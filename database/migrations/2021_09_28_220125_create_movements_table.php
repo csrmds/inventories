@@ -13,8 +13,8 @@ class CreateMovementsTable extends Migration
      */
     public function up()
     {
-        Schema::table('movements', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('movements', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('order_id')->constrained('orders');
             $table->integer('order_item_id');
@@ -22,8 +22,6 @@ class CreateMovementsTable extends Migration
             $table->string('movement');
             $table->bigInteger('order_reference_id');
             $table->timestamps();
-            // $table->foreign('product_id')->references('id')->on('products');
-            // $table->foreign('order_id')->references('id')->on('orders');
         });
     }
 
