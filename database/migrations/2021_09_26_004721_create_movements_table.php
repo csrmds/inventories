@@ -15,15 +15,15 @@ class CreateMovementsTable extends Migration
     {
         Schema::table('movements', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigIncrements('product_id');
-            $table->bigIncrements('order_id');
-            $table->bigIncrements('order_item_id');
-            $table->decimal('amount',11,4);
+            $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('order_id')->constrained('orders');
+            $table->integer('order_item_id');
+            $table->decimal('qtd',11,4);
             $table->string('movement');
-            $table->bigIncrements('order_reference_id');
+            $table->bigInteger('order_reference_id');
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('products');
-            $table->foreign('order_id')->references('id')->on('orders');
+            // $table->foreign('product_id')->references('id')->on('products');
+            // $table->foreign('order_id')->references('id')->on('orders');
         });
     }
 
@@ -34,8 +34,6 @@ class CreateMovementsTable extends Migration
      */
     public function down()
     {
-        Schema::table('movements', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('movements');
     }
 }

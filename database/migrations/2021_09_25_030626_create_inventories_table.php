@@ -14,12 +14,12 @@ class CreateInventoriesTable extends Migration
     public function up()
     {
         Schema::create('inventories', function (Blueprint $table) {
-            $table->bigIncrements('people_id');
-            $table->bigIncrements('product_id');
+            $table->foreignId('people_id')->constrained('people');
+            $table->foreignId('product_id')->constrained('products');
             $table->decimal('entry',11,4);
             $table->decimal('out',11,4);
-            $table->foreign('people_id')->references('id')->on('people');
-            $table->foreign('product_id')->references('id')->on('products');
+            // $table->foreign('people_id')->references('id')->on('people');
+            // $table->foreign('product_id')->references('id')->on('products');
         });
     }
 

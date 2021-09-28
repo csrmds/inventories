@@ -14,8 +14,8 @@ class CreateOrderItemsTable extends Migration
     public function up()
     {
         Schema::create('order_items', function (Blueprint $table) {
-            $table->bigInteger('order_id');
-            $table->bigInteger('product_id');
+            $table->foreignId('order_id')->constrained('orders');
+            $table->foreignId('product_id')->constrained('products');
             $table->string('description')->nullable();
             $table->integer('order', 11,4);
             $table->decimal('qtd', 11,4);
@@ -23,8 +23,8 @@ class CreateOrderItemsTable extends Migration
             $table->decimal('discount', 11,4)->nullable();
             $table->string('category')->nullable();
             $table->timestamps();
-            $table->foreign('order_id')->references('id')->on('orders');
-            $table->foreign('product_id')->references('id')->on('products');
+            // $table->foreign('order_id')->references('id')->on('orders');
+            // $table->foreign('product_id')->references('id')->on('products');
         });
     }
 
