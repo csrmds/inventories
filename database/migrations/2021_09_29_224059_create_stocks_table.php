@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLocationsTable extends Migration
+class CreateStocksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateLocationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('locations', function (Blueprint $table) {
-            $table->id();
+        Schema::create('stocks', function (Blueprint $table) {
             $table->foreignId('people_id')->constrained('people');
-            $table->string('description');
-            $table->foreignId('product_id')->constrained('products')->nullable();
-            $table->decimal('product_qtd')->nullable();
+            $table->foreignId('product_id')->constrained('products');
+            $table->decimal('entry', 11,4);
+            $table->decimal('out', 11,4);
+            $table->decimal('value', 11,4);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateLocationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('locations');
+        Schema::dropIfExists('stocks');
     }
 }

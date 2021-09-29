@@ -27,9 +27,6 @@ class CreateOrdersTable extends Migration
             $table->decimal('amount', 11,4)->nullable();
             $table->decimal('discount', 11,4)->nullable();
             $table->string('status')->nullable();
-            // $table->foreign('people_origin')->references('id')->on('people');
-            // $table->foreign('location_origin')->references('id')->on('locations');
-            // $table->foreign('user')->references('id')->on('users');
             $table->timestamps();
         });
     }
