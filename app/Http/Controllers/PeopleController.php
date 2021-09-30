@@ -46,7 +46,7 @@ class PeopleController extends Controller
      */
     public function show(People $people)
     {
-        //
+        echo "<p>Eita</p>";
     }
 
     /**

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,4 +18,6 @@ Route::get('/', function () {
     return view('home');
 });
 
-//Route::get('/', ['uses'=>'PessoaController@index']);
+
+Route::post('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
+//Route::get('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
