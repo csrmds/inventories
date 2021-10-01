@@ -17,27 +17,59 @@ class AuthenticateController extends Controller
         //$user= (new User)->where('email', 'csrmds@gmail.com')->get()->toArray();
 
         //buscar login por email
-        $user= (new User)->where('email', $data['login'])->get();
+        //$user= (new User)->where('email', $data['login'])->get();
+        $user= new User;
+
+        //$array= $user->where('email', 'csrmdas@gmail.com')->get()->toArray();
+        //$obj= $user->where('email', 'aaacsrmds@gmail.com')->get();
+
+
+        echo "<pre>";
+
+        $count= count($user->where('name', $data['login'])->get());
+        if ($count>0) {
+            $userLogin= $user->where('name', $data['login'])->get();
+
+            if(password_verify($data['password'], $userLogin[0]->password)) {
+                echo "senha bateu: <br/>";
+                
+                
+
+            } else {
+                echo "Senha não bateu: <br/>";
+            }
+            
+        } else {
+            echo "Nenhum usuário encontrado.";
+        }
+
+
+        //echo "ARRAY<br/><br/>";
+        //print_r($array[0]['password']);
+        // echo "<br/><br/>OBJ<br/><br/>";
+        // print_r($obj[0]);
+        // echo "</pre>";
+
         
         //dd($user[0]->password);
 
-        if (!empty($user[0])) {
-            //obter dados e validar senha
-            if ($user[0]->password== password_hash($data['password'], PASSWORD_DEFAULT)) {
-                //salvar session e redirecionar para home
-                session([
-                    'authenticate'=>[
-                        'userLogin'=> $user->name,
-                        'userEmail'=> $user->email
-                    ]
-                ]);
+        // if (!empty($user[0])) {
+        //     //obter dados e validar senha
+        //     if ($user[0]->password== password_hash($data['password'], PASSWORD_DEFAULT)) {
+        //         //salvar session e redirecionar para home
+        //         session([
+        //             'authenticate'=>[
+        //                 'userLogin'=> $user->name,
+        //                 'userEmail'=> $user->email
+        //             ]
+        //         ]);
 
-                echo "Usuário autenticado com sucesso<br/>";
+        //         echo "Usuário autenticado com sucesso<br/>";
 
-            }
-        } else {
-            echo "Usuário ou senha inválidos<br/>";
-        }
+        //     }
+        // } else {
+        //     echo "Usuário ou senha inválidos<br/>";
+        // }
 
         
 
@@ -49,11 +81,11 @@ class AuthenticateController extends Controller
         // echo $user->email."<br/>";
         // echo $user->password."<br/>";
         // echo "Atributes: ".$user->attributtes;
-        echo "<pre>";
-        //print_r(Session::all());
+        // echo "<pre>";
+        // //print_r(Session::all());
         
-        echo "</pre>";
-        dd($user);
+        // echo "</pre>";
+        //dd($user);
         //return json_encode($dados);
     }
 }
