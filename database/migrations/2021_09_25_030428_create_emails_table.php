@@ -15,10 +15,10 @@ class CreateEmailsTable extends Migration
     {
         Schema::create('emails', function (Blueprint $table) {
             $table->bigInteger('order');
-            $table->bigIncrements('pessoa_id');
+            $table->bigIncrements('people_id');
             $table->string('email');
             $table->string('description')->nullable();
-            $table->foreign('pessoa_id')->references('id')->on('people');
+            $table->foreign('people_id')->references('id')->on('people');
         });
     }
 

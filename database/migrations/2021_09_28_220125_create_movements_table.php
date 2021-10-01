@@ -18,7 +18,7 @@ class CreateMovementsTable extends Migration
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('order_id')->constrained('orders');
             $table->integer('order_item_id');
-            $table->decimal('qtd',11,4);
+            $table->decimal('amount',11,4);
             $table->string('movement');
             $table->bigInteger('order_reference_id');
             $table->timestamps();

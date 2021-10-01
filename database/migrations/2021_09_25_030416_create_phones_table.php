@@ -15,11 +15,11 @@ class CreatePhonesTable extends Migration
     {
         Schema::create('phones', function (Blueprint $table) {
             $table->bigInteger('order');
-            $table->bigIncrements('pessoa_id');
+            $table->bigIncrements('people_id');
             $table->decimal('ddd',2)->nullable();
             $table->decimal('number',9);
             $table->string('description')->nullable();
-            $table->foreign('pessoa_id')->references('id')->on('people');
+            $table->foreign('people_id')->references('id')->on('people');
         });
     }
 
