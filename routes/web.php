@@ -21,3 +21,6 @@ Route::get('/', function () {
 
 Route::post('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
 //Route::get('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
+
+
+Route::get('/teste', [App\Http\Controllers\AuthenticateController::class, 'teste']);
