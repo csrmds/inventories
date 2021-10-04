@@ -25,17 +25,20 @@
 			</li>
 		</ul>
 
+
+		@if (session()->has('userLogin'))
+		<?php $userLogin= session()->get('userLogin');  ?>
 		<form class="form-inline my-2 my-lg-0">
 			<div class="navbar-nav">
-				<li class="nav-item dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<a class="nav-link dropdown-toggle">Usuario</a>
-					<div class="dropdown-menu">
-						<a class="dropdown-item">Usuário</a>
-						<a class="dropdown-item">Logout</a>
+				<li class="nav-item dropdown" >
+					<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $userLogin['name'] }}</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="{{ route('authenticate.logout') }}">Logout</a>
 					</div>
 				</li>	
 			</div>
 		</form>
+		@endif
 
 	</div>
 </nav>

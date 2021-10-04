@@ -12,10 +12,8 @@ class AuthenticateController extends Controller
 {
     public function login(Request $request) {
         $data= $request->all();
-
         $user= new User;
-
-        echo "<pre>";
+        $return= [];
 
         $count= count($user->where('name', $data['login'])->get());
         if ($count>0) {
@@ -29,18 +27,24 @@ class AuthenticateController extends Controller
                         'name'=> $userLogin[0]->name,
                         'email'=> $userLogin[0]->email
                 ]);
-                
+                $return= session()->get('userLogin');
+                $return["error"]= false;
 
             } else {
-                echo "Senha não bateu: <br/>";
+                $return= [
+                    "error"=> true,
+                    "msg"=> "Usuário ou senha inválido"
+                ];
             }
             
         } else {
-            echo "Nenhum usuário encontrado.";
+            $return= [
+                "error"=> true,
+                "msg"=> "Usuário ou senha inválido"
+            ];
         };
 
-        print_r(session()->all());
-
+        return json_encode($return);
 
     }
 
@@ -49,7 +53,7 @@ class AuthenticateController extends Controller
             session()->forget('userLogin');
         }
 
-        return true;
+        return redirect('/');
     }
 
     public function teste() {

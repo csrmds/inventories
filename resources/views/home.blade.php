@@ -7,6 +7,8 @@
 </div>
 
 <div class="container">
+
+    @if (!session()->has('userLogin'))
     <form>
         <div class="form-group">
             <label>Email</label>
@@ -32,9 +34,12 @@
         <button type="submit" class="btn btn-primary" id="btnLogin">Login</button>
     </form>
 
-    <div id="return-msg">
-        
+    <br/><br/>
+    <div id="return-msg" class="alert alert-warning" style="display:none">
+        xxx
     </div>
+    @endif
+
 </div>
 
 
@@ -51,6 +56,7 @@
         let login= $("#login").val()
         let password= $("#password").val();
         let content= {"login": login, "password": password}
+        const x= null
         
         //console.log("chamou login...\n"+login+"\n"+password)
 
@@ -58,9 +64,16 @@
         
         axios.post('authenticate', content)
             .then(function (response){
-                console.log(response.data)
+                this.x= response.data
+                
+                if (!this.x.error) {
+                    window.location.href="http://localhost:8000/"
+                } else {
+                    $("#return-msg").html(this.x.msg).show()
+                }
+                
             }).catch(function (error) {
-                console.log(error)
+                $("#return-msg").html(this.x.msg).show()
             });
 
 
