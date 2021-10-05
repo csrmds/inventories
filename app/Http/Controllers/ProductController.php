@@ -68,4 +68,10 @@ class ProductController extends Controller
         }
         echo "</pre>";
     }
+
+    public function getInfo() {
+        $product= Product::find(10);
+
+        return json_encode($product);
+    }
 }
