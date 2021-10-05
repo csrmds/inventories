@@ -36,7 +36,7 @@
 
     <br/><br/>
     <div id="return-msg" class="alert alert-warning" style="display:none">
-        xxx
+        
     </div>
     @endif
 
@@ -56,7 +56,7 @@
         let login= $("#login").val()
         let password= $("#password").val();
         let content= {"login": login, "password": password}
-        const x= null
+        let resp= null
         
         //console.log("chamou login...\n"+login+"\n"+password)
 
@@ -64,18 +64,17 @@
         
         axios.post('authenticate', content)
             .then(function (response){
-                this.x= response.data
+                this.resp= response.data
                 
-                if (!this.x.error) {
+                if (!this.resp.error) {
                     window.location.href="http://localhost:8000/"
                 } else {
-                    $("#return-msg").html(this.x.msg).show()
+                    $("#return-msg").html(this.resp.msg).show()
                 }
                 
             }).catch(function (error) {
-                $("#return-msg").html(this.x.msg).show()
+                $("#return-msg").html(this.resp.msg).show()
             });
-
 
         event.preventDefault()
     })

@@ -21,7 +21,9 @@ window.Vue = require('vue').default;
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-//Vue.component('c-teste', require('./components/TesteComponent.vue').default);
+Vue.component('c-product-find', require('./components/product/InputFind.vue').default);
+Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);
+Vue.component('c-input-list', require('./components/form/InputList.vue').default);
 
 
 /**
