@@ -29,6 +29,7 @@ Route::post('/product/edit', [App\Http\Controllers\ProductController::class, 'ed
 Route::post('/product/update', [App\Http\Controllers\ProductController::class, 'update'])->name('product.update');
 Route::post('/product/destroy', [App\Http\Controllers\ProductController::class, 'destroy'])->name('product.destroy');
 Route::get('/product/faker', [App\Http\Controllers\ProductController::class, 'faker'])->name('product.faker');
+Route::get('/product/getinfo', [App\Http\Controllers\ProductController::class, 'getInfo'])->name('product.getInfo');
 
 
 Route::get('/teste', [App\Http\Controllers\AuthenticateController::class, 'teste']);

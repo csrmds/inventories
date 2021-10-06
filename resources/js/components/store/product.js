@@ -1,5 +1,6 @@
 
 export default {
+	namespaced: true,
 	
 	state: {
 		id: null,
@@ -27,18 +28,18 @@ export default {
 	},
 
 	getters: {
+		
+	},
+
+	mutations: {
 		getInfo(state) {
-			axios.get('produtc/getInfo')
+			axios.get('/product/getinfo')
 				.then(function (response) {
 					state.resp= response.data
 				}).catch(function (error) {
 					state.error= error
 				})
 		}
-	},
-
-	mutations: {
-		
 	},
 
 	actions: {

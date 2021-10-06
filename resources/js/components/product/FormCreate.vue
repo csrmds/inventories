@@ -95,8 +95,9 @@
 				<button class="btn btn-info">Salvar e add novo</button>
 			</div>
 
-			<div class="col-sm-2">
-				<button class="btn btn-info">teste</button>
+			<div class="col-sm-2 alert alert-info">
+				<button class="btn btn-info" @click="teste()">teste</button>
+				{{ text }}
 			</div>
 
 		</div>
@@ -107,23 +108,32 @@
 
 			</div>
 		</div>
+
+		<div class="row">
+			<c-suggest></c-suggest>
+		</div>
+		
 	</div>
+	
 </template>
 
 <script>
+
 	export default {
 		data() {
 			return {
-				product: this.$store.state.product
+				product: this.$store.state.product,
+				text: this.$store.state.product.resp,
+				options: ["abelha", "bola", "macaco", "jujuba"]
 			}
 		},
 
 		computed: {
-
+			teste2() { return this.$store.state.product.resp }
 		},
 
 		methods: {
-			teste() { this.$store.commit('product/getInfo') }
+			teste() { this.$store.commit('product/getInfo') },
 		},
 
 		mounted() {
