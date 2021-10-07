@@ -31,6 +31,7 @@ Vue.component('c-product-find', require('./components/product/InputFind.vue').de
 Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);
 Vue.component('c-input-list', require('./components/form/InputList.vue').default);
 Vue.component('c-suggest', require('./components/SimpleSuggest.vue').default);
+Vue.component('c-autocomplete', require('./components/Autocomplete.vue').default);
 
 
 /**

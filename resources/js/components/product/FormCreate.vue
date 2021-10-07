@@ -112,6 +112,15 @@
 		<div class="row">
 			<c-suggest></c-suggest>
 		</div>
+
+		<div class="row">
+			<div class="col-sm-3">
+				<c-autocomplete
+					items="['maça', 'banana', 'melancia', 'jaca', 'morango', 'uva']"
+				></c-autocomplete>	
+			</div>
+			
+		</div>
 		
 	</div>
 	
