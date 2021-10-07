@@ -115,9 +115,7 @@
 
 		<div class="row">
 			<div class="col-sm-3">
-				<c-autocomplete
-					items="['maça', 'banana', 'melancia', 'jaca', 'morango', 'uva']"
-				></c-autocomplete>	
+				<c-autocomplete></c-autocomplete>	
 			</div>
 			
 		</div>

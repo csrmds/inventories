@@ -1,15 +1,27 @@
 <template>
 	
 	<div class="autocomplete">
-		<input v-model="search" @input="onChange" type="text">
+		<input 
+			v-model="search" 
+			@input="onChange" 
+			@blur="isOpen= false"
+			@keydown.down="onArrowDown"
+			@keydown.up="onArrowUp"
+			@keydown.enter="onEnter"
+			type="text">
 		<ul
 			v-show="isOpen" 
-			class="autocomplete-results"
-			>
+			class="autocomplete-results">
+
 			<li
-				v-for="(result, i) in results"
-				:key="i"
-				class="autocomplete-result">{{ result }}</li>
+				v-for= "(result, i) in results"
+				:key= "i"
+				@click= "setResult(result)"
+				class= "autocomplete-result"
+				:class="{'is-active': i===arrowCounter}">
+				{{ result }}
+			</li>
+
 		</ul>
 	</div>
 
@@ -24,13 +36,16 @@ export default {
 		items: {
 			type: Array,
 			required: false,
-			default: ()=> [],
+			default: ()=> ['maça', 'banana', 'melancia', 'jaca', 'morango', 'uva', 'maracuja', 'abacaxi', 'manga', 'limão', 'pepino', 'baunilha'],
 		}
 	},
 
 	data() {
 		return {
 			search: '',
+			results: [],
+			isOpen: false,
+			arrowCounter: -1
 		};
 	},
 
@@ -42,12 +57,52 @@ export default {
 		},
 
 		onChange() {
-			this.filterResults();
+			this.filterResult();
 			this.isOpen= true;
 			console.log(this.search)
+		},
+
+		setResult(result) {
+			this.search= result;
+			this.isOpen= false;
+		},
+
+		handleClickOutside(event) {
+			if (!this.$el.contains(event.target)) {
+				this.arrowCounter= -1;
+				this.isOpen= false;
+			}
+		},
+
+		onArrowDown() {
+			if (this.arrowCounter < this.results.length) {
+				this.arrowCounter= this.arrowCounter +1;
+			}
+		},
+
+		onArrowUp() {
+			if (this.arrowCounter > 0) {
+				this.arrowCounter= this.arrowCounter -1;
+			}
+		},
+
+		onEnter() {
+			this.search= this.results[this.arrowCounter];
+			this.arrowCounter= -1;
+			this.isOpen= false
 		}
 
-	}
+	},
+
+	mounted() {
+		document.addEventListener('click', this.handleClickOutside);
+	},
+
+	destroyed() {
+		document.removeEventListener('click', this.handleClickOutside);
+	},
+
+
 }
 
 
@@ -74,6 +129,7 @@ export default {
 	cursor: pointer;
 }
 
+.autocomplete-result.is-active,
 .autocomplete-result:hover {
 	background-color: #4aae9b;
 	color: white;
