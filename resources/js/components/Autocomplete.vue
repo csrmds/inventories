@@ -3,17 +3,27 @@
 	<div class="autocomplete">
 		<input 
 			v-model="search" 
-			@input="onChange" 
-			@blur="isOpen= false"
+			@input="list" 
+			@blur="blur"
 			@keydown.down="onArrowDown"
 			@keydown.up="onArrowUp"
 			@keydown.enter="onEnter"
-			type="text">
+			type="text" 
+			class="form-control" 
+		/>
 		<ul
 			v-show="isOpen" 
 			class="autocomplete-results">
 
 			<li
+				v-if="isLoading"
+				class="loading"
+			>
+				Carregando lista...
+			</li>
+
+			<li
+				v-else
 				v-for= "(result, i) in results"
 				:key= "i"
 				@click= "setResult(result)"
@@ -30,6 +40,8 @@
 
 
 <script>
+import { mapGetters, mapState } from 'vuex'
+
 export default {
 	name: 'SearchAutocomplete',
 	props: {
@@ -37,6 +49,11 @@ export default {
 			type: Array,
 			required: false,
 			default: ()=> ['maça', 'banana', 'melancia', 'jaca', 'morango', 'uva', 'maracuja', 'abacaxi', 'manga', 'limão', 'pepino', 'baunilha'],
+		},
+		isAsync: {
+			type: Boolean,
+			required: false,
+			default: false
 		}
 	},
 
@@ -45,7 +62,8 @@ export default {
 			search: '',
 			results: [],
 			isOpen: false,
-			arrowCounter: -1
+			arrowCounter: -1,
+			isLoading: false
 		};
 	},
 
@@ -56,13 +74,29 @@ export default {
 			);
 		},
 
+		list() {
+			this.$store.commit('product/search', this.search)
+			if (this.$store.product.resp) {
+				console.log("resp: "+this.$store.product.resp)
+			} else {
+				console.log("error: "+this.$store.product.error)
+			}
+		},
+
 		onChange() {
-			this.filterResult();
-			this.isOpen= true;
-			console.log(this.search)
+			this.$emit('input', this.search);
+
+			if (this.isAsync) {
+				this.isLoading= true;
+			} else {
+				this.filterResult();
+				this.isOpen= true;	
+			}
+			
 		},
 
 		setResult(result) {
+			console.log("chamou set result")
 			this.search= result;
 			this.isOpen= false;
 		},
@@ -90,8 +124,23 @@ export default {
 			this.search= this.results[this.arrowCounter];
 			this.arrowCounter= -1;
 			this.isOpen= false
+		},
+
+		blur() {
+			console.log('blur')
+			//this.isOpen= false
 		}
 
+	},
+
+	watch: {
+		items: function (value, oldValue) {
+			if (this.isAsync) {
+				this.results= value;
+				this.isOpen= true;
+				this.isLoading= false;
+			}
+		}
 	},
 
 	mounted() {
@@ -116,9 +165,9 @@ export default {
 	padding: 0;
 	margin: 0;
 	border: 1px solid #eeeeee;
-	height: 120px;
+	height: 160px;
 	min-height: 1em;
-	max-height: 6em;
+	/*max-height: 6em;*/
 	overflow: auto;
 }
 

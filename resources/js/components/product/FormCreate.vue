@@ -97,7 +97,6 @@
 
 			<div class="col-sm-2 alert alert-info">
 				<button class="btn btn-info" @click="teste()">teste</button>
-				{{ text }}
 			</div>
 
 		</div>
@@ -140,7 +139,9 @@
 		},
 
 		methods: {
-			teste() { this.$store.commit('product/getInfo') },
+			teste() {
+				
+			},
 		},
 
 		mounted() {

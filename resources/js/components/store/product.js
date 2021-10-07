@@ -39,6 +39,16 @@ export default {
 				}).catch(function (error) {
 					state.error= error
 				})
+		},
+
+		search(state, payload) {
+			axios.post('/product/search', {
+				word: payload
+			}).then(function (response) {
+					state.resp= response.data
+				}).catch(function (error) {
+					state.error= error
+				})
 		}
 	},
 
