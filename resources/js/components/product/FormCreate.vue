@@ -91,12 +91,25 @@
 				<button class="btn btn-success container-fluid">Salvar</button>
 			</div>
 
-			<div class="col-sm-2">
+			<div class="col-sm-3">
 				<button class="btn btn-info">Salvar e add novo</button>
 			</div>
 
-			<div class="col-sm-2 alert alert-info">
+			<div class="col-sm-2">
 				<button class="btn btn-info" @click="teste()">teste</button>
+			</div>
+
+			<div class="col-sm-3">
+				<ul class="ul-teste">
+					<li v-for="(item, i) in list" :key=i class="li-teste" :class="{'is-active': i===indexList}">
+						{{ item }}
+					</li>
+				</ul>
+			</div>
+
+			<div class="col-sm-2">
+				<button class="btn btn-warning" @click="desce">+</button>
+				<button class="btn btn-info" @click="sobe">-</button>
 			</div>
 
 		</div>
@@ -106,10 +119,6 @@
 			<div class="alert" id="response-msg">
 
 			</div>
-		</div>
-
-		<div class="row">
-			<c-suggest></c-suggest>
 		</div>
 
 		<div class="row">
@@ -130,7 +139,9 @@
 			return {
 				product: this.$store.state.product,
 				text: this.$store.state.product.resp,
-				options: ["abelha", "bola", "macaco", "jujuba"]
+				options: ["abelha", "bola", "macaco", "jujuba"],
+				indexList: -1,
+				list: ['ovo', 'abacaxi', 'jaca', 'melão', 'groselha', 'maracuja', 'chocolate', 'mostarda', 'pink', 'jujuba']
 			}
 		},
 
@@ -142,6 +153,14 @@
 			teste() {
 				
 			},
+
+			desce() {
+				this.indexList= this.indexList+1
+			},
+
+			sobe() {
+				this.indexList= this.indexList-1
+			}
 		},
 
 		mounted() {
@@ -155,3 +174,31 @@
 
 	}
 </script>
+
+
+<style scoped>
+
+.ul-teste {
+	padding: 0;
+	margin: 0;
+	border: 1px solid #eeeeee;
+	height: 160px;
+	min-height: 1em;
+	/*max-height: 6em;*/
+	overflow: auto;
+}
+
+.li-teste {
+	list-style: none;
+	text-align: left;
+	padding: 4px 2px;
+	cursor: pointer;
+}
+
+.li-teste.is-active,
+.li-teste:hover {
+	background-color: #4aae9b;
+	color: white;
+}
+
+</style>

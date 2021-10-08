@@ -8,17 +8,13 @@
 			@keydown.down="onArrowDown"
 			@keydown.up="onArrowUp"
 			@keydown.enter="onEnter"
+			@keydown.tab="isOpen=false"
 			type="text" 
 			class="form-control" 
 		/>
-		<ul
-			v-show="isOpen" 
-			class="autocomplete-results">
+		<ul	v-show="isOpen" class="autocomplete-results">
 
-			<li
-				v-if="isLoading"
-				class="loading"
-			>
+			<li v-if="isLoading" class="loading">
 				Carregando lista...
 			</li>
 
@@ -33,22 +29,23 @@
 			</li>
 
 		</ul>
+
 	</div>
 
+	
 
 </template>
 
 
 <script>
-import { mapGetters, mapState } from 'vuex'
 
 export default {
 	name: 'SearchAutocomplete',
 	props: {
 		items: {
 			type: Array,
-			required: false,
-			default: ()=> ['maça', 'banana', 'melancia', 'jaca', 'morango', 'uva', 'maracuja', 'abacaxi', 'manga', 'limão', 'pepino', 'baunilha'],
+			required: false
+			//default: ()=> ['maça', 'banana', 'melancia', 'jaca', 'morango', 'uva', 'maracuja', 'abacaxi', 'manga', 'limão', 'pepino', 'baunilha'],
 		},
 		isAsync: {
 			type: Boolean,
@@ -74,29 +71,24 @@ export default {
 			);
 		},
 
-		list() {
-			this.$store.commit('product/search', this.search)
-			if (this.$store.product.resp) {
-				console.log("resp: "+this.$store.product.resp)
-			} else {
-				console.log("error: "+this.$store.product.error)
-			}
-		},
+		async list() {
+			this.isLoading= true
+			this.results= []
+			const resp= await this.$store.dispatch('product/search', this.search)
 
-		onChange() {
-			this.$emit('input', this.search);
-
-			if (this.isAsync) {
-				this.isLoading= true;
+			if (resp.data.length<1) {
+				this.isOpen= false
 			} else {
-				this.filterResult();
-				this.isOpen= true;	
+				resp.data.forEach((element, i) => {
+					this.results.push(element.name)
+				});
+				this.isLoading= false
+				this.isOpen= true
 			}
-			
+
 		},
 
 		setResult(result) {
-			console.log("chamou set result")
 			this.search= result;
 			this.isOpen= false;
 		},
@@ -127,7 +119,6 @@ export default {
 		},
 
 		blur() {
-			console.log('blur')
 			//this.isOpen= false
 		}
 

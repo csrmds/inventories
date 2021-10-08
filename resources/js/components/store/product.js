@@ -1,3 +1,4 @@
+import axios from "axios"
 
 export default {
 	namespaced: true,
@@ -23,7 +24,7 @@ export default {
 		created_at: null,
 		updated_at: null,
 		error: [],
-		resp: [],
+		resp: null,
 		action: []
 	},
 
@@ -41,19 +42,22 @@ export default {
 				})
 		},
 
-		search(state, payload) {
-			axios.post('/product/search', {
-				word: payload
-			}).then(function (response) {
-					state.resp= response.data
-				}).catch(function (error) {
-					state.error= error
-				})
+		setResp(state, payload) {
+			state.resp= payload
 		}
 	},
 
 	actions: {
-		
+		async search(context, payload) {
+			const resp= await axios.post('/product/search', {
+				word: payload
+			})
+
+			context.commit('setResp', resp.data)
+
+			return resp
+
+		}
 	}
 }
 
