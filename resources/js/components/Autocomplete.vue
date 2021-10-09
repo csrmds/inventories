@@ -22,6 +22,7 @@
 				v-else
 				v-for= "(result, i) in results"
 				:key= "i"
+				:id="'li_'+i"
 				@click= "setResult(result)"
 				class= "autocomplete-result"
 				:class="{'is-active': i===arrowCounter}">
@@ -101,14 +102,16 @@ export default {
 		},
 
 		onArrowDown() {
-			if (this.arrowCounter < this.results.length) {
-				this.arrowCounter= this.arrowCounter +1;
+			if (this.arrowCounter < this.results.length-1) {
+				this.arrowCounter++
+				$("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
 			}
 		},
 
 		onArrowUp() {
 			if (this.arrowCounter > 0) {
-				this.arrowCounter= this.arrowCounter -1;
+				this.arrowCounter--
+				$("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
 			}
 		},
 
