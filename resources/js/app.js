@@ -29,9 +29,10 @@ import store from './components/store/store'
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('c-product-find', require('./components/product/InputFind.vue').default);
 Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);
-Vue.component('c-input-list', require('./components/form/InputList.vue').default);
-Vue.component('c-suggest', require('./components/SimpleSuggest.vue').default);
-Vue.component('c-autocomplete', require('./components/Autocomplete.vue').default);
+//Vue.component('c-input-list', require('./components/form/InputList.vue').default);
+//Vue.component('c-suggest', require('./components/SimpleSuggest.vue').default);
+Vue.component('c-autocomplete', require('./components/form/Autocomplete.vue').default);
+Vue.component('c-select', require('./components/form/Select.vue').default);
 
 
 /**

@@ -32,5 +32,6 @@ Route::get('/product/faker', [App\Http\Controllers\ProductController::class, 'fa
 Route::get('/product/getinfo', [App\Http\Controllers\ProductController::class, 'getInfo'])->name('product.getInfo');
 Route::post('/product/search', [App\Http\Controllers\ProductController::class, 'search'])->name('product.search');
 
+Route::post('/user/search', [App\Http\Controllers\UserController::class, 'search'])->name('user.search');
 
 Route::get('/teste', [App\Http\Controllers\AuthenticateController::class, 'teste']);

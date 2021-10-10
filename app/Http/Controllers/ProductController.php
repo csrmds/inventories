@@ -50,14 +50,9 @@ class ProductController extends Controller
     {
         $data= $request->all();
 
-        //$products= new Product;
-        //$products= (new Product)->all()->where('category', 'like', "m%");
         $products= DB::table('products')->where('name', 'like', $data['word'].'%')->get();
 
-        // echo "<pre>";
         return json_encode($products);
-        // print_r($data);
-        // echo "</pre>";
 
     }
 
