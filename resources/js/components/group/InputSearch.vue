@@ -14,14 +14,19 @@
 
 <script>
 export default {
-	data: {
-		return: {
+	data() {
+		return {
 			word: null
 		}
 	},
 
 	methods: {
-		search() { console.log("busca..."+this.word) }
+		async search() { 
+			console.log("busca..."+this.word) 
+			const resp= await this.$store.dispatch('group/search', this.word)
+
+			console.log(resp)
+		}
 	},
 
 	mounted() {

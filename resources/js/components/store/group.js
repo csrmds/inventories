@@ -29,7 +29,7 @@ export default {
 
 	actions: {
 		async search(context, payload) {
-			const resp= await axios.post('/group/search', {
+			const resp= await axios.get('/group/search', {
 				word: payload
 			})
 
@@ -39,7 +39,7 @@ export default {
 		},
 
 		async all(context) {
-			const resp= await axios.post('/group/all')
+			const resp= await axios.get('/group/all')
 
 			context.commit('setResp', resp.data)
 

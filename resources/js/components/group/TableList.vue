@@ -27,8 +27,8 @@
 
         },
 
-        data: {
-            return: {
+        data() {
+            return {
                 groups: null
             }
         },
