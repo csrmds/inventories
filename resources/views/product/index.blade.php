@@ -4,14 +4,12 @@
 
 <div class="container">
     <h1>Produtos</h1>
-</div>
 
-<div class="container">
     <div class="row">
         <div class="col-sm">
-            <c-product-find></c-product-find>
+            <c-product-search></c-product-search>
         </div>
-        <div>
+        <div class="col-sm-1">
             <a href="{{ route('product.create') }}">
                 <button class="btn btn-secondary">Novo</button>
             </a>

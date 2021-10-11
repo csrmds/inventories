@@ -7,7 +7,7 @@
                 :key="i" 
                 :value="option.id" 
             >
-                {{ option }}
+                {{ option.name }}
             </option>
         </select>
     </div>
@@ -20,12 +20,8 @@
                 type: Array,
                 required: true
             },
-            label: { 
-                type: String 
-            },
-            source: {
-                type: String,
-            }
+            label: null,
+            source: null
         },
 
         data() {
@@ -34,8 +30,14 @@
             }
         },
 
+        beforeMount() {
+            if (typeof(this.options)=="string") {
+                this.options= JSON.parse(this.options)
+            }
+        },
+
         mounted() {
-            console.log('Component mounted.')
+            console.log('Component select mounted.')
         }
     }
 </script>

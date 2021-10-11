@@ -12,9 +12,6 @@ window.Vue = require('vue').default;
 import store from './components/store/store'
 
 
-
-
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -26,14 +23,15 @@ import store from './components/store/store'
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('c-product-find', require('./components/product/InputFind.vue').default);
-Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);
-//Vue.component('c-input-list', require('./components/form/InputList.vue').default);
-//Vue.component('c-suggest', require('./components/SimpleSuggest.vue').default);
-Vue.component('c-autocomplete', require('./components/form/Autocomplete.vue').default);
+//Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('c-select', require('./components/form/Select.vue').default);
+Vue.component('c-autocomplete', require('./components/form/Autocomplete.vue').default);
 
+Vue.component('c-product-search', require('./components/product/InputSearch.vue').default);
+Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);
+
+Vue.component('c-group-search', require('./components/group/InputSearch.vue').default);
+Vue.component('c-group-table-list', require('./components/group/TableList.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

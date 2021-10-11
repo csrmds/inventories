@@ -3,6 +3,7 @@ import Vuex from "vuex"
 
 import product from "./product"
 import user from "./user"
+import group from "./group"
 
 
 Vue.use(Vuex)
@@ -26,6 +27,7 @@ export default new Vuex.Store({
 
     modules: {
         product: product,
-        user: user
+        user: user,
+        group: group
     }
 })

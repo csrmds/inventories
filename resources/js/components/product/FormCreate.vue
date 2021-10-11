@@ -3,6 +3,11 @@
 		<div class="row">
 			
 			<div class="col-sm-2">
+				<label for="property">Patrimônio</label>
+				<input type="text" name="property" id="property" class="form-control input-text">
+			</div>
+
+			<div class="col-sm-2">
 				<label for="type">Tipo</label>
 				<select name="type" id="type" class="form-control">
 					<option value="">1</option>
@@ -26,18 +31,13 @@
 				<input type="text" name="brand" id="brand" class="form-control input-text">
 			</div>
 
-			<div class="col-sm">
-				<label for="model">Modelo</label>
-				<input type="text" name="model" id="model" class="form-control input-text">
-			</div>
-
 		</div>
 
 		<div class="row">
 
 			<div class="col-sm">
-				<label for="property">Patrimônio</label>
-				<input type="text" name="property" id="property" class="form-control input-text">
+				<label for="model">Modelo</label>
+				<input type="text" name="model" id="model" class="form-control input-text">
 			</div>
 
 			<div class="col-sm">
@@ -101,7 +101,7 @@
 			</div>
 			
 			<div class="col-sm-2">
-				<c-select label="Select" :options="opa" ></c-select>
+				<c-select label="Select" :options="selectArray" ></c-select>
 			</div>
 
 		</div>
@@ -133,14 +133,23 @@
 				text: this.$store.state.product.resp,
 				indexList: -1,
 				list: ['ovo', 'abacaxi', 'jaca', 'melão', 'groselha', 'maracuja', 'chocolate', 'mostarda', 'pink', 'jujuba'],
-				opa: ["opação01", "opção02", "opção03"]
+				opa: ["opção01", "opção02", "opção03"]
 			}
 		},
 
 		computed: {
 			teste2() { return this.$store.state.product.resp },
 			selectArray() {
-				return ["opação01", "opção02", "opção03"]
+				return {
+					0: {
+							id: 1,
+							name: "select01"	
+						},
+					1: {
+							id: 2,
+							name: "select02"
+						}
+				}
 			},
 			
 		},
