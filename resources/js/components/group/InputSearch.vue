@@ -1,11 +1,12 @@
 <template>
 	<div class="input-group">
 		<input 
-			:v-model="word"
+			v-model="word"
+			@keydown.enter="search"
 			type="text" 
 			name="group-find" 
 			class="form-control input-control input-sm" 
-			placeholder="Busca">
+			placeholder="Busca" />
 		<div class="input-group-append">
 			<button class="btn btn-sm btn-primary" @click="search">Busca</button>
 		</div>
@@ -21,12 +22,7 @@ export default {
 	},
 
 	methods: {
-		async search() { 
-			console.log("busca..."+this.word) 
-			const resp= await this.$store.dispatch('group/search', this.word)
-
-			console.log(resp)
-		}
+		search() { this.$store.dispatch('group/search', this.word) }
 	},
 
 	mounted() {

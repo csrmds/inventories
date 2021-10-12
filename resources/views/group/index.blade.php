@@ -20,7 +20,8 @@
 
     <div class="row">
         <div class="col-sm">
-            <table class="table table-striped table-sm">
+            <c-group-table-list></c-group-table-list>
+            {{-- <table class="table table-striped table-sm">
                 <thead>
                     <th>Nome</th>
                     <th>Descrição</th>
@@ -39,7 +40,7 @@
                     </tr>
                     @endforeach
                 </tbody>
-            </table>
+            </table> --}}
             
         </div>
     </div>

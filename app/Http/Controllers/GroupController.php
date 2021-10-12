@@ -38,7 +38,6 @@ class GroupController extends Controller
     public function search(Request $request)
     {
         $data= $request->all();
-
         $groups= DB::table('groups')->where('name', 'like', $data['word'].'%')->get();
 
         return json_encode($groups);
@@ -47,7 +46,6 @@ class GroupController extends Controller
     public function getById(Request $request)
     {
         $data= $request->all();
-
         $group= (new Group)->find($data['id']);
 
         return json_encode($group);
@@ -58,6 +56,14 @@ class GroupController extends Controller
         $group= Group::all();
 
         return json_encode($group);
+    }
+
+    public function getByTable(Request $request)
+    {
+        $data= $request->all();
+        $groups= DB::table('groups')->where('table', $data['word'])->get();
+
+        return json_encode($groups);
     }
 
 }

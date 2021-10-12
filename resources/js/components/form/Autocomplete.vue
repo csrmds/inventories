@@ -27,7 +27,7 @@
 				@click= "setResult(result)"
 				class= "autocomplete-result"
 				:class="{'is-active': i===arrowCounter}">
-				{{ result.name }}
+				{{ column ? result.column : result.name }}
 			</li>
 
 		</ul>
@@ -60,8 +60,13 @@ export default {
 			default: null
 		},
 		source: {
-			type: String, Array,
+			type: String,
 			required: true
+		},
+		column: {
+			type: String,
+			required: false,
+			default: false
 		}
 	},
 
@@ -87,7 +92,10 @@ export default {
 		async list() {
 			this.isLoading= true
 			this.results= []
-			const resp= await this.$store.dispatch(this.source, this.word)
+			const resp= await this.$store.dispatch(this.source, { 
+				word: this.word, 
+				column: this.column
+			})
 
 			if (resp.data.length<1) {
 				this.isOpen= false
@@ -103,7 +111,7 @@ export default {
 
 		setResult(result) {
 			this.attr= result,
-			this.word= result.name;
+			this.word= result.column;
 			this.inputId= result.id;
 			this.isOpen= false;
 		},
@@ -176,6 +184,9 @@ export default {
 	min-height: 1em;
 	/*max-height: 6em;*/
 	overflow: auto;
+	z-index: 10;
+	position: absolute;
+	background-color: #eeeeee;
 }
 
 .autocomplete-result {
@@ -183,6 +194,7 @@ export default {
 	text-align: left;
 	padding: 4px 2px;
 	cursor: pointer;
+	
 }
 
 .autocomplete-result.is-active,

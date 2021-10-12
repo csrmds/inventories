@@ -1,4 +1,4 @@
-import axios from "axios"
+//import axios from "axios"
 
 export default {
 	namespaced: true,
@@ -29,13 +29,15 @@ export default {
 
 	actions: {
 		async search(context, payload) {
-			const resp= await axios.get('/group/search', {
+
+			console.log("action..: "+payload)
+			const resp= await axios.post('/group/search', {
 				word: payload
 			})
 
 			context.commit('setResp', resp.data)
 
-			return resp
+			return resp.data
 		},
 
 		async all(context) {
@@ -43,7 +45,21 @@ export default {
 
 			context.commit('setResp', resp.data)
 
+			return resp.data
+		},
+
+		getByTable(context, payload) {
+			const resp= axios.post('/group/getbytable', { word:payload })
+			context.commit('setResp', resp.data)
+
 			return resp
+		},
+
+		getById(context, payload) {
+			const resp= axios.post('/group/getbyid', { word:payload })
+			context.commit('setResp', resp.data)
+
+			return resp.data
 		}
 	}
 }

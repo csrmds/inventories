@@ -3,17 +3,13 @@
 		<div class="row">
 			
 			<div class="col-sm-2">
-				<label for="property">Patrimônio</label>
-				<input type="text" name="property" id="property" class="form-control input-text">
+				<!-- <label for="property">Patrimônio</label>
+				<input type="text" name="property" id="property" class="form-control input-text"> -->
+				<c-autocomplete label="Patrimonio" source="product/searchBy" column="property_id"></c-autocomplete>
 			</div>
 
 			<div class="col-sm-2">
-				<label for="type">Tipo</label>
-				<select name="type" id="type" class="form-control">
-					<option value="">1</option>
-					<option value="">2</option>
-					<option value="">3</option>
-				</select>
+				<c-select label="Tipo" :options="type"></c-select>
 			</div>
 			
 			<div class="col-sm">
@@ -46,11 +42,7 @@
 			</div>
 
 			<div class="col-sm-1">
-				<label for="um">UM</label>
-				<select name="um" id="um" class="form-control">
-					<option value="">UN</option>
-					<option value="">PC</option>
-				</select>
+				<c-select label="UM" :options="um" ></c-select>
 			</div>
 
 			<div class="col-sm-2">
@@ -97,11 +89,11 @@
 			</div>
 
 			<div class="col-sm-2">
-				<button class="btn btn-info" @click="teste()">teste</button>
+				<button class="btn btn-info" @click="teste2()">teste2</button>
 			</div>
 			
 			<div class="col-sm-2">
-				<c-select label="Select" :options="selectArray" ></c-select>
+				<!-- <c-select label="Select" :options="selectArray" ></c-select> -->
 			</div>
 
 		</div>
@@ -127,44 +119,52 @@
 <script>
 
 	export default {
+		props: {
+			type: { type: String	},
+			um: { type: String }
+		},
+
 		data() {
 			return {
 				product: this.$store.state.product,
 				text: this.$store.state.product.resp,
 				indexList: -1,
-				list: ['ovo', 'abacaxi', 'jaca', 'melão', 'groselha', 'maracuja', 'chocolate', 'mostarda', 'pink', 'jujuba'],
-				opa: ["opção01", "opção02", "opção03"]
 			}
 		},
 
 		computed: {
-			teste2() { return this.$store.state.product.resp },
-			selectArray() {
-				return {
-					0: {
-							id: 1,
-							name: "select01"	
-						},
-					1: {
-							id: 2,
-							name: "select02"
-						}
-				}
-			},
 			
 		},
 
 		methods: {
+			async getType() {
+				const resp= await this.$store.dispatch('group/getByTable', 'product_type')
+				this.type= resp.data
+			},
+
+			async getUm() {
+				const resp= await this.$store.dispatch('group/getByTable', 'product_um')
+				this.um= resp.data
+			},
+
 			teste() {
 				let cesar= document.querySelectorAll("[data-id='val_data_id']")
 				console.log(cesar[0].getAttribute('value'))
 				console.log(cesar[0].scrollHeight)
 			},
+			teste2() {
+				let cesar= {
+					var01: "opa",
+					var02: "eita"
+				};
+				this.$store.dispatch('product/searchBy', cesar)
+				//console.log(this.type)
+			},
 
 		},
 
 		mounted() {
-
+			
 		},
 
 		watch: {

@@ -56,7 +56,18 @@ export default {
 			context.commit('setResp', resp.data)
 
 			return resp
+		},
 
+		async searchBy(context, payload) {
+			const resp= await axios.post('/product/searchby', {
+				word: payload.word,
+				column: payload.column
+			})
+
+			context.commit('setResp', resp.data)
+
+			return resp
+			
 		}
 	}
 }

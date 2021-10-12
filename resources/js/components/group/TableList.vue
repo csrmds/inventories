@@ -6,10 +6,10 @@
                 <th>Descrição</th>
                 <th>Gr Pai</th>
                 <th>Tabela</th>
-                <th>-</th>
+                <th></th>
             </thead>
             <tbody>
-                <tr v-for="(grupo, i) in groups" :k="i">
+                <tr v-for="(group, i) in groups" :k="i">
                     <td>{{ group.name }}</td>
                     <td>{{ group.description }}</td>
                     <td>{{ group.hierarchy_name }}</td>
@@ -29,20 +29,30 @@
 
         data() {
             return {
-                groups: null
+                groups: null,
+                
             }
         },
 
+        computed: {
+            error() { return this.$store.state.group.error },
+		    resp() { return this.$store.state.group.resp },
+        },
+
         methods: {
-            // async list() {
-            //     this.isLoading= true
-            //     this.groups= []
-            //     cons resp= await this.$store.dispach('group/search', this)
-            // }
+            teste() { }
         },
 
         mounted() {
             console.log('Component mounted.')
+            this.$store.dispatch('group/search', "")
+        },
+
+        watch: {
+            resp: function(newVal) {
+                console.log("ouviu carai..")
+                this.groups= newVal
+            }
         }
     }
 </script>

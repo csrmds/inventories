@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Group;
 use Faker\Factory;
 
 
@@ -22,8 +23,10 @@ class ProductController extends Controller
 
     public function create() 
     {
+        $type= DB::table('groups')->where('table', 'product_type')->get();
+        $um= DB::table('groups')->where('table', 'product_um')->get();
 
-        return view('product.create');
+        return view('product.create', compact('type','um'));
     }
 
     public function edit()
@@ -50,11 +53,27 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         $data= $request->all();
-
         $products= DB::table('products')->where('name', 'like', $data['word'].'%')->get();
 
         return json_encode($products);
 
+    }
+
+    public function searchBy(Request $request)
+    {
+        $data= $request->all();
+        //$products= DB::table('products')->select('*, '.$data['column'].' as column')->where($data['column'], 'like', $data['word'].'%')->get();
+        $products= DB::select("select *, {$data['column']} as 'column' from products where {$data['column']} like '{$data['word']}%'");
+
+        return json_encode($products);
+    }
+
+    public function searchByPropertyId(Resquest $request)
+    {
+        $data= $request->all();
+        $products= DB::table('products')->where('property_id', 'like', $data['word'].'%')->get();
+
+        return json_encode($products);
     }
 
     public function faker() 
