@@ -44,7 +44,29 @@ export default {
 
 		setResp(state, payload) {
 			state.resp= payload
-		}
+		},
+
+		setProduct(state, product) {
+			//product= JSON.parse(product)
+			state.id= product.id
+			state.name= product.name
+			state.reference= product.reference
+			state.description= product.description
+			state.type= product.type
+			state.category= product.category
+			state.manufacturer= product.manufacturer
+			state.brand= product.brand
+			state.model= product.model
+			state.sn= product.sn
+			state.tag= product.tag
+			state.property_id= product.property_id
+			state.size_id= product.size_id
+			state.color_id= product.color_id
+			state.um= product.um
+			state.status= product.status
+			state.obs= product.obs
+		},
+
 	},
 
 	actions: {
@@ -67,7 +89,17 @@ export default {
 			context.commit('setResp', resp.data)
 
 			return resp
-			
+		},
+
+		loadInputs(context, product) {
+			console.log('laod inputs chegou...')
+			//console.log(typeof(product))
+			if (typeof(product)=="object") {
+				context.commit('setProduct', product)
+			} else {
+				product= JSON.parse(product)
+				context.commit('setProduct', product)
+			}
 		}
 	}
 }

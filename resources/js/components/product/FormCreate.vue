@@ -5,26 +5,34 @@
 			<div class="col-sm-2">
 				<!-- <label for="property">Patrimônio</label>
 				<input type="text" name="property" id="property" class="form-control input-text"> -->
-				<c-autocomplete label="Patrimonio" source="product/searchBy" column="property_id"></c-autocomplete>
+				<c-autocomplete 
+					id="property" 
+					label="Patrimonio" 
+					source="product/searchBy" 
+					column="property_id"
+					:callback="getInputs"
+				>	
+				</c-autocomplete>
+				<input type="hidden" id="product_id" v-model="product.id">
 			</div>
 
 			<div class="col-sm-2">
-				<c-select label="Tipo" :options="type"></c-select>
+				<c-select label="Tipo" :options="type" v-model="product.type"></c-select>
 			</div>
 			
 			<div class="col-sm">
 				<label for="description">Descrição</label>
-				<input type="text" id="description" name="description" class="form-control input-text">
+				<input v-model="product.description" type="text" id="description" name="description" class="form-control input-text">
 			</div>
 			
 			<div class="col-sm">
 				<label for="category">Categoria</label>
-				<input type="text" name="category" id="category" class="form-control input-text">
+				<input v-model="product.category" type="text" name="category" id="category" class="form-control input-text">
 			</div>
 
 			<div class="col-sm">
 				<label for="brand">Marca</label>
-				<input type="text" name="brand" id="brand" class="form-control input-text">
+				<input v-model="product.brand" type="text" name="brand" id="brand" class="form-control input-text">
 			</div>
 
 		</div>
@@ -33,21 +41,21 @@
 
 			<div class="col-sm">
 				<label for="model">Modelo</label>
-				<input type="text" name="model" id="model" class="form-control input-text">
+				<input v-model="product.model" type="text" name="model" id="model" class="form-control input-text">
 			</div>
 
 			<div class="col-sm">
 				<label for="sn">SN</label>
-				<input type="text" name="sn" id="sn" class="form-control input-text">
+				<input v-model="product.sn" type="text" name="sn" id="sn" class="form-control input-text">
 			</div>
 
 			<div class="col-sm-1">
-				<c-select label="UM" :options="um" ></c-select>
+				<c-select v-model="product.um" label="UM" :options="um" ></c-select>
 			</div>
 
 			<div class="col-sm-2">
 				<label for="location">Localização</label>
-				<select name="location" id="location" class="form-control">
+				<select v-model="product.location" name="location" id="location" class="form-control">
 					<option value="">DEPOSITO</option>
 					<option value="">ESCRITORIO</option>
 					<option value="">SALA TECNICA 01</option>
@@ -56,7 +64,7 @@
 
 			<div class="col-sm">
 				<label for="people">Responsável</label>
-				<input type="text" name="people" id="people" class="form-control">
+				<input v-model="product.people" type="text" name="people" id="people" class="form-control">
 			</div>
 
 		</div>
@@ -89,11 +97,11 @@
 			</div>
 
 			<div class="col-sm-2">
-				<button class="btn btn-info" @click="teste2()">teste2</button>
+				<button class="btn btn-info" @click="teste3()">teste3</button>
 			</div>
 			
 			<div class="col-sm-2">
-				<!-- <c-select label="Select" :options="selectArray" ></c-select> -->
+				
 			</div>
 
 		</div>
@@ -101,13 +109,21 @@
 
 		<div class="row">
 			<div class="alert" id="response-msg">
-
+				<p>{{ property_id }}</p>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-sm-3">
+				
 				<c-autocomplete label="Usuarios" source="user/search"></c-autocomplete>	
+			</div>
+			
+		</div>
+
+		<div class="row">
+			<div class="col-sm-3">
+				
 			</div>
 			
 		</div>
@@ -129,6 +145,10 @@
 				product: this.$store.state.product,
 				text: this.$store.state.product.resp,
 				indexList: -1,
+				loadInputs: {
+					route: 'product/setProduct',
+					method: 'setProduct'
+				}
 			}
 		},
 
@@ -161,6 +181,10 @@
 				//console.log(this.type)
 			},
 
+			getInputs() {
+				console.log("chamando funcção doida aqui...")
+			}
+
 		},
 
 		mounted() {
@@ -168,7 +192,10 @@
 		},
 
 		watch: {
-
+			property_id: function(newVal) {
+				console.log("ouviu property id")
+				console.log(property_id)
+			}
 		},
 
 

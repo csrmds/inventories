@@ -1,20 +1,20 @@
 <template>
 	
 	<div class="autocomplete">
-		<label :for="inputId" v-if="label" >{{label}}</label>
+		<label :for="id" v-if="label" >{{label}}</label>
 		<input 
 			v-model="word" 
 			@input="list" 
 			@keydown.down="onArrowDown"
 			@keydown.up="onArrowUp"
-			@keydown.enter="onEnter"
+			@keydown.enter="callback"
 			@keydown.tab="isOpen=false"
+			:data-id="inputId"
+			:id="id"
 			type="text" 
 			class="form-control"
-			:id="inputId"
 		/>
 		<ul	v-show="isOpen" class="autocomplete-results">
-
 			<li v-if="isLoading" class="loading">
 				Carregando lista...
 			</li>
@@ -24,17 +24,15 @@
 				v-for= "(result, i) in results"
 				:key= "i"
 				:id="'li_'+i"
+				:class="{'is-active': i===arrowCounter}"
 				@click= "setResult(result)"
 				class= "autocomplete-result"
-				:class="{'is-active': i===arrowCounter}">
+			>
 				{{ column ? result.column : result.name }}
 			</li>
-
 		</ul>
 
 	</div>
-
-	
 
 </template>
 
@@ -67,7 +65,10 @@ export default {
 			type: String,
 			required: false,
 			default: false
-		}
+		},
+		id: null,
+		callback: Function,
+		dispatch: Object
 	},
 
 	data() {
@@ -110,10 +111,11 @@ export default {
 		},
 
 		setResult(result) {
-			this.attr= result,
-			this.word= result.column;
-			this.inputId= result.id;
-			this.isOpen= false;
+			this.attr= result
+			this.$store.dispatch('product/loadInputs', result)
+			this.word= result.column
+			this.inputId= result.id
+			this.isOpen= false
 		},
 
 		handleClickOutside(event) {
@@ -140,7 +142,7 @@ export default {
 
 		onEnter() {
 			this.attr= this.results[this.arrowCounter]
-			this.word= this.results[this.arrowCounter].name
+			this.word= this.results[this.arrowCounter].column
 			this.inputId= this.results[this.arrowCounter].id
 			this.arrowCounter= -1
 			this.isOpen= false
