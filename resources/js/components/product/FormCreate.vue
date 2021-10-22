@@ -17,7 +17,7 @@
 			</div>
 
 			<div class="col-sm-2">
-				<c-select label="Tipo" :options="type" v-model="product.type"></c-select>
+				<c-select label="Tipo" name="type" :options="type" :option_selected="product.type"></c-select>
 			</div>
 			
 			<div class="col-sm">
@@ -50,15 +50,18 @@
 			</div>
 
 			<div class="col-sm-1">
-				<c-select v-model="product.um" label="UM" :options="um" ></c-select>
+				<c-select v-model="product.um" label="UM" :options="um" :option_selected="product.um" ></c-select>
 			</div>
 
 			<div class="col-sm-2">
 				<label for="location">Localização</label>
-				<select v-model="product.location" name="location" id="location" class="form-control">
-					<option value="">DEPOSITO</option>
-					<option value="">ESCRITORIO</option>
-					<option value="">SALA TECNICA 01</option>
+				<select v-model="teste" name="location" id="location" class="form-control">
+					<option value="DEPOSITO">DEPOSITO</option>
+					<option value="ESCRITORIO">ESCRITORIO</option>
+					<option value="SALA01">SALA01</option>
+					<option value="SALA02">SALA02</option>
+					<option value="SALA03">SALA03</option>
+					<option value="SALA04">SALA04</option>
 				</select>
 			</div>
 
@@ -97,7 +100,7 @@
 			</div>
 
 			<div class="col-sm-2">
-				<button class="btn btn-info" @click="teste3()">teste3</button>
+				<button class="btn btn-info" @click="teste4()">teste select</button>
 			</div>
 			
 			<div class="col-sm-2">
@@ -109,7 +112,7 @@
 
 		<div class="row">
 			<div class="alert" id="response-msg">
-				<p>{{ property_id }}</p>
+				<p></p>
 			</div>
 		</div>
 
@@ -136,7 +139,7 @@
 
 	export default {
 		props: {
-			type: { type: String	},
+			type: { type: String },
 			um: { type: String }
 		},
 
@@ -148,7 +151,8 @@
 				loadInputs: {
 					route: 'product/setProduct',
 					method: 'setProduct'
-				}
+				},
+				teste: null,
 			}
 		},
 
@@ -167,11 +171,11 @@
 				this.um= resp.data
 			},
 
-			teste() {
-				let cesar= document.querySelectorAll("[data-id='val_data_id']")
-				console.log(cesar[0].getAttribute('value'))
-				console.log(cesar[0].scrollHeight)
-			},
+			// teste() {
+			// 	let cesar= document.querySelectorAll("[data-id='val_data_id']")
+			// 	console.log(cesar[0].getAttribute('value'))
+			// 	console.log(cesar[0].scrollHeight)
+			// },
 			teste2() {
 				let cesar= {
 					var01: "opa",
@@ -179,6 +183,10 @@
 				};
 				this.$store.dispatch('product/searchBy', cesar)
 				//console.log(this.type)
+			},
+
+			teste4() {
+				this.teste="SERVIÇO"
 			},
 
 			getInputs() {
@@ -192,10 +200,7 @@
 		},
 
 		watch: {
-			property_id: function(newVal) {
-				console.log("ouviu property id")
-				console.log(property_id)
-			}
+			
 		},
 
 
