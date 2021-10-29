@@ -26,7 +26,7 @@ class CreateOcsMonitorsTable extends Migration
 				KEY HARDWARE_ID (HARDWARE_ID) ) 
 			ENGINE=federated 
 			default CHARSET=utf8
-			connection='mysql://ocs:ocs@192.168.18.25:3306/ocsweb/monitors'"
+			connection='mysql://ocs:ocs@192.168.18.25:3306/ocsweb_zurich/monitors'"
 		);
 	}
 

@@ -11,6 +11,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         info: "Store Info",
+        alertView: false
     },
 
     getters: {
@@ -18,7 +19,10 @@ export default new Vuex.Store({
     },
 
     mutations: {
-
+        alertShow() {
+            console.log("opaa  do store")
+            this.state.alertView= !this.state.alertView
+        }
     },
 
     actions: {

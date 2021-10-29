@@ -24,6 +24,9 @@
 				<a class="nav-link" href="{{ url('/') }}">HOME</a>
 			</li>
 			<li class="nav-item">
+				<a class="nav-link" href="{{ route('people.index') }}">PESSOAS</a>
+			</li>
+			<li class="nav-item">
 				<a class="nav-link" href="{{ route('product.index') }}">PRODUTOS</a>
 			</li>
 			<li class="nav-item">

@@ -1,4 +1,5 @@
 import axios from "axios"
+import { update } from "lodash"
 
 export default {
 	namespaced: true,
@@ -46,6 +47,10 @@ export default {
 			state.resp= payload
 		},
 
+		setError(state, payload) {
+			state.error= payload
+		},
+
 		setProduct(state, product) {
 			//product= JSON.parse(product)
 			state.id= product.id
@@ -67,6 +72,31 @@ export default {
 			state.obs= product.obs
 		},
 
+		cleanProduct(state) {
+			state.id= null
+			state.name= null
+			state.reference= null
+			state.description= null
+			state.type= null
+			state.category= null
+			state.manufacturer= null
+			state.brand= null
+			state.model= null
+			state.sn= null
+			state.tag= null
+			state.property_id= null
+			state.size_id= null
+			state.color_id= null
+			state.um= null
+			state.status= null
+			state.obs= null
+		},
+
+		cleanResp(state) {
+			state.error= null
+			state.resp= null
+		}
+
 	},
 
 	actions: {
@@ -75,7 +105,7 @@ export default {
 				word: payload
 			})
 
-			context.commit('setResp', resp.data)
+			//context.commit('setResp', resp.data)
 
 			return resp
 		},
@@ -86,14 +116,26 @@ export default {
 				column: payload.column
 			})
 
-			context.commit('setResp', resp.data)
+			//context.commit('setResp', resp.data)
 
 			return resp
 		},
 
+		async update(context, payload) {
+			const resp= await axios.post('/product/update', payload)
+				.then(function (response) {
+					context.commit('cleanProduct')
+					context.error= null
+					context.commit('setResp', "Alteração feita com sucesso")
+					return resp.data
+				})
+				.catch(function (error) {
+					context.commit('setError', error.response.data)
+					return error.response.data
+				})
+		},
+
 		loadInputs(context, product) {
-			console.log('laod inputs chegou...')
-			//console.log(typeof(product))
 			if (typeof(product)=="object") {
 				context.commit('setProduct', product)
 			} else {

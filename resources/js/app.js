@@ -11,6 +11,17 @@ window.Vue = require('vue').default;
 
 import store from './components/store/store'
 
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+// Import Bootstrap an BootstrapVue CSS files (order is important)
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+// Make BootstrapVue available throughout your project
+Vue.use(BootstrapVue)
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin)
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -32,6 +43,8 @@ Vue.component('c-product-form-create', require('./components/product/FormCreate.
 
 Vue.component('c-group-search', require('./components/group/InputSearch.vue').default);
 Vue.component('c-group-table-list', require('./components/group/TableList.vue').default);
+
+Vue.component('c-alert', require('./components/import/Alert.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

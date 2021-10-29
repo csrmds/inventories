@@ -10,14 +10,16 @@
 					label="Patrimonio" 
 					source="product/searchBy" 
 					column="property_id"
-					:callback="getInputs"
 				>	
 				</c-autocomplete>
 				<input type="hidden" id="product_id" v-model="product.id">
 			</div>
 
 			<div class="col-sm-2">
-				<c-select label="Tipo" name="type" :options="type" :option_selected="product.type"></c-select>
+				<label for="type">Tipo</label>
+				<select name="type" id="type" class="form-control" v-model="product.type">
+					<option v-for="(option, i) in JSON.parse(type)" :key="i">{{ option.name }}</option>
+				</select>
 			</div>
 			
 			<div class="col-sm">
@@ -50,12 +52,12 @@
 			</div>
 
 			<div class="col-sm-1">
-				<c-select v-model="product.um" label="UM" :options="um" :option_selected="product.um" ></c-select>
+				<c-select v-model="product.um" label="UM" name="um" :options="um" :option_selected="product.um" ></c-select>
 			</div>
 
 			<div class="col-sm-2">
 				<label for="location">Localização</label>
-				<select v-model="teste" name="location" id="location" class="form-control">
+				<select name="location" id="location" class="form-control">
 					<option value="DEPOSITO">DEPOSITO</option>
 					<option value="ESCRITORIO">ESCRITORIO</option>
 					<option value="SALA01">SALA01</option>
@@ -83,52 +85,21 @@
 				</div>
 			</div>
 
-			<div class="col-sm-3">
-				<label for="">input teste</label>
-				<input type="text" name="texto" id="text_id" data-id="val_data_id" value="valor_do_input" class="form-control">
-			</div>
 		</div>
 
 		<hr>
 		<div class="row">
 			<div class="col-sm-2">
-				<button class="btn btn-success container-fluid">Salvar</button>
-			</div>
-
-			<div class="col-sm-3">
-				<button class="btn btn-info">Salvar e add novo</button>
-			</div>
-
-			<div class="col-sm-2">
-				<button class="btn btn-info" @click="teste4()">teste select</button>
-			</div>
-			
-			<div class="col-sm-2">
-				
+				<button class="btn btn-success container-fluid" @click="update">Salvar</button>
 			</div>
 
 		</div>
 		<br>
 
 		<div class="row">
-			<div class="alert" id="response-msg">
-				<p></p>
+			<div class="col-sm-12">
+				<c-alert :type="alertType" :title="alertTitle" :msg="alertMsg"  dismissible="true" ></c-alert>
 			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-sm-3">
-				
-				<c-autocomplete label="Usuarios" source="user/search"></c-autocomplete>	
-			</div>
-			
-		</div>
-
-		<div class="row">
-			<div class="col-sm-3">
-				
-			</div>
-			
 		</div>
 		
 	</div>
@@ -136,75 +107,89 @@
 </template>
 
 <script>
+import eventbus from '../eventbus'
 
-	export default {
-		props: {
-			type: { type: String },
-			um: { type: String }
+export default {
+	props: {
+		type: { type: String },
+		um: { type: String }
+	},
+
+	data() {
+		return {
+			product: this.$store.state.product,
+			indexList: -1,
+			loadInputs: {
+				route: 'product/setProduct',
+				method: 'setProduct'
+			},
+			showAlert: false,
+			alertMsg: null,
+			alertTitle: null,
+			alertType: null
+		}
+	},
+
+	computed: {
+		error() { return this.$store.state.product.error },
+		resp() { return this.$store.state.product.resp }
+	},
+
+	created() {
+		//atualiza "TYPE" via evento enviado pelo componente select
+		eventbus.$on('select_type', payload => {
+			this.product.type= payload
+		}),
+
+		//atualiza "UM" via evento enviado pelo componente select
+		eventbus.$on('select_um', payload => {
+			this.product.um= payload
+		})
+	},
+
+	methods: {
+		async getType() {
+			const resp= await this.$store.dispatch('group/getByTable', 'product_type')
+			this.type= resp.data
 		},
 
-		data() {
-			return {
-				product: this.$store.state.product,
-				text: this.$store.state.product.resp,
-				indexList: -1,
-				loadInputs: {
-					route: 'product/setProduct',
-					method: 'setProduct'
-				},
-				teste: null,
+		async getUm() {
+			const resp= await this.$store.dispatch('group/getByTable', 'product_um')
+			this.um= resp.data
+		},
+
+		async update() {
+			return await this.$store.dispatch('product/update', this.product)
+		},
+
+	},
+
+	mounted() {
+		
+	},
+
+	watch: {
+		error: function(newValue) {
+			console.log("escutou mudança no error")
+			console.log(newValue)
+			this.alertType= "alert-danger"
+			this.alertMsg= this.$store.state.product.error
+			if (!this.$store.state.alertView) {
+				this.$store.commit('alertShow')
 			}
 		},
 
-		computed: {
-			
-		},
-
-		methods: {
-			async getType() {
-				const resp= await this.$store.dispatch('group/getByTable', 'product_type')
-				this.type= resp.data
-			},
-
-			async getUm() {
-				const resp= await this.$store.dispatch('group/getByTable', 'product_um')
-				this.um= resp.data
-			},
-
-			// teste() {
-			// 	let cesar= document.querySelectorAll("[data-id='val_data_id']")
-			// 	console.log(cesar[0].getAttribute('value'))
-			// 	console.log(cesar[0].scrollHeight)
-			// },
-			teste2() {
-				let cesar= {
-					var01: "opa",
-					var02: "eita"
-				};
-				this.$store.dispatch('product/searchBy', cesar)
-				//console.log(this.type)
-			},
-
-			teste4() {
-				this.teste="SERVIÇO"
-			},
-
-			getInputs() {
-				console.log("chamando funcção doida aqui...")
+		resp: function(newValue) {
+			this.alertType= "alert-info"
+			this.alertMsg= this.$store.state.product.resp
+			if (!this.$store.state.alertView) {
+				this.$store.commit('alertShow')
 			}
-
-		},
-
-		mounted() {
-			
-		},
-
-		watch: {
-			
-		},
+		}
+	},
 
 
-	}
+}
 </script>
 
 

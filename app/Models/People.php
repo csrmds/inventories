@@ -17,7 +17,7 @@ class People extends Model
         "type",
         "category",
         "birth_date",
-        "zip-code",
+        "zipcode",
         "country",
         "state",
         "city",

@@ -21,7 +21,7 @@ class CreatePeopleTable extends Migration
             $table->string('type');
             $table->string('category')->nullable();
             $table->date('birth_date')->nullable();
-            $table->date('zip-code')->nullable();
+            $table->string('zipcode')->nullable();
             $table->string('country')->nullable();
             $table->string('state')->nullable();
             $table->string('city')->nullable();

@@ -22,6 +22,14 @@ Route::get('/', function () {
 Route::post('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
 Route::get('/authenticate/logout', [App\Http\Controllers\AuthenticateController::class, 'logout'])->name('authenticate.logout');
 
+Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.index');
+Route::get('/people/create', [App\Http\Controllers\PeopleController::class, 'create'])->name('people.create');
+Route::get('/people/edit', [App\Http\Controllers\PeopleController::class, 'edit'])->name('people.edit');
+Route::get('/people/update', [App\Http\Controllers\PeopleController::class, 'update'])->name('people.update');
+Route::get('/people/destroy', [App\Http\Controllers\PeopleController::class, 'destroy'])->name('people.destroy');
+Route::get('/people/faker', [App\Http\Controllers\PeopleController::class, 'faker'])->name('people.faker');
+Route::get('/people/search', [App\Http\Controllers\PeopleController::class, 'search'])->name('people.search');
+Route::get('/people/searchby', [App\Http\Controllers\PeopleController::class, 'searchby'])->name('people.searchby');
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
 Route::get('/product/create', [App\Http\Controllers\ProductController::class, 'create'])->name('product.create');
