@@ -1,7 +1,7 @@
 <template>
     <div>
         <label v-if="label">{{ label }}</label>
-        <select class="form-control" @change="eventEmit" :name="name">
+        <select class="form-control form-control-sm" @change="eventEmit" :name="name">
             <template v-for="(option, i) in options2">
                 <option 
                     v-if="option.selected" 

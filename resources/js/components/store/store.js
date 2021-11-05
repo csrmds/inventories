@@ -4,14 +4,15 @@ import Vuex from "vuex"
 import product from "./product"
 import user from "./user"
 import group from "./group"
+import ocsHardware from "./ocshardware"
+import alert from "./alert"
 
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        info: "Store Info",
-        alertView: false
+        info: "Store Info"
     },
 
     getters: {
@@ -19,10 +20,7 @@ export default new Vuex.Store({
     },
 
     mutations: {
-        alertShow() {
-            console.log("opaa  do store")
-            this.state.alertView= !this.state.alertView
-        }
+
     },
 
     actions: {
@@ -32,6 +30,8 @@ export default new Vuex.Store({
     modules: {
         product: product,
         user: user,
-        group: group
+        group: group,
+        ocsHardware: ocsHardware,
+        alert: alert
     }
 })

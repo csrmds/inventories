@@ -27,6 +27,9 @@ class Product extends Model
         'um',
         'status',
         'obs',
+        'ocs_hw_id',
+        'ocs_mon_id',
+        'people_id',
         'create_at',
         'updated_at'
     ];

@@ -11,16 +11,25 @@ window.Vue = require('vue').default;
 
 import store from './components/store/store'
 
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import useVuelidate from '@vuelidate/core'
+Vue.use(useVuelidate)
+
+import VueCompositionAPI from '@vue/composition-api'
+Vue.use(VueCompositionAPI)
+
+//import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+// This imports <b-modal> as well as the v-b-modal directive as a plugin:
+import { ModalPlugin } from 'bootstrap-vue'
+Vue.use(ModalPlugin)
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // Make BootstrapVue available throughout your project
-Vue.use(BootstrapVue)
+//Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin)
+//Vue.use(IconsPlugin)
 
 
 /**
@@ -45,6 +54,9 @@ Vue.component('c-group-search', require('./components/group/InputSearch.vue').de
 Vue.component('c-group-table-list', require('./components/group/TableList.vue').default);
 
 Vue.component('c-alert', require('./components/import/Alert.vue').default);
+
+Vue.component('c-ocs-form-search', require('./components/ocs/FormSearch.vue').default);
+Vue.component('c-ocs-card-info', require('./components/ocs/CardInfo.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

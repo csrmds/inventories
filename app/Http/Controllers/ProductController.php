@@ -36,6 +36,9 @@ class ProductController extends Controller
         $this->product->um= $proprieties['um'];
         $this->product->status= $proprieties['status'];
         $this->product->obs= $proprieties['obs'];
+        $this->product->ocs_hw_id= $proprieties['ocs_hw_id'];
+        $this->product->ocs_mon_id= $proprieties['ocs_mon_id'];
+        $this->product->people_id= $proprieties['people_id'];
     }
 
     /**
@@ -56,6 +59,17 @@ class ProductController extends Controller
         return view('product.create', compact('type','um'));
     }
 
+    public function save(Request $request)
+    {
+        $this->setProprieties($request->input('product'));
+        try {
+            $this->product->save();
+            return json_encode($this->product);
+        } catch (\Exception $e) {
+            return jscon_encode($e->getMessate(), 418);
+        }
+    }
+
     public function edit()
     {
 		return view('product.index'); 
@@ -65,12 +79,11 @@ class ProductController extends Controller
     {
         $this->product= Product::Find($request->input('id'));
         $this->setProprieties($request->all());
-
         try {
             $this->product->save();
             return response(json_encode($this->product));
         }catch(\Exception $e) {
-            return response(json_encode($e->getMessage()), 418) ;
+            return response(json_encode($e->getMessage()), 418);
         }
         
     }

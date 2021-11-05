@@ -32,8 +32,9 @@ Route::get('/people/search', [App\Http\Controllers\PeopleController::class, 'sea
 Route::get('/people/searchby', [App\Http\Controllers\PeopleController::class, 'searchby'])->name('people.searchby');
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
-Route::get('/product/create', [App\Http\Controllers\ProductController::class, 'create'])->name('product.create');
+Route::match(['get','post'], '/product/create', [App\Http\Controllers\ProductController::class, 'create'])->name('product.create');
 Route::post('/product/edit', [App\Http\Controllers\ProductController::class, 'edit'])->name('product.edit');
+Route::post('/product/save', [App\Http\Controllers\ProductController::class, 'save'])->name('product.save');
 Route::post('/product/update', [App\Http\Controllers\ProductController::class, 'update'])->name('product.update');
 Route::post('/product/destroy', [App\Http\Controllers\ProductController::class, 'destroy'])->name('product.destroy');
 Route::get('/product/faker', [App\Http\Controllers\ProductController::class, 'faker'])->name('product.faker');
@@ -49,4 +50,10 @@ Route::post('/group/search', [App\Http\Controllers\GroupController::class, 'sear
 Route::post('/group/getbytable', [App\Http\Controllers\GroupController::class, 'getByTable'])->name('group.getByTable');
 Route::post('/group/getbyid', [App\Http\Controllers\GroupController::class, 'getById'])->name('group.getById');
 
-Route::get('/teste', [App\Http\Controllers\AuthenticateController::class, 'teste']);
+Route::post('/ocs/search', [App\Http\Controllers\OcsHardwareController::class, 'search'])->name('ocs.search');
+Route::post('/ocs/searchbyid/{id?}', [App\Http\Controllers\OcsHardwareController::class, 'searchById'])->name('ocs.searchById');
+//Route::get('/ocs/tag', [App\Http\Controllers\OcsHardwareController::class, 'tag'])->name('ocs.tag');
+
+Route::get('/teste', function() {
+    return view('teste');
+})->name('teste');

@@ -1,10 +1,10 @@
 <template>
     <transition name="fade"> 
 
-        <div class="alert alert-dismissible fade show" :class="type" role="alert" v-show="this.$store.state.alertView">
+        <div class="alert alert-dismissible fade show" :class="classType" role="alert" v-show="this.$store.state.alert.view">
             <h4>{{ title }}</h4>
             <p>{{ msg }}</p>
-            <button v-if="dismissible" type="button" class="close" aria-label="Close" @click="alertClose">
+            <button v-if="dismissible" type="button" class="close" aria-label="Close" @click="close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -15,22 +15,31 @@
 <script>
     export default {
         props: {
-            title: null,
-            msg: null,
-            type: null,
-            dismissible: false,
-            timeToClose: 3000
+            // title: null,
+            // msg: null,
+            // type: null,
+            dismissible: false
         },
         
         computed: {
-            //alertView() { return this.$store.state.alertView }
+            title() { return this.$store.state.alert.title },
+            msg() { return this.$store.state.alert.msg },
+            classType() { return this.$store.state.alert.classType }
         },
 
         methods: {
-            alertClose() {
-				this.$store.commit('alertShow')
-			},
+            close() { this.$store.dispatch('alert/closeAlert') }
         },
+
+        watch: {
+            classType: function(newValue) {    
+                if (newValue=="alert-success" || newValue=="alert-info") {
+                    setTimeout(()=>{
+                        this.$store.dispatch('alert/closeAlert')
+                    }, 4000)
+                }
+            }
+        }
 
 
     }

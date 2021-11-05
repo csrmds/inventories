@@ -22,8 +22,12 @@ export default {
 		um: null,
 		status: null,
 		obs: null,
+		ocs_hw_id: null,
+		ocs_mon_id: null,
+		people_id: null,
 		created_at: null,
 		updated_at: null,
+
 		error: [],
 		resp: null,
 		action: []
@@ -70,6 +74,9 @@ export default {
 			state.um= product.um
 			state.status= product.status
 			state.obs= product.obs
+			state.ocs_hw_id= product.ocs_hw_id,
+			state.ocs_mon_id= product.ocs_mon_id,
+			state.people_id= product.people_id
 		},
 
 		cleanProduct(state) {
@@ -90,6 +97,9 @@ export default {
 			state.um= null
 			state.status= null
 			state.obs= null
+			state.ocs_hw_id= null,
+			state.ocs_mon_id= null,
+			state.people_id= null
 		},
 
 		cleanResp(state) {
@@ -104,9 +114,6 @@ export default {
 			const resp= await axios.post('/product/search', {
 				word: payload
 			})
-
-			//context.commit('setResp', resp.data)
-
 			return resp
 		},
 
@@ -115,13 +122,23 @@ export default {
 				word: payload.word,
 				column: payload.column
 			})
-
-			//context.commit('setResp', resp.data)
-
 			return resp
 		},
 
+		async save(context, payload) {
+			context.commit('cleanResp')
+			context.commit('cleanProduct')
+			const resp= await axios.post('/product/save', { product: payload})
+				.then(function (response) {
+					context.commit('setResp', "Produto salvo com sucesso")
+				})
+				.catch(function (error) {
+					context.commit('setError', error.response.data)
+				})
+		},
+
 		async update(context, payload) {
+			context.commit('cleanResp')
 			const resp= await axios.post('/product/update', payload)
 				.then(function (response) {
 					context.commit('cleanProduct')

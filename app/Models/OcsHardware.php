@@ -47,4 +47,9 @@ class OcsHardware extends Model
 		'category_id',
 		'archive'
 	];
+
+	public function tag()
+    {
+        return $this->hasOne(OcsAccountInfo::class, 'hardware_id', 'id');
+    }
 }

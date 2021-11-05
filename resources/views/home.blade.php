@@ -41,9 +41,9 @@
     @endif
 
     <div>
-        <b-button v-b-modal.modal-1>Launch demo modal</b-button>
+        <button class="btn btn-secondary btn-sm" v-b-modal="'modal-1'">Launch demo modal</button>
       
-        <b-modal id="modal-1" title="BootstrapVue">
+        <b-modal id="modal-1" title="Título">
           <p class="my-4">Hello from modal!</p>
         </b-modal>
     </div>

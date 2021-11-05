@@ -7,12 +7,13 @@
 			@input="list" 
 			@keydown.down="onArrowDown"
 			@keydown.up="onArrowUp"
-			@keydown.enter="callback"
-			@keydown.tab="isOpen=false"
-			:data-id="inputId"
+			@keydown.enter="onEnter"
+			@keydown.esc="isOpen=false"
+			@blur="onBlur"
 			:id="id"
 			type="text" 
-			class="form-control"
+			class="form-control form-control-sm"
+			autocomplete="off"
 		/>
 		<ul	v-show="isOpen" class="autocomplete-results">
 			<li v-if="isLoading" class="loading">
@@ -67,8 +68,8 @@ export default {
 			default: false
 		},
 		id: null,
-		callback: Function,
-		dispatch: Object
+		//callback: Function,
+		//dispatch: Object
 	},
 
 	data() {
@@ -78,8 +79,8 @@ export default {
 			isOpen: false,
 			arrowCounter: -1,
 			isLoading: false,
-			inputId: null,
-			attr: []
+			//inputId: null,
+			itemSelected: false,
 		};
 	},
 
@@ -89,10 +90,11 @@ export default {
 				item=> item.toLowerCase().indexOf(this.word.toLowerCase()) > -1
 			);
 		},
-
+	
 		async list() {
 			this.isLoading= true
 			this.results= []
+			
 			const resp= await this.$store.dispatch(this.source, { 
 				word: this.word, 
 				column: this.column
@@ -111,11 +113,38 @@ export default {
 		},
 
 		setResult(result) {
-			this.attr= result
-			this.$store.dispatch('product/loadInputs', result)
 			this.word= result.column
-			this.inputId= result.id
+			this.itemSelected= result
 			this.isOpen= false
+
+			this.$emit('itemSelected', this.itemSelected)
+		},
+
+		async onBlur() {
+			const resp= await this.$store.dispatch(this.source, { 
+				word: this.word, 
+				column: this.column
+			})
+			
+			if (this.itemSelected.column==this.word) {
+				console.log("o campo é igual")
+				console.log(this.itemSelected.column+" -> "+this.word)
+			} else {
+				console.log("o campo é difrerente")
+				console.log(this.itemSelected.column+" -> "+this.word)	
+
+				if (resp.data.length>0 && resp.data[0].column==this.word) {
+					console.log("o registro existe.. retornar itemSelected")
+					this.itemSelected= resp.data[0]
+				} else {
+					console.log("o registro não existe.. retornar itemSelected false")
+					this.itemSelected= false
+				}
+			}
+
+			this.isOpen= false
+			this.$emit('itemSelected', this.itemSelected)
+
 		},
 
 		handleClickOutside(event) {
@@ -141,22 +170,38 @@ export default {
 		},
 
 		onEnter() {
-			this.attr= this.results[this.arrowCounter]
+			//this.$store.dispatch('product/loadInputs', this.results[this.arrowCounter])
+			//this.inputId= this.results[this.arrowCounter].id
 			this.word= this.results[this.arrowCounter].column
-			this.inputId= this.results[this.arrowCounter].id
+			this.itemSelected= this.results[this.arrowCounter]
 			this.arrowCounter= -1
 			this.isOpen= false
+
+			this.$emit('itemSelected', this.itemSelected)
 		},
+
+		cleanResults() {
+			this.results=[],
+			this.isOpen= false,
+			this.arrowCounter= -1,
+			this.inputId= null
+		},
+
+		cleanWord() { this.word= null }
 
 	},
 
 	watch: {
 		items: function (value, oldValue) {
 			if (this.isAsync) {
-				this.results= value;
+				this.results= word;
 				this.isOpen= true;
 				this.isLoading= false;
 			}
+		},
+
+		word: function(newValue, oldValue) {
+
 		}
 	},
 
@@ -184,11 +229,13 @@ export default {
 	border: 1px solid #eeeeee;
 	height: 160px;
 	min-height: 1em;
+	min-width: 170px;
+	width: auto;
 	/*max-height: 6em;*/
 	overflow: auto;
 	z-index: 10;
 	position: absolute;
-	background-color: #eeeeee;
+	background-color: white;
 }
 
 .autocomplete-result {

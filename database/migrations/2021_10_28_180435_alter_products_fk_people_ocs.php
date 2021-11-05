@@ -21,8 +21,8 @@ class AlterProductsFkPeopleOcs extends Migration
             //$table->bigInteger('people_id')->nullable();
             
 
-            $table->foreign('ocs_hw_id')->references('id')->on('ocs_hardware');
-            $table->foreign('ocs_mon_id')->references('id')->on('ocs_monitors');
+            //$table->foreign('ocs_hw_id')->references('id')->on('ocs_hardware');
+            //$table->foreign('ocs_mon_id')->references('id')->on('ocs_monitors');
             //$table->foreignId('user_id')->constrained('users');
             $table->foreignId('people_id')->nullable()->constrained('people');
 
