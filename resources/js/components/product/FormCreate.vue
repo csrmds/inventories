@@ -3,14 +3,14 @@
 		<div class="form-row">
 			
 			<div class="col-sm-2" >
-				<c-autocomplete 
+				<c-autocomplete-axios 
 					id="property" 
 					label="Patrimonio" 
 					source="product/searchBy" 
 					column="property_id"
 					@itemSelected="autoComplete($event)"
 				>	
-				</c-autocomplete>
+				</c-autocomplete-axios>
 				<input type="hidden" id="product_id" v-model="product.id" >
 			</div>
 
@@ -47,7 +47,8 @@
 			
 			<div class="col-sm">
 				<label for="category">Categoria</label>
-				<input v-model="product.category" type="text" name="category" id="category" class="form-control form-control-sm input-text">
+				<c-autocomplete v-model="product.category" :list="pCategory" column="name" ></c-autocomplete>
+				<!-- <input v-model="product.category" type="text" name="category" id="category" class="form-control form-control-sm input-text"> -->
 				
 			</div>
 
@@ -152,7 +153,8 @@ import eventbus from '../eventbus'
 export default {
 	props: {
 		pType: { type: String },
-		pUm: { type: String }
+		pUm: { type: String },
+		pCategory: { type: String }
 	},
 
 	setup () {

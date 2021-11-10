@@ -25,11 +25,13 @@ Route::get('/authenticate/logout', [App\Http\Controllers\AuthenticateController:
 Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.index');
 Route::get('/people/create', [App\Http\Controllers\PeopleController::class, 'create'])->name('people.create');
 Route::get('/people/edit', [App\Http\Controllers\PeopleController::class, 'edit'])->name('people.edit');
-Route::get('/people/update', [App\Http\Controllers\PeopleController::class, 'update'])->name('people.update');
-Route::get('/people/destroy', [App\Http\Controllers\PeopleController::class, 'destroy'])->name('people.destroy');
+Route::post('/people/save', [App\Http\Controllers\PeopleController::class, 'save'])->name('people.save');
+Route::post('/people/update', [App\Http\Controllers\PeopleController::class, 'update'])->name('people.update');
+Route::post('/people/destroy', [App\Http\Controllers\PeopleController::class, 'destroy'])->name('people.destroy');
 Route::get('/people/faker', [App\Http\Controllers\PeopleController::class, 'faker'])->name('people.faker');
-Route::get('/people/search', [App\Http\Controllers\PeopleController::class, 'search'])->name('people.search');
-Route::get('/people/searchby', [App\Http\Controllers\PeopleController::class, 'searchby'])->name('people.searchby');
+Route::post('/people/search', [App\Http\Controllers\PeopleController::class, 'search'])->name('people.search');
+Route::post('/people/searchby', [App\Http\Controllers\PeopleController::class, 'searchby'])->name('people.searchby');
+Route::post('/people/getbyid', [App\Http\Controllers\PeopleController::class, 'getbyid'])->name('people.getbyid');
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
 Route::match(['get','post'], '/product/create', [App\Http\Controllers\ProductController::class, 'create'])->name('product.create');

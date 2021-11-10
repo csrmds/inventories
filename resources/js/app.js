@@ -46,6 +46,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('c-select', require('./components/form/Select.vue').default);
 Vue.component('c-autocomplete', require('./components/form/Autocomplete.vue').default);
+Vue.component('c-autocomplete-axios', require('./components/form/AutocompleteAxios.vue').default);
+
+Vue.component('c-people-table-list', require('./components/people/TableList.vue').default);
+Vue.component('c-people-form-edit', require('./components/people/FormEdit.vue').default);
 
 Vue.component('c-product-search', require('./components/product/InputSearch.vue').default);
 Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);

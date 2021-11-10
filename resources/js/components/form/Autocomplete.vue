@@ -1,226 +1,157 @@
 <template>
-	
-	<div class="autocomplete">
-		<label :for="id" v-if="label" >{{label}}</label>
-		<input 
-			v-model="word" 
-			@input="list" 
-			@keydown.down="onArrowDown"
-			@keydown.up="onArrowUp"
-			@keydown.enter="onEnter"
-			@keydown.esc="isOpen=false"
-			@blur="onBlur"
-			:id="id"
-			type="text" 
-			class="form-control form-control-sm"
-			autocomplete="off"
-		/>
-		<ul	v-show="isOpen" class="autocomplete-results">
-			<li v-if="isLoading" class="loading">
-				Carregando lista...
-			</li>
+    <div class="autocomplete">
+        <label v-if="label">{{ label }}</label>
+        <div class="input-group">
+            <input 
+                v-model="word"
+                :id="id"
+                @input="filter"
+                @keydown.down="onArrowDown"
+                @keydown.up="onArrowUp"
+                @keydown.enter="onEnter"
+                @keydown.esc="cleanResults"
+                @keydown.tab="cleanResults"
+                type="text"
+                class="form-control form-control-sm"
+                autocomplete="off"
+            />
+        </div>
+        
 
-			<li
-				v-else
-				v-for= "(result, i) in results"
-				:key= "i"
-				:id="'li_'+i"
-				:class="{'is-active': i===arrowCounter}"
-				@click= "setResult(result)"
-				class= "autocomplete-result"
-			>
-				{{ column ? result.column : result.name }}
-			</li>
-		</ul>
+        <ul v-show="divList" class="autocomplete-results">
+            <li v-if="isLoading" class="loading">
+                Carregando lista...
+            </li>
 
-	</div>
-
+            <li
+                v-else
+                v-for= "(result, i) in listFiltred"
+                :key= "i"
+                :id="'li_'+i"
+                :class= "{'is-active': i===arrowCounter}"
+                @click= "setItem(result)"
+                class="autocomplete-result"
+            >
+                {{ result[column] }}
+            </li>
+        </ul>
+    </div>
 </template>
 
-
 <script>
-//colocar minimo de caracteres como parametro
-//settimeout para pesquisar após keyup no input
+    export default {
+        props: {
+            list: null,
+            column: null,
+            label: null,
+            id: null
+        },
 
-export default {
-	//name: 'SearchAutocomplete',
-	props: {
-		items: {
-			type: Array,
-			required: false
-		},
-		isAsync: {
-			type: Boolean,
-			required: false,
-			default: false
-		},
-		label: {
-			type: String,
-			default: null
-		},
-		source: {
-			type: String,
-			required: true
-		},
-		column: {
-			type: String,
-			required: false,
-			default: false
-		},
-		id: null,
-		//callback: Function,
-		//dispatch: Object
-	},
+        data() {
+            return {
+                word: null,
+                divList: false,
+                arrowCounter: -1,
+                isLoading: false,
+                itemSelected: false,
+                listFiltred: null,
+            }
+        },
 
-	data() {
-		return {
-			word: '',
-			results: [],
-			isOpen: false,
-			arrowCounter: -1,
-			isLoading: false,
-			//inputId: null,
-			itemSelected: false,
-		};
-	},
+        computed: {
+            listObj() {
+                if (typeof(this.list)=="object") {
+                    return this.list
+                } else {
+                    return JSON.parse(this.list)
+                }
+            }
+        },
 
-	methods: {
-		filterResult() {
-			this.results= this.items.filter(
-				item=> item.toLowerCase().indexOf(this.word.toLowerCase()) > -1
-			);
-		},
-	
-		async list() {
-			this.isLoading= true
-			this.results= []
-			
-			const resp= await this.$store.dispatch(this.source, { 
-				word: this.word, 
-				column: this.column
-			})
+        methods: {
+            
 
-			if (resp.data.length<1) {
-				this.isOpen= false
-			} else {
-				resp.data.forEach((element, i) => {
-					this.results.push(element)
-				});
-				this.isLoading= false
-				this.isOpen= true
-			}
+            filter() {
+                let word= this.word.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+                let col= this.column.toLowerCase()
+                this.listFiltred= this.listObj.filter(function(item, i) {
+                    let name= item[col].toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+                    return name.indexOf(word)>-1 ? item : false
+                })
+            },
 
-		},
+            setItem(param) {
+                this.word= param[this.column]
+                this.itemSelected= param
+                this.divList= false
+                this.arrowCounter= -1
 
-		setResult(result) {
-			this.word= result.column
-			this.itemSelected= result
-			this.isOpen= false
+                //this.$emit('itemSelected', this.itemSelected)
+            },
 
-			this.$emit('itemSelected', this.itemSelected)
-		},
+            handleClickOutside(event) {
+                if (!this.$el.contains(event.target)) {
+                    this.arrowCounter= -1
+                    this.divList= false
+                }
+            },
 
-		async onBlur() {
-			const resp= await this.$store.dispatch(this.source, { 
-				word: this.word, 
-				column: this.column
-			})
-			
-			if (this.itemSelected.column==this.word) {
-				console.log("o campo é igual")
-				console.log(this.itemSelected.column+" -> "+this.word)
-			} else {
-				console.log("o campo é difrerente")
-				console.log(this.itemSelected.column+" -> "+this.word)	
+            onArrowUp() {
+                if (this.arrowCounter>0) {
+                    this.arrowCounter--
+                    $("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
+                }
+            },
 
-				if (resp.data.length>0 && resp.data[0].column==this.word) {
-					console.log("o registro existe.. retornar itemSelected")
-					this.itemSelected= resp.data[0]
-				} else {
-					console.log("o registro não existe.. retornar itemSelected false")
-					this.itemSelected= false
-				}
-			}
+            onArrowDown() {
+                this.divList==false ? this.divList=true : false
+                if (this.arrowCounter < this.listFiltred.length-1) {
+                    this.arrowCounter++
+                    $("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
+                }
+            },
 
-			this.isOpen= false
-			this.$emit('itemSelected', this.itemSelected)
+            onEnter() {
+                this.word= this.listFiltred[this.arrowCounter][this.column]
+                this.itemSelected= this.listFiltred[this.arrowCounter]
+                this.arrowCounter= -1
+                this.divList= false
+            },
 
-		},
+            cleanResults() {
+                this.arrowCounter= -1
+                this.divList= false
+            }
 
-		handleClickOutside(event) {
-			if (!this.$el.contains(event.target)) {
-				this.arrowCounter= -1;
-				this.isOpen= false;
-				this.word=="" ? this.inputId=null : false
-			}
-		},
+            // filtro2() {
+            //     let word= this.word.toLowerCase()
+            //     this.listFiltred= this.listObj.filter(function(item, i) {
+            //         let name= item.first_name.concat(" ", item.last_name).toLowerCase()
+            //         return name.indexOf(word)>-1 ? item : false
+            //     })
+            // },
 
-		onArrowDown() {
-			if (this.arrowCounter < this.results.length-1) {
-				this.arrowCounter++
-				$("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
-			}
-		},
+        },
 
-		onArrowUp() {
-			if (this.arrowCounter > 0) {
-				this.arrowCounter--
-				$("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
-			}
-		},
+        watch: {
+            listFiltred: function(newValue, oldValue) {
+                this.divList= true
+            }
+        },
 
-		onEnter() {
-			//this.$store.dispatch('product/loadInputs', this.results[this.arrowCounter])
-			//this.inputId= this.results[this.arrowCounter].id
-			this.word= this.results[this.arrowCounter].column
-			this.itemSelected= this.results[this.arrowCounter]
-			this.arrowCounter= -1
-			this.isOpen= false
+        mounted() {
+            document.addEventListener('click', this.handleClickOutside);
+        },
 
-			this.$emit('itemSelected', this.itemSelected)
-		},
-
-		cleanResults() {
-			this.results=[],
-			this.isOpen= false,
-			this.arrowCounter= -1,
-			this.inputId= null
-		},
-
-		cleanWord() { this.word= null }
-
-	},
-
-	watch: {
-		items: function (value, oldValue) {
-			if (this.isAsync) {
-				this.results= word;
-				this.isOpen= true;
-				this.isLoading= false;
-			}
-		},
-
-		word: function(newValue, oldValue) {
-
-		}
-	},
-
-	mounted() {
-		document.addEventListener('click', this.handleClickOutside);
-	},
-
-	destroyed() {
-		document.removeEventListener('click', this.handleClickOutside);
-	},
+        destroyed() {
+            document.removeEventListener('click', this.handleClickOutside);
+        },
 
 
-}
-
-
+    }
 </script>
 
-<style>
-
+<style scoped>
 .autocomplete { position: relative; }
 
 .autocomplete-results {
@@ -233,7 +164,7 @@ export default {
 	width: auto;
 	/*max-height: 6em;*/
 	overflow: auto;
-	z-index: 10;
+	z-index: 1000;
 	position: absolute;
 	background-color: white;
 }
@@ -251,5 +182,4 @@ export default {
 	background-color: #4aae9b;
 	color: white;
 }
-
 </style>

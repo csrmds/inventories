@@ -1,0 +1,184 @@
+import { faSave } from "@fortawesome/free-regular-svg-icons"
+import axios from "axios"
+import { update } from "lodash"
+
+export default {
+    namespaced: true,
+
+    state: {
+        id: null,
+        first_name: null,
+        last_name: null,
+        nick_name: null,
+        type: null,
+        category: null,
+        birth_date: null,
+        zipcode: null,
+        country: null,
+        state: null,
+        city: null,
+        district: null,
+        address: null,
+        number: null,
+        complement: null,
+        rg: null,
+        cpf: null,
+        cnpj: null,
+        ie: null,
+        created_at: null,
+        updated_at: null,
+        sistema: null,
+
+        error: null,
+        resp: null
+    },
+
+    getters: {
+        getResp(state) {
+            return {resp: state.resp, error: state.error}
+        }
+    },
+
+    mutations: {
+        setResp(state, payload) {
+            state.resp= payload
+        },
+
+        setError(state, payload) {
+            state.error= payload
+        },
+
+        setPeople(state, people) {
+            state.id= people.id,
+            state.first_name= people.first_name,
+            state.last_name= people.last_name,
+            state.nick_name= people.nick_name,
+            state.type= people.type,
+            state.category= people.category,
+            state.birth_date= people.birth_date,
+            state.zipcode= people.zipcode,
+            state.country= people.country,
+            state.state= people.state,
+            state.city= people.city,
+            state.district= people.district,
+            state.address= people.address,
+            state.number= people.number,
+            state.complement= people.complement,
+            state.rg= people.rg,
+            state.cpf= people.cpf,
+            state.cnpj= people.cnpj,
+            state.ie= people.ie,
+            state.sistema= people.sistema
+        },
+
+        cleanPeople(state) {
+            state.id= null,
+            state.first_name= null,
+            state.last_name= null,
+            state.nick_name= null,
+            state.type= null,
+            state.category= null,
+            state.birth_date= null,
+            state.zipcode= null,
+            state.country= null,
+            state.state= null,
+            state.city= null,
+            state.district= null,
+            state.address= null,
+            state.number= null,
+            state.complement= null,
+            state.rg= null,
+            state.cpf= null,
+            state.cnpj= null,
+            state.ie= null,
+            state.sistema= null,
+            state.created_at= null,
+            state.updated_at= null
+        },
+
+        cleanResp(state) {
+            state.error= null,
+            state.resp= null
+        }
+
+
+    },
+
+    actions: {
+        async search(context, payload) {
+            const resp= await axios.post('/people/search', {
+                word: payload
+            })
+            return resp
+        },
+
+        async searchBy(context, payload) {
+            const resp= await axios.post('/people/searchby', {
+                word: payload.word,
+                column: payload.column
+            })
+            return resp
+        },
+
+        async getById(context, payload) {
+            const resp= await axios.post('/people/getbyid', {
+                id: payload
+            })
+            if (resp.data[0].id>0) {
+                context.commit('setPeople', resp.data[0])
+                return resp.data[0]
+            } else {
+                return resp
+            }
+        },
+
+        async save(context, payload) {
+            context.commit('cleanResp')
+            const resp= await axios.post('/people/save', { people: payload })
+                .then(function(response) {
+                    context.commit('cleanPeople')
+                    context.commit('setResp', "Cadastro salvo com sucesso")
+                })
+                .catch(function (error) {
+                    context.commit('setError', error.response.data)
+                })
+        },
+
+        async update(context, payload) {
+            context.commit('cleanResp')
+            const resp= await axios.post('/people/update', payload)
+                .then(function (response) {
+                    context.commit('cleanPeople')
+                    context.commit('setResp', "Alteração feita com sucesso")
+                    return resp.data
+                })
+                .catch(function (error) {
+                    context.commit('setError', error.response.data)
+                    return error.response.data
+                })
+        },
+
+        async destroy(context, payload) {
+			context.commit('cleanResp')
+			const resp= await axios.post('/people/destroy', {id: payload})
+				.then(function (response) {
+                    //context.commit('cleanPeople')
+					context.commit('setResp', "Registro deletado com sucesso")
+					return resp
+				})
+				.catch( (error)=> {
+					context.commit('setError', error.response.data)
+					return error.response.data
+				})
+		},
+
+        loadInputs(context, people) {
+            if(typeof(people)=="object") {
+                context.commit('setPeople', people)
+            } else { 
+                people= JSON.parse(people)
+                context.commit('setPeople', people)
+            }
+        }
+    }
+}

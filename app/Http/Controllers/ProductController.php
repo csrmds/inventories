@@ -18,27 +18,27 @@ class ProductController extends Controller
         $this->product= new Product;
     }
 
-    protected function setProprieties($proprieties) {
-        //$this->product->id= "cesar"; //$proprieties['id'];
-        $this->product->name= $proprieties['name'];
-        $this->product->reference= $proprieties['reference'];
-        $this->product->description= $proprieties['description'];
-        $this->product->type= $proprieties['type'];
-        $this->product->category= $proprieties['category'];
-        $this->product->manufacturer= $proprieties['manufacturer'];
-        $this->product->brand= $proprieties['brand'];
-        $this->product->model= $proprieties['model'];
-        $this->product->sn= $proprieties['sn'];
-        $this->product->tag= $proprieties['tag'];
-        $this->product->property_id= $proprieties['property_id'];
-        $this->product->size_id= $proprieties['size_id'];
-        $this->product->color_id= $proprieties['color_id'];
-        $this->product->um= $proprieties['um'];
-        $this->product->status= $proprieties['status'];
-        $this->product->obs= $proprieties['obs'];
-        $this->product->ocs_hw_id= $proprieties['ocs_hw_id'];
-        $this->product->ocs_mon_id= $proprieties['ocs_mon_id'];
-        $this->product->people_id= $proprieties['people_id'];
+    protected function setProperties($properties) {
+        //$this->product->id= "cesar"; //$properties['id'];
+        $this->product->name= $properties['name'];
+        $this->product->reference= $properties['reference'];
+        $this->product->description= $properties['description'];
+        $this->product->type= $properties['type'];
+        $this->product->category= $properties['category'];
+        $this->product->manufacturer= $properties['manufacturer'];
+        $this->product->brand= $properties['brand'];
+        $this->product->model= $properties['model'];
+        $this->product->sn= $properties['sn'];
+        $this->product->tag= $properties['tag'];
+        $this->product->property_id= $properties['property_id'];
+        $this->product->size_id= $properties['size_id'];
+        $this->product->color_id= $properties['color_id'];
+        $this->product->um= $properties['um'];
+        $this->product->status= $properties['status'];
+        $this->product->obs= $properties['obs'];
+        $this->product->ocs_hw_id= $properties['ocs_hw_id'];
+        $this->product->ocs_mon_id= $properties['ocs_mon_id'];
+        $this->product->people_id= $properties['people_id'];
     }
 
     /**
@@ -55,13 +55,14 @@ class ProductController extends Controller
     {
         $type= DB::table('groups')->where('table', 'product_type')->get();
         $um= DB::table('groups')->where('table', 'product_um')->get();
+        $category= DB::table('groups')->where('table', 'product_category')->get();
 
-        return view('product.create', compact('type','um'));
+        return view('product.create', compact('type','um', 'category'));
     }
 
     public function save(Request $request)
     {
-        $this->setProprieties($request->input('product'));
+        $this->setProperties($request->input('product'));
         try {
             $this->product->save();
             return json_encode($this->product);
@@ -78,7 +79,7 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $this->product= Product::Find($request->input('id'));
-        $this->setProprieties($request->all());
+        $this->setProperties($request->all());
         try {
             $this->product->save();
             return response(json_encode($this->product));

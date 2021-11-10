@@ -9,6 +9,7 @@
     <c-product-form-create
         p-type="{{ json_encode($type) }}"
         p-um="{{ json_encode($um) }}"
+        p-category="{{ json_encode($category) }}"
     />
 
 </div>

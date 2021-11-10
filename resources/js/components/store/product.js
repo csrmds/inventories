@@ -152,6 +152,19 @@ export default {
 				})
 		},
 
+		async destroy(payload) {
+			context.commit('cleanResp')
+			const resp= await axios.post('/product/destroy', payload)
+				.then(function (response) {
+					context.commit('setResp', "Registro deletado com sucesso")
+					return resp.data
+				})
+				.catch(function (error) {
+					context.commit('setError', error.response.data)
+					return error.response.data
+				})
+		},
+
 		loadInputs(context, product) {
 			if (typeof(product)=="object") {
 				context.commit('setProduct', product)
