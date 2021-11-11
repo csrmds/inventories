@@ -32,6 +32,7 @@ Route::get('/people/faker', [App\Http\Controllers\PeopleController::class, 'fake
 Route::post('/people/search', [App\Http\Controllers\PeopleController::class, 'search'])->name('people.search');
 Route::post('/people/searchby', [App\Http\Controllers\PeopleController::class, 'searchby'])->name('people.searchby');
 Route::post('/people/getbyid', [App\Http\Controllers\PeopleController::class, 'getbyid'])->name('people.getbyid');
+Route::post('/people/listcategory', [App\Http\Controllers\PeopleController::class, 'listcategory'])->name('people.listcategory');
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
 Route::match(['get','post'], '/product/create', [App\Http\Controllers\ProductController::class, 'create'])->name('product.create');
@@ -51,6 +52,8 @@ Route::get('/group/all', [App\Http\Controllers\GroupController::class, 'all'])->
 Route::post('/group/search', [App\Http\Controllers\GroupController::class, 'search'])->name('group.search');
 Route::post('/group/getbytable', [App\Http\Controllers\GroupController::class, 'getByTable'])->name('group.getByTable');
 Route::post('/group/getbyid', [App\Http\Controllers\GroupController::class, 'getById'])->name('group.getById');
+
+Route::get('/location', [App\Http\Controllers\LocationController::class, 'index'])->name('location');
 
 Route::post('/ocs/search', [App\Http\Controllers\OcsHardwareController::class, 'search'])->name('ocs.search');
 Route::post('/ocs/searchbyid/{id?}', [App\Http\Controllers\OcsHardwareController::class, 'searchById'])->name('ocs.searchById');

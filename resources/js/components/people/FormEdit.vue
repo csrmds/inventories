@@ -3,44 +3,68 @@
         <div class="form-row">
             <div class="col-sm-2">
                 <label for="type">Tipo</label>
-                <select name="type" id="type" class="form-control form-control-sm" v-model="people.type">
+                <select 
+                    v-model="people.type"
+                    name="type" 
+                    id="type" 
+                    class="form-control form-control-sm"
+                    :class="validation.type.invalid ? 'is-invalid' : null"
+                    aria-describedby="type-invalid"
+                >
                     <option value="F">Física</option>
                     <option value="J">Jurídica</option>
                 </select>
+                <div id="type-invalid" class="invalid-feedback">
+                    {{ validation.type.msg }}
+                </div>
 
             </div>
 
             <div class="col-sm-3">
                 <template v-if="people.type=='F'">
                     <label for="">Nome</label>
-                    <input v-model="people.first_name" type="text" class="form-control form-control-sm">
+                    <input 
+                        v-model="people.first_name" 
+                        type="text" 
+                        :class="validation.first_name.invalid ? 'is-invalid' : null"
+                        class="form-control form-control-sm"
+                        aria-describedby="first_name-invalid">
                 </template>
                 <template v-else>
                     <label for="">Razão Social</label>
-                    <input v-model="people.first_name" type="text" class="form-control form-control-sm">
+                    <input 
+                        v-model="people.first_name" 
+                        type="text" 
+                        :class="validation.first_name.invalid ? 'is-invalid' : null"
+                        class="form-control form-control-sm"
+                        aria-describedby="first_name-invalid">
                 </template>
+                <div id="first_name-invalid" class="invalid-feedback">
+                    {{ validation.first_name.msg }}
+                </div>
 
             </div>
 
             <div class="col-sm-2">
                 <label for="">Categoria</label>
-                <input v-model="people.category" type="text" class="form-control form-control-sm">
+                <c-autocomplete v-model="people.category" :list="categories" column="name" ></c-autocomplete>
+                <!-- <input v-model="people.category" type="text" class="form-control form-control-sm"> -->
             </div>
 
             <div class="col-sm-2">
                 <label for="">Nascimento</label>
-                <input v-if="people.type=='F'" v-model="people.birth_date" type="text" class="form-control form-control-sm">
+                <input v-if="people.type=='F'" v-model="birth_date" v-mask="'##/##/####'" type="text" class="form-control form-control-sm">
                 <input v-else type="text" class="form-control form-control-sm" disabled>
             </div>
 
             <div class="col-sm-2">
                 <template v-if="people.type=='F'">
                     <label for="">CPF</label>
-                    <input v-model="people.cpf" type="text" class="form-control form-control-sm">
+                    <input v-model="people.cpf" v-mask="'###.###.###-##'" type="text" class="form-control form-control-sm">
                 </template>
                 <template v-else>
                     <label for="">CNPJ</label>
-                    <input v-model="people.cnpj" type="text" class="form-control form-control-sm">
+                    <input v-model="people.cnpj" v-mask="'##.###.###/####-##'" type="text" class="form-control form-control-sm">
                 </template>
             </div>
 
@@ -48,8 +72,9 @@
 
         <div class="form-row">
             <div class="col-sm-2">
-                <label for="">CEP</label>
-                <input v-model="people.zipcode" type="text" class="form-control form-control-sm">
+                <c-cep label="CEP" @ibge="loadCep($event)"></c-cep>
+                <!-- <label for="">CEP</label>
+                <input v-model="people.zipcode" v-mask="'#####-###'" type="text" class="form-control form-control-sm"> -->
             </div>
 
             <div class="col-sm-3">
@@ -98,7 +123,7 @@
 
         <div class="row">
             <div class="col-sm-2">
-                <button class="btn btn-sm btn-primary" @click="save">Salvar</button>
+                <button class="btn btn-sm btn-primary" @click="validate">Salvar</button>
             </div>
         </div>
 
@@ -108,42 +133,99 @@
 
 <script>
 import useVuelidate from '@vuelidate/core'
-import { required } from '@vuelidate/validators'
+import { required, requiredUnless } from '@vuelidate/validators'
 
 export default {
-    props: {
-
-    },
 
     data() {
         return {
-            ufs: this.$store.state.ufs
+            ufs: this.$store.state.ufs,
+            birth_date: null,
+
+            validation: {
+                type: {
+                    msg: "Campo obrigatório",
+					invalid: false
+                },
+                first_name: {
+                    msg: "Campo obrigatório",
+					invalid: false
+                }
+            }
         }
     },
+
+    validations() {
+        return {
+            type: { required },
+            first_name: { required }
+        }
+    },
+
+    setup () {
+		return { $v: useVuelidate() }
+	},
 
     computed: {
         people() { return this.$store.state.people },
         error() { return this.$store.state.people.error },
         resp() { return this.$store.state.people.resp },
-        alert() { return this.$store.state.alert }
+        alert() { return this.$store.state.alert },
+        categories() { return this.$store.state.people.categories },
+        type() { return this.people.type },
+        first_name() { return this.people.first_name }
     },
 
     mounted() {
-        
+        this.loadCategory()
+        this.birthDate()
     },
 
     methods: {
+
         async save() {
             if (this.people.id>0) {
-                console.log("entrou no update: "+this.people.id)
                 await this.$store.dispatch('people/update', this.people)
             } else {
-                console.log("entrou no salvar: "+this.people.id)
-                console.log(this.people)
                 await this.$store.dispatch('people/save', this.people)
             }
-            
+        },
+
+        async validate() {
+            if (this.birth_date!=null) {
+                let date= this.birth_date.split('/')
+                this.people.birth_date= date[2]+'-'+date[1]+'-'+date[0]
+            }
+
+            this.$v.$touch()
+            if (this.$v.$invalid) {
+                this.$v.first_name.$invalid ? this.validation.first_name.invalid= true : this.validation.first_name.invalid= false
+                this.$v.type.$invalid ? this.validation.type.invalid= true : this.validation.type.invalid= false
+                return false
+            }
+
+            this.validation.first_name.invalid= false
+            this.validation.type.invalid= false
+            this.save()
+        },
+
+        loadCep(param) {
+            this.$store.dispatch('people/loadAddress', param)
+        },
+
+        async loadCategory() {
+            await this.$store.dispatch('people/listCategory')
+        },
+
+        birthDate() {
+            let date= this.$store.state.people.birth_date.split("-")
+            this.birth_date= date[2]+"/"+date[1]+"/"+date[0]
         }
+
+        // async convertBirthDate() {
+        //     this.$store.state.people.birth_date= await this.$store.dispatch('convertData', this.birthDate())
+            
+        // }
     },
 
     watch: {

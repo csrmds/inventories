@@ -49,7 +49,7 @@
 
         data() {
             return {
-                word: null,
+                word: "",
                 divList: false,
                 arrowCounter: -1,
                 isLoading: false,

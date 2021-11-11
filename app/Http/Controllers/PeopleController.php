@@ -162,6 +162,12 @@ class PeopleController extends Controller
         return json_encode($people);
     }
 
+    public function listCategory()
+    {
+        $category= DB::table('groups')->where('table', 'people_category')->get();
+        return json_encode($category);
+    }
+
     public function faker() {
         
         $faker= Factory::create('pt_BR');

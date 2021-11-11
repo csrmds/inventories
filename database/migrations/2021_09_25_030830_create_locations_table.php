@@ -13,6 +13,8 @@ class CreateLocationsTable extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('people_id')->constrained('people');
@@ -21,6 +23,8 @@ class CreateLocationsTable extends Migration
             $table->decimal('product_qtd')->nullable();
             $table->timestamps();
         });
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

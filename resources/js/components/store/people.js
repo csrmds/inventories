@@ -29,6 +29,8 @@ export default {
         updated_at: null,
         sistema: null,
 
+        categories: null,
+
         error: null,
         resp: null
     },
@@ -36,7 +38,7 @@ export default {
     getters: {
         getResp(state) {
             return {resp: state.resp, error: state.error}
-        }
+        },
     },
 
     mutations: {
@@ -99,9 +101,20 @@ export default {
         cleanResp(state) {
             state.error= null,
             state.resp= null
+        },
+
+        setAddress(state, payload) {
+            state.zipcode= payload.cep
+            state.state= payload.uf
+            state.city= payload.city
+            state.district= payload.district
+            state.address= payload.address
+            state.complement= payload.complement
+        },
+
+        setCategories(state, payload) {
+            state.categories= payload
         }
-
-
     },
 
     actions: {
@@ -150,7 +163,7 @@ export default {
                 .then(function (response) {
                     context.commit('cleanPeople')
                     context.commit('setResp', "Alteração feita com sucesso")
-                    return resp.data
+                    return response
                 })
                 .catch(function (error) {
                     context.commit('setError', error.response.data)
@@ -179,6 +192,21 @@ export default {
                 people= JSON.parse(people)
                 context.commit('setPeople', people)
             }
+        },
+
+        loadAddress(context, payload) {
+            context.commit('setAddress', payload)
+        },
+
+        async listCategory(context) {
+            await axios.post('/people/listcategory')
+                .then((response)=> {
+                    context.commit('setCategories', response.data)
+                })
+                .catch((error)=> {
+                    console.log("error: "+error)
+                    return error
+                })
         }
     }
 }

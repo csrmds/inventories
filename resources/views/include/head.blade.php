@@ -33,6 +33,9 @@
 				<a class="nav-link" href="{{ route('group.index') }}">GRUPOS</a>
 			</li>
 			<li class="nav-item">
+				<a class="nav-link" href="{{ route('location') }}">LOCAIS</a>
+			</li>
+			<li class="nav-item">
 				<a class="nav-link" href="{{ route('teste') }}">TESTE</a>
 			</li>
 		</ul>

@@ -56,7 +56,22 @@ export default new Vuex.Store({
     },
 
     actions: {
-
+        async convertData(context, payload) {
+            console.log('store convertData')
+            console.log('payload '+payload)
+            let date= null
+            if (payload.indexOf('/')>-1) {
+                date= payload.split('/')
+                date= date[2]+"-"+date[1]+"-"+date[0]
+                console.log("date DB "+date)
+            } else {
+                date= payload.split(' ')
+                date= date[0].split('-')
+                date= date[2]+"/"+date[1]+"/"+date[0]
+                console.log("date PT "+date)
+            }
+            return await date
+        }
     },
 
     modules: {

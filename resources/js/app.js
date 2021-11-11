@@ -31,6 +31,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 // Optionally install the BootstrapVue icon components plugin
 //Vue.use(IconsPlugin)
 
+// The Mask input for Vue.js
+import VueTheMask from 'vue-the-mask'
+Vue.use(VueTheMask)
 
 /**
  * The following block of code may be used to automatically register your
@@ -47,6 +50,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.component('c-select', require('./components/form/Select.vue').default);
 Vue.component('c-autocomplete', require('./components/form/Autocomplete.vue').default);
 Vue.component('c-autocomplete-axios', require('./components/form/AutocompleteAxios.vue').default);
+Vue.component('c-cep', require('./components/form/Cep.vue').default);
 
 Vue.component('c-people-table-list', require('./components/people/TableList.vue').default);
 Vue.component('c-people-form-edit', require('./components/people/FormEdit.vue').default);
