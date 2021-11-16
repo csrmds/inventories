@@ -3,11 +3,11 @@
 @section('content')
 
 <div class="container">
-    <h1>Localizações / Depositos</h1>
+    <h1>Locais / Depósitos / Estoques</h1>
 
-    <div class="row">
+    <div class="form-row">
         <div class="col-sm">
-            {{ print_r($location) }}
+            <c-location-table-list></c-location-table-list>
         </div>
     </div>
 

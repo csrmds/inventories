@@ -12,9 +12,8 @@ class Location extends Model
     protected $fillable=[
         'id',
         'people_id',
+        'name',
         'description',
-        'product_id',
-        'product_qtd',
         'created_at',
         'updated_at'
     ];

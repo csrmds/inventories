@@ -33,6 +33,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // The Mask input for Vue.js
 import VueTheMask from 'vue-the-mask'
+import Vue from 'vue';
 Vue.use(VueTheMask)
 
 /**
@@ -65,6 +66,9 @@ Vue.component('c-alert', require('./components/import/Alert.vue').default);
 
 Vue.component('c-ocs-form-search', require('./components/ocs/FormSearch.vue').default);
 Vue.component('c-ocs-card-info', require('./components/ocs/CardInfo.vue').default);
+
+Vue.component('c-location-table-list', require('./components/location/TableList.vue').default);
+Vue.component('c-location-form', require('./components/location/Form.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

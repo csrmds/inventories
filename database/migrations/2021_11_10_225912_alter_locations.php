@@ -16,11 +16,10 @@ class AlterLocations extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::table('locations', function (Blueprint $table) {
-            $table->dropForeign('locations_product_id_foreign');
-            $table->dropColumn(['product_qtd', 'product_id']);
             $table->string('name')->after('people_id');
-            $table->string('hierarchy')->nullable()->after('description');
             $table->string('description')->nullable()->change();
+            $table->dropForeign('locations_product_id_foreign');
+            $table->dropColumn(['product_id', 'product_qtd']);
         });
 
         Schema::enableForeignKeyConstraints();
@@ -36,9 +35,7 @@ class AlterLocations extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::table('locations', function (Blueprint $table) {
-            $table->dropColumn(['name', 'hierarchy']);
-            $table->foreignId('product_id')->constrained('products')->nullable();
-            $table->decimal('product_qtd')->nullable();
+            $table->dropColumn(['name']);
         });
 
         Schema::enableForeignKeyConstraints();

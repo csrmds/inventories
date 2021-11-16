@@ -120,8 +120,10 @@ export default {
     actions: {
         async search(context, payload) {
             const resp= await axios.post('/people/search', {
-                word: payload
+                word: payload.word,
+                page: payload.page
             })
+            //console.log(payload)
             return resp
         },
 

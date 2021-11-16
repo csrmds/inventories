@@ -29,7 +29,7 @@ Route::post('/people/save', [App\Http\Controllers\PeopleController::class, 'save
 Route::post('/people/update', [App\Http\Controllers\PeopleController::class, 'update'])->name('people.update');
 Route::post('/people/destroy', [App\Http\Controllers\PeopleController::class, 'destroy'])->name('people.destroy');
 Route::get('/people/faker', [App\Http\Controllers\PeopleController::class, 'faker'])->name('people.faker');
-Route::post('/people/search', [App\Http\Controllers\PeopleController::class, 'search'])->name('people.search');
+Route::match(['get','post'], '/people/search', [App\Http\Controllers\PeopleController::class, 'search'])->name('people.search');
 Route::post('/people/searchby', [App\Http\Controllers\PeopleController::class, 'searchby'])->name('people.searchby');
 Route::post('/people/getbyid', [App\Http\Controllers\PeopleController::class, 'getbyid'])->name('people.getbyid');
 Route::post('/people/listcategory', [App\Http\Controllers\PeopleController::class, 'listcategory'])->name('people.listcategory');
@@ -54,6 +54,12 @@ Route::post('/group/getbytable', [App\Http\Controllers\GroupController::class, '
 Route::post('/group/getbyid', [App\Http\Controllers\GroupController::class, 'getById'])->name('group.getById');
 
 Route::get('/location', [App\Http\Controllers\LocationController::class, 'index'])->name('location');
+Route::post('/location/save', [App\Http\Controllers\LocationController::class, 'save'])->name('location.save');
+Route::post('/location/update', [App\Http\Controllers\LocationController::class, 'update'])->name('location.update');
+Route::post('/location/destroy', [App\Http\Controllers\LocationController::class, 'destroy'])->name('location.destroy');
+Route::post('/location/search', [App\Http\Controllers\LocationController::class, 'search'])->name('location.search');
+Route::post('/location/getbyid', [App\Http\Controllers\LocationController::class, 'getbyid'])->name('location.getbyid');
+
 
 Route::post('/ocs/search', [App\Http\Controllers\OcsHardwareController::class, 'search'])->name('ocs.search');
 Route::post('/ocs/searchbyid/{id?}', [App\Http\Controllers\OcsHardwareController::class, 'searchById'])->name('ocs.searchById');

@@ -78,12 +78,6 @@ class PeopleController extends Controller
     }
 
 
-    public function create()
-    {
-        //
-    }
-
-
     public function save(Request $request)
     {
         $this->setProperties($request->input('people'));
@@ -94,18 +88,6 @@ class PeopleController extends Controller
         } catch(\Exception $e) {
             return response(json_encode($e->getMessage()), 418);
         }
-    }
-
-
-    public function show(People $people)
-    {
-        echo "<p>Eita</p>";
-    }
-
-
-    public function edit(People $people)
-    {
-        //
     }
 
 
@@ -138,10 +120,12 @@ class PeopleController extends Controller
     public function search(Request $request)
     {
         $data= $request->input('word');
+        
         $people= DB::table('people')
-            ->where('first_name', 'like', $data['word'].'%')
-            ->orWhere('last_name', 'like', $data['word'].'%')
-            ->orWhere('nick_name', 'like', $data['word'].'%')->get();
+            ->where('first_name', 'like', $data.'%')
+            ->orWhere('last_name', 'like', $data.'%')
+            ->orWhere('nick_name', 'like', $data.'%')
+            ->paginate(5);
         
         return json_encode($people);
     }

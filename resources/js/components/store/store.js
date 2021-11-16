@@ -7,6 +7,7 @@ import group from "./group"
 import ocsHardware from "./ocshardware"
 import alert from "./alert"
 import people from "./people"
+import location from "./location"
 
 
 Vue.use(Vuex)
@@ -80,6 +81,7 @@ export default new Vuex.Store({
         group: group,
         ocsHardware: ocsHardware,
         alert: alert,
-        people: people
+        people: people,
+        location: location
     }
 })

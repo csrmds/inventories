@@ -41,6 +41,7 @@
 <script>
 //colocar minimo de caracteres como parametro
 //settimeout para pesquisar após keyup no input
+import eventbus from '../eventbus'
 
 export default {
 	//name: 'SearchAutocomplete',
@@ -67,9 +68,7 @@ export default {
 			required: false,
 			default: false
 		},
-		id: null,
-		//callback: Function,
-		//dispatch: Object
+		id: null
 	},
 
 	data() {
@@ -170,8 +169,6 @@ export default {
 		},
 
 		onEnter() {
-			//this.$store.dispatch('product/loadInputs', this.results[this.arrowCounter])
-			//this.inputId= this.results[this.arrowCounter].id
 			this.word= this.results[this.arrowCounter].column
 			this.itemSelected= this.results[this.arrowCounter]
 			this.arrowCounter= -1
@@ -181,13 +178,23 @@ export default {
 		},
 
 		cleanResults() {
-			this.results=[],
-			this.isOpen= false,
-			this.arrowCounter= -1,
+			this.results=[]
+			this.isOpen= false
+			this.arrowCounter= -1
 			this.inputId= null
+			this.itemSelected= null
 		},
 
-		cleanWord() { this.word= null }
+		cleanWord() { this.word= null },
+
+		// loadInput() {
+		// 	if (this.itemInput!=null) {
+		// 		console.log('carregou loadInput')
+		// 		this.itemSelected= this.itemInput
+		// 		this.word= this.itemSelected[this.column]
+		// 		console.log(this.itemSelected[this.column])
+		// 	}
+		// }
 
 	},
 
@@ -200,13 +207,29 @@ export default {
 			}
 		},
 
-		word: function(newValue, oldValue) {
-
-		}
+		// itemInput(newValue) {
+		// 	console.log(newValue)
+		// 	this.loadInput()
+		// }
 	},
 
 	mounted() {
 		document.addEventListener('click', this.handleClickOutside);
+		eventbus.$on('cleanAutocomplete', ()=>{
+			//console.log('escutou clenaAutocomplete...')
+			this.cleanResults()
+			this.cleanWord()
+		})
+
+		eventbus.$on('loadAutocomplete', (param)=>{
+			// console.log('loadAutocomplete...')
+			// console.log(param)
+			this.cleanResults()
+			this.cleanWord()
+			this.itemSelected= param
+			this.word= this.itemSelected[this.column]
+			// console.log(this.itemSelected[this.column])
+		})
 	},
 
 	destroyed() {

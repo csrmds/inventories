@@ -29,8 +29,6 @@ export default {
 
 	actions: {
 		async search(context, payload) {
-
-			console.log("action..: "+payload)
 			const resp= await axios.post('/group/search', {
 				word: payload
 			})
