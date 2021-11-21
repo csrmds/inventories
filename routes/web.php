@@ -44,6 +44,9 @@ Route::get('/product/faker', [App\Http\Controllers\ProductController::class, 'fa
 Route::get('/product/getinfo', [App\Http\Controllers\ProductController::class, 'getInfo'])->name('product.getInfo');
 Route::post('/product/search', [App\Http\Controllers\ProductController::class, 'search'])->name('product.search');
 Route::post('/product/searchby', [App\Http\Controllers\ProductController::class, 'searchBy'])->name('product.searchBy');
+Route::post('/product/getbyid', [App\Http\Controllers\ProductController::class, 'getbyid'])->name('product.getbyid');
+Route::post('/product/getgroups', [App\Http\Controllers\ProductController::class, 'getgroups'])->name('product.getgroups');
+
 
 Route::post('/user/search', [App\Http\Controllers\UserController::class, 'search'])->name('user.search');
 

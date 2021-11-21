@@ -39,116 +39,119 @@
 </template>
 
 <script>
-    export default {
-        props: {
-            list: null,
-            column: null,
-            label: null,
-            id: null
-        },
+export default {
+    props: {
+        list: null,
+        column: null,
+        label: null,
+        id: null,
+        itemLoad: null,
+        inputValue: null
+    },
 
-        data() {
-            return {
-                word: "",
-                divList: false,
-                arrowCounter: -1,
-                isLoading: false,
-                itemSelected: false,
-                listFiltred: null,
+    data() {
+        return {
+            word: this.inputValue,
+            divList: false,
+            arrowCounter: -1,
+            isLoading: false,
+            itemSelected: false,
+            listFiltred: null,
+        }
+    },
+
+    computed: {
+        listObj() {
+            if (typeof(this.list)=="object") {
+                return this.list
+            } else {
+                return JSON.parse(this.list)
             }
         },
+        
+    },
 
-        computed: {
-            listObj() {
-                if (typeof(this.list)=="object") {
-                    return this.list
-                } else {
-                    return JSON.parse(this.list)
-                }
-            }
+    methods: {
+
+        filter() {
+            let word= this.word.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+            let col= this.column.toLowerCase()
+            this.listFiltred= this.listObj.filter(function(item, i) {
+                let name= item[col].toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+                return name.indexOf(word)>-1 ? item : false
+            })
         },
 
-        methods: {
-            
+        setItem(param) {
+            this.word= param[this.column]
+            this.itemSelected= param
+            this.divList= false
+            this.arrowCounter= -1
 
-            filter() {
-                let word= this.word.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-                let col= this.column.toLowerCase()
-                this.listFiltred= this.listObj.filter(function(item, i) {
-                    let name= item[col].toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-                    return name.indexOf(word)>-1 ? item : false
-                })
-            },
+            //this.$emit('itemSelected', this.itemSelected)
+        },
 
-            setItem(param) {
-                this.word= param[this.column]
-                this.itemSelected= param
-                this.divList= false
-                this.arrowCounter= -1
-
-                //this.$emit('itemSelected', this.itemSelected)
-            },
-
-            handleClickOutside(event) {
-                if (!this.$el.contains(event.target)) {
-                    this.arrowCounter= -1
-                    this.divList= false
-                }
-            },
-
-            onArrowUp() {
-                if (this.arrowCounter>0) {
-                    this.arrowCounter--
-                    $("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
-                }
-            },
-
-            onArrowDown() {
-                this.divList==false ? this.divList=true : false
-                if (this.arrowCounter < this.listFiltred.length-1) {
-                    this.arrowCounter++
-                    $("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
-                }
-            },
-
-            onEnter() {
-                this.word= this.listFiltred[this.arrowCounter][this.column]
-                this.itemSelected= this.listFiltred[this.arrowCounter]
-                this.arrowCounter= -1
-                this.divList= false
-            },
-
-            cleanResults() {
+        handleClickOutside(event) {
+            if (!this.$el.contains(event.target)) {
                 this.arrowCounter= -1
                 this.divList= false
             }
-
-            // filtro2() {
-            //     let word= this.word.toLowerCase()
-            //     this.listFiltred= this.listObj.filter(function(item, i) {
-            //         let name= item.first_name.concat(" ", item.last_name).toLowerCase()
-            //         return name.indexOf(word)>-1 ? item : false
-            //     })
-            // },
-
         },
 
-        watch: {
-            listFiltred: function(newValue, oldValue) {
-                this.divList= true
+        onArrowUp() {
+            if (this.arrowCounter>0) {
+                this.arrowCounter--
+                $("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
             }
         },
 
-        mounted() {
-            document.addEventListener('click', this.handleClickOutside);
+        onArrowDown() {
+            this.divList==false ? this.divList=true : false
+            if (this.arrowCounter < this.listFiltred.length-1) {
+                this.arrowCounter++
+                $("#li_"+this.arrowCounter)[0].scrollIntoViewIfNeeded(false)
+            }
         },
 
-        destroyed() {
-            document.removeEventListener('click', this.handleClickOutside);
+        onEnter() {
+            this.word= this.listFiltred[this.arrowCounter][this.column]
+            this.itemSelected= this.listFiltred[this.arrowCounter]
+            this.arrowCounter= -1
+            this.divList= false
         },
 
+        cleanResults() {
+            this.arrowCounter= -1
+            this.divList= false
+        },
 
-    }
+    },
+
+    watch: {
+        listFiltred: function(newValue, oldValue) {
+            this.divList= true
+        },
+
+        word: function(newValue) {
+            this.$emit('value-return', newValue)
+        },
+
+        inputValue: function(newValue) {
+            this.word= newValue
+        }
+
+    },
+
+    mounted() {
+        document.addEventListener('click', this.handleClickOutside);
+    },
+
+    destroyed() {
+        document.removeEventListener('click', this.handleClickOutside);
+    },
+
+
+}
 </script>
 
 <style scoped>

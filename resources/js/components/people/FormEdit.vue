@@ -9,8 +9,7 @@
                     id="type" 
                     class="form-control form-control-sm"
                     :class="validation.type.invalid ? 'is-invalid' : null"
-                    aria-describedby="type-invalid"
-                >
+                    aria-describedby="type-invalid">
                     <option value="F">Física</option>
                     <option value="J">Jurídica</option>
                 </select>
@@ -47,8 +46,11 @@
 
             <div class="col-sm-2">
                 <label for="">Categoria</label>
-                <c-autocomplete v-model="people.category" :list="categories" column="name" ></c-autocomplete>
-                <!-- <input v-model="people.category" type="text" class="form-control form-control-sm"> -->
+                <c-autocomplete 
+                    :input-value="people.category" 
+                    :list="categories" 
+                    column="name" >
+                </c-autocomplete>
             </div>
 
             <div class="col-sm-2">
@@ -72,9 +74,11 @@
 
         <div class="form-row">
             <div class="col-sm-2">
-                <c-cep label="CEP" @ibge="loadCep($event)"></c-cep>
-                <!-- <label for="">CEP</label>
-                <input v-model="people.zipcode" v-mask="'#####-###'" type="text" class="form-control form-control-sm"> -->
+                <c-cep
+                    :input-value="people.zipcode"
+                    @ibge="loadCep($event)"
+                    label="CEP">
+                </c-cep>
             </div>
 
             <div class="col-sm-3">

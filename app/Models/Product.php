@@ -30,6 +30,7 @@ class Product extends Model
         'ocs_hw_id',
         'ocs_mon_id',
         'people_id',
+        'location_id',
         'create_at',
         'updated_at'
     ];

@@ -68,17 +68,17 @@ export default {
 			required: false,
 			default: false
 		},
-		id: null
+		id: null,
+		inputValue: null
 	},
 
 	data() {
 		return {
-			word: '',
+			word: this.inputValue,
 			results: [],
 			isOpen: false,
 			arrowCounter: -1,
 			isLoading: false,
-			//inputId: null,
 			itemSelected: false,
 		};
 	},
@@ -207,10 +207,9 @@ export default {
 			}
 		},
 
-		// itemInput(newValue) {
-		// 	console.log(newValue)
-		// 	this.loadInput()
-		// }
+		inputValue: function(newValue) {
+			this.word= newValue
+		}
 	},
 
 	mounted() {

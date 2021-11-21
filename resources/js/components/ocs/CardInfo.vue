@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid">
+    <div>
         <div class="card" >
             <div class="card-body">
                 <h4>OCS Info</h4>
@@ -49,10 +49,6 @@
             ocsHardwareId() { return this.$store.state.ocsHardware.id }
         },
 
-        mounted() {
-            console.log('Component mounted.')
-        },
-
         methods: {
             modalOcsSearch() {
                 this.$bvModal.show('modal-ocs-search')
@@ -66,12 +62,6 @@
             teste() {
                 console.log(this)
             }
-        },
-
-        watch: {
-            // ocsHardwareId: function(newValue) {
-
-            // }
         }
     }
 </script>

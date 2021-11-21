@@ -25,6 +25,7 @@ export default {
 		ocs_hw_id: null,
 		ocs_mon_id: null,
 		people_id: null,
+		location_id: null,
 		created_at: null,
 		updated_at: null,
 
@@ -76,7 +77,10 @@ export default {
 			state.obs= product.obs
 			state.ocs_hw_id= product.ocs_hw_id,
 			state.ocs_mon_id= product.ocs_mon_id,
-			state.people_id= product.people_id
+			state.people_id= product.people_id,
+			state.location_id= product.location_id,
+			state.created_at= product.created_at,
+			state.updated_at= product.updated_at
 		},
 
 		cleanProduct(state) {
@@ -99,7 +103,10 @@ export default {
 			state.obs= null
 			state.ocs_hw_id= null,
 			state.ocs_mon_id= null,
-			state.people_id= null
+			state.people_id= null,
+			state.location_id= null,
+			state.created_at= null,
+			state.updated_at= null
 		},
 
 		cleanResp(state) {
@@ -112,7 +119,8 @@ export default {
 	actions: {
 		async search(context, payload) {
 			const resp= await axios.post('/product/search', {
-				word: payload
+				word: payload.word,
+				page: payload.page
 			})
 			return resp
 		},
@@ -125,11 +133,22 @@ export default {
 			return resp
 		},
 
+		async getById(context, payload) {
+			const resp= await axios.post('/product/getbyid', {id: payload})
+			if (resp.data[0].id>0) {
+				context.commit('setProduct', resp.data[0])
+				return resp.data[0]
+			} else {
+				return resp
+			}
+		},
+
 		async save(context, payload) {
 			context.commit('cleanResp')
-			context.commit('cleanProduct')
 			const resp= await axios.post('/product/save', { product: payload})
 				.then(function (response) {
+					context.commit('cleanProduct')
+					context.error= null
 					context.commit('setResp', "Produto salvo com sucesso")
 				})
 				.catch(function (error) {
@@ -139,7 +158,7 @@ export default {
 
 		async update(context, payload) {
 			context.commit('cleanResp')
-			const resp= await axios.post('/product/update', payload)
+			const resp= await axios.post('/product/update', { product: payload })
 				.then(function (response) {
 					context.commit('cleanProduct')
 					context.error= null
@@ -157,12 +176,24 @@ export default {
 			const resp= await axios.post('/product/destroy', payload)
 				.then(function (response) {
 					context.commit('setResp', "Registro deletado com sucesso")
-					return resp.data
+					return response.data
 				})
 				.catch(function (error) {
 					context.commit('setError', error.response.data)
 					return error.response.data
 				})
+			return resp
+		},
+
+		async getGroups(context) {
+			const resp= await axios.post('/product/getgroups')
+				.then(response=> {
+					return response.data
+				}).catch(error=> {
+					context.commit('setError', error.response.data)
+					return error
+				})
+			return resp
 		},
 
 		loadInputs(context, product) {

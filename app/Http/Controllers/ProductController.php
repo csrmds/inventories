@@ -19,7 +19,6 @@ class ProductController extends Controller
     }
 
     protected function setProperties($properties) {
-        //$this->product->id= "cesar"; //$properties['id'];
         $this->product->name= $properties['name'];
         $this->product->reference= $properties['reference'];
         $this->product->description= $properties['description'];
@@ -39,6 +38,7 @@ class ProductController extends Controller
         $this->product->ocs_hw_id= $properties['ocs_hw_id'];
         $this->product->ocs_mon_id= $properties['ocs_mon_id'];
         $this->product->people_id= $properties['people_id'];
+        $this->product->location_id= $properties['location_id'];
     }
 
     /**
@@ -56,30 +56,31 @@ class ProductController extends Controller
         $type= DB::table('groups')->where('table', 'product_type')->get();
         $um= DB::table('groups')->where('table', 'product_um')->get();
         $category= DB::table('groups')->where('table', 'product_category')->get();
+        $location= DB::table('locations')->get();
 
-        return view('product.create', compact('type','um', 'category'));
+        return view('product.create', compact('type','um', 'category', 'location'));
     }
 
     public function save(Request $request)
     {
+        // $data= $request->all();
+        // dd($data);
         $this->setProperties($request->input('product'));
+
         try {
             $this->product->save();
             return json_encode($this->product);
         } catch (\Exception $e) {
-            return jscon_encode($e->getMessate(), 418);
+            return json_encode($e->getMessate(), 418);
         }
-    }
-
-    public function edit()
-    {
-		return view('product.index'); 
     }
 
     public function update(Request $request)
     {
-        $this->product= Product::Find($request->input('id'));
-        $this->setProperties($request->all());
+        $data= $request->input('product');
+        $this->product= Product::Find($data['id']);
+        $this->setProperties($data);
+        
         try {
             $this->product->save();
             return response(json_encode($this->product));
@@ -96,9 +97,11 @@ class ProductController extends Controller
 
     public function search(Request $request)
     {
-        $data= $request->all();
-        $products= DB::table('products')->where('name', 'like', $data['word'].'%')->get();
-
+        $data= $request->input('word');
+        $products= DB::table('products')
+            ->where('name', 'like', $data.'%')
+            ->orWhere('property_id', 'like', $data.'%')
+            ->paginate(10);
         return json_encode($products);
     }
 
@@ -117,6 +120,30 @@ class ProductController extends Controller
         $products= DB::table('products')->where('property_id', 'like', $data['word'].'%')->get();
 
         return json_encode($products);
+    }
+
+    public function getbyid(Request $request)
+    {
+        $id= $request->input('id');
+        $product= DB::table('products')->where('id', $id)->get();
+        return json_encode($product);
+    }
+
+    public function getgroups()
+    {
+        $type= DB::table('groups')->where('table', 'product_type')->get();
+        $um= DB::table('groups')->where('table', 'product_um')->get();
+        $category= DB::table('groups')->where('table', 'product_category')->get();
+        $location= DB::table('locations')->get();
+        
+        $groups= [
+            'typeList'=> $type,
+            'umList'=> $um,
+            'categoryList'=> $category,
+            'locationList'=> $location
+        ];
+
+        return json_encode($groups);
     }
 
     public function faker() 

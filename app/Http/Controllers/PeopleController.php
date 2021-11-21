@@ -125,7 +125,7 @@ class PeopleController extends Controller
             ->where('first_name', 'like', $data.'%')
             ->orWhere('last_name', 'like', $data.'%')
             ->orWhere('nick_name', 'like', $data.'%')
-            ->paginate(5);
+            ->paginate(10);
         
         return json_encode($people);
     }

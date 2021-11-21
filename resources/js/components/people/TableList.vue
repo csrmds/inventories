@@ -19,6 +19,7 @@
             </div>
 
         </div>
+        <br>
 
         <div class="row">
             <div class="col-sm">
@@ -132,9 +133,7 @@
 <script>
 export default {
     props: {
-        inputSearch: {
-            default: true
-        }
+        inputSearch: { default: true }
     },
 
     data() {

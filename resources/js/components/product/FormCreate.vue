@@ -4,11 +4,12 @@
 			
 			<div class="col-sm-2" >
 				<c-autocomplete-axios 
-					id="property" 
+					:input-value="product.property_id"
+					@itemSelected="autoComplete($event)"
+					column="property_id"
 					label="Patrimonio" 
 					source="product/searchBy" 
-					column="property_id"
-					@itemSelected="autoComplete($event)"
+					id="property" 
 				>	
 				</c-autocomplete-axios>
 				<input type="hidden" id="product_id" v-model="product.id" >
@@ -18,12 +19,12 @@
 				<label for="type">Tipo</label>
 				<select 
 					v-model="product.type"
-					name="type" 
-					id="type" 
-					class="form-control form-control-sm" 
 					:class="validation.type.invalid ? 'is-invalid' : null"
+					id="type" 
+					name="type" 
+					class="form-control form-control-sm" 
 					aria-describedby="type-invalid">
-					<option v-for="(option, i) in JSON.parse(pType)" :key="i">{{ option.name }}</option>
+					<option v-for="(option, i) in JSON.parse(typeList)" :key="i">{{ option.name }}</option>
 				</select>
 				<div id="type-invalid" class="invalid-feedback">
 					{{ validation.type.msg }}
@@ -46,10 +47,15 @@
 			</div>
 			
 			<div class="col-sm">
-				<label for="category">Categoria</label>
-				<c-autocomplete v-model="product.category" :list="pCategory" column="name" ></c-autocomplete>
-				<!-- <input v-model="product.category" type="text" name="category" id="category" class="form-control form-control-sm input-text"> -->
-				
+				<c-autocomplete 
+					:input-value="product.category" 
+					:list="categoryList" 
+					@value-return="setCategory($event)"
+					label="Categoria"
+					column="name" 
+					id="category" 
+					name="category">
+				</c-autocomplete>
 			</div>
 
 			<div class="col-sm">
@@ -74,34 +80,27 @@
 			<div class="col-sm-1">
 				<label for="um">UM</label>
 				<select v-model="product.um"  name="um" id="um" class="form-control form-control-sm">
-					<option v-for="(option, i) in JSON.parse(pUm)" :key="i">{{ option.name }}</option>
+					<option v-for="(option, i) in JSON.parse(umList)" :key="i">{{ option.name }}</option>
 				</select>
 			</div>
 
 			<div class="col-sm-2">
 				<label for="location">Localização</label>
-				<select name="location" id="location" class="form-control form-control-sm">
-					<option value="DEPOSITO">DEPOSITO</option>
-					<option value="ESCRITORIO">ESCRITORIO</option>
-					<option value="SALA01">SALA01</option>
-					<option value="SALA02">SALA02</option>
-					<option value="SALA03">SALA03</option>
-					<option value="SALA04">SALA04</option>
+				<select v-model="product.location_id" name="location" id="location" class="form-control form-control-sm">
+					<option v-for="(location, i) in JSON.parse(locationList)" :key="i" :value="location.id">{{ location.name }}</option>
 				</select>
-			</div>
-
-			<div class="col-sm">
-				<label for="people">Responsável</label>
-				<input v-model="product.people" type="text" name="people" id="people" class="form-control form-control-sm">
 			</div>
 
 		</div>
 		<br/>
 
-
 		<div class="form-row">
 			<div class="col-sm-6">
 				<c-ocs-card-info :ocshardware="ocshardware"></c-ocs-card-info>
+			</div>
+
+			<div class="col-sm-6">
+				<c-people-card-info />
 			</div>
 		</div>
 
@@ -114,14 +113,15 @@
 			</div>
 
 			<!-- <div class="col-sm-2">
-				<button type="submit" class="btn btn-sm btn-success container-fluid" @click="teste">teste</button>
-			</div>
+				<button type="submit" class="btn btn-sm btn-success container-fluid" @click="cleanInputs">teste</button>
+			</div> -->
+			<!--
 			<div class="col-sm-2">
 				<button class="btn btn-sm btn-outline-success container-fluid" @click="teste2">teste2</button>
 			</div> -->
 		</div>
 		</form>
-		
+
 
 		<div class="form-row">
 			<div class="col-sm-6">	
@@ -132,14 +132,23 @@
 					<c-ocs-form-search></c-ocs-form-search>
 				</b-modal>
 			</div>
+
+			<div class="col-sm-6">	
+				<b-modal 
+					id="modal-people-search" 
+					title="Pessoas"
+					size="xl">
+					<c-people-form-search />
+				</b-modal>
+			</div>
 		</div>
 		<br>
 
-		<div class="row">
+		<!-- <div class="row">
 			<div class="col-sm-12">
 				<c-alert dismissible="true" ></c-alert>
 			</div>
-		</div>
+		</div> -->
 		
 	</div>
 	
@@ -147,14 +156,15 @@
 
 <script>
 import useVuelidate from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators'
+import { required } from '@vuelidate/validators'
 import eventbus from '../eventbus'
 
 export default {
 	props: {
-		pType: { type: String },
-		pUm: { type: String },
-		pCategory: { type: String }
+		typeList: String, Object,
+		umList: String, Object,
+		categoryList: String, Object,
+		locationList: String, Object
 	},
 
 	setup () {
@@ -179,7 +189,7 @@ export default {
 					msg: "Campo obrigatório",
 					invalid: false
 				}
-			}
+			},
 		}
 	},
 
@@ -195,6 +205,7 @@ export default {
 		resp() { return this.$store.state.product.resp },
 		ocshardware() { return this.$store.state.ocsHardware },
 		ocsHardwareId() { return this.$store.state.ocsHardware.id },
+		peopleId() { return this.$store.state.people.id },
 		productId() { return this.product.id },
 		description() { return this.product.description },
 		type() { return this.product.type },
@@ -250,35 +261,56 @@ export default {
 			} else {
 				this.$store.commit('product/cleanProduct')
 			}
-		}
-	},
-
-	mounted() {
-		
-	},
-
-	watch: {
-		error: function(newValue) {
-			this.alert.msg= newValue
-			this.alert.classType= "alert-danger"
-			this.$store.dispatch('alert/showAlert', this.alert)
 		},
 
-		resp: function(newValue) {
-			this.alert.msg= newValue
-			this.alert.classType= "alert-info"
-			this.$store.dispatch('alert/showAlert', this.alert)
-		},
-
-		ocsHardwareId: function(newValue) { this.product.ocs_hw_id= newValue },
-
-		productId: async function(newValue) {
+		async loadOcsHardware() {
 			if (this.product.ocs_hw_id!=null) {
+				//console.log('load ocs harwdare')
 				const resp= await this.$store.dispatch('ocsHardware/searchById', this.product.ocs_hw_id)
 				this.$store.commit('ocsHardware/setOcsHardware', resp.data)
 			} else {
+				//console.log("cleant Ocs Hardware")
 				this.$store.commit('ocsHardware/cleanOcsHardware')
 			}
+		},
+
+		async loadPeople() {
+			if (this.product.people_id!=null) {
+				const resp= await this.$store.dispatch('people/getById', this.product.people_id)
+			} else {
+				this.$store.commit('people/cleanPeople')
+			}
+		},
+
+		setCategory(param) {
+			this.product.category= param
+		},
+	},
+
+	mounted() {
+		this.loadOcsHardware()
+		this.loadPeople()
+	},
+
+	watch: {
+		// error: function(newValue) {
+		// 	this.alert.msg= newValue
+		// 	this.alert.classType= "alert-danger"
+		// 	this.$store.dispatch('alert/showAlert', this.alert)
+		// },
+
+		// resp: function(newValue) {
+		// 	this.alert.msg= newValue
+		// 	this.alert.classType= "alert-info"
+		// 	this.$store.dispatch('alert/showAlert', this.alert)
+		// },
+
+		ocsHardwareId: function(newValue) { this.product.ocs_hw_id= newValue },
+		peopleId: function(newValue) { this.product.people_id= newValue },
+
+		productId: async function(newValue) { 
+			this.loadOcsHardware() 
+			this.loadPeople()
 		}
 	},
 

@@ -8,8 +8,8 @@
             @keydown.enter="consulta"
             type="text" 
             :id="id" 
-            class="form-control form-control-sm"
             :class="classValidation"
+            class="form-control form-control-sm"
             aria-describedby="validation-cep">
             <div id="validation-cep" class="invalid-feedback">
                 CEP inválido
@@ -21,12 +21,13 @@
     export default {
         props: {
             id: null,
-            label: null
+            label: null,
+            inputValue: null
         },
 
         data() {
             return {
-                cep: null,
+                cep: this.inputValue,
                 error: false,
                 ibge: {
                     cep: null,

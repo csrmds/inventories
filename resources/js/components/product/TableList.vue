@@ -7,9 +7,9 @@
                     @keydown.enter="filterList"
                     type="text"
                     class="form-control form-control-sm"
-                    placeholder="busca">
-                <div class="input-group-apped">
-                    <button class="btn btn-sm btn-outline-primary container-fluid" @click="filterList">Filtrar</button>
+                    placeholder="Busca">
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-outline-secondary container-fluid" @click="filterList">Filtrar</button>
                 </div>
             </div>
 
@@ -17,6 +17,8 @@
                 <button class="btn btn-sm btn-outline-primary container-fluid" @click="newProduct">Novo</button>
             </div>
         </div>
+        <br>
+        
 
         <div class="row">
             <div class="col-sm">
@@ -25,21 +27,21 @@
                     <thead>
                         <th>ID</th>
                         <th>Tipo</th>
+                        <th>Nome</th>
                         <th>Descrição</th>
-                        <th>Marca</th>
                         <th>Modelo</th>
                         <th></th>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr v-for="(product, i) in list" :key="i">
                             <td>{{ product.id }}</td>
                             <td>{{ product.type }}</td>
+                            <td>{{ product.name }}</td>
                             <td>{{ product.description }}</td>
-                            <td>{{ product.brand }}</td>
                             <td>{{ product.model }}</td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary" @click="edit(product.id)"></button>
-                                <button class="btn btn-sm btn-outline-danger" @click="destroy(product)"></button>
+                                <button class="btn btn-sm btn-outline-primary" @click="edit(product.id)">Editar</button>
+                                <button class="btn btn-sm btn-outline-danger" @click="destroy(product)">Deletar</button>
                             </td>
                         </tr>
                     </tbody>
@@ -92,7 +94,12 @@
 					size="xl"
                     button-size="sm"
                     hide-footer>
-					<c-product-form-create></c-product-form-create>
+                    <c-product-form-create 
+                        :category-list="categoryList"
+                        :type-list="typeList"
+                        :um-list="umList"
+                        :location-list="locationList"
+                    />
 				</b-modal>
 			</div>
 
@@ -103,7 +110,7 @@
                     button-size="sm"
                     hide-header>
                     <p>Deseja realmente deletar o seguinte registro?</p> 
-                    <strong>{{ "ID: "+product.id+" " }} {{ product.description }}</strong>
+                    <strong>{{ "ID: "+product.id }} {{ product.description }}</strong>
                     <template #modal-footer>
                         <button size="sm" variant="outline-secondary" class="btn btn-sm btn-danger" @click="destroyConfirm">Deletar</button>
                     </template>
@@ -130,7 +137,7 @@
 <script>
 export default {
     props: {
-        inputeSearch: true
+        inputSearch: { default: true }
     },
 
     data() {
@@ -139,7 +146,11 @@ export default {
             word: null,
             list: null,
             modal: { msg: null },
-            filterPaginate: null
+            filterPaginate: null,
+            typeList: null,
+            umList: null,
+            categoryList: null,
+            locationList: null
         }
     },
 
@@ -153,11 +164,92 @@ export default {
             const resp= await this.$store.dispatch('product/search', {word: this.word})
             this.filterPaginate= resp.data
             this.list= this.filterPaginate.data
+        },
+
+        async linkPage(param) {
+            const resp= await this.$store.dispatch('product/search', {
+                word: this.word,
+                page: param
+            })
+            this.filterPaginate= resp.data
+            this.list= this.filterPaginate.data
+        },
+
+        async prevNextPage(param) {
+            if (param) {
+                param= new URL(param)
+                let page= param.search.replace( /^\D+/g, '') //remove todos caracteres que não são numéricos
+                const resp= await this.$store.dispatch('product/search', {
+                    word: this.word,
+                    page: page
+                })
+                this.filterPaginate= resp.data
+                this.list= this.filterPaginate.data
+            }
+        },
+
+        async edit(id) {
+            const product= await this.$store.dispatch('product/getById', { id: id })
+            if (product.id) {
+                this.$store.dispatch('product/loadInputs', product)
+                this.$bvModal.show('modal-product-edit')
+            } else {
+                this.modal.msg= product
+                this.$bvModal.show('modal-msg')
+            }
+        },
+
+        newProduct() {
+            this.$store.commit('product/cleanProduct')
+            this.$store.commit('product/cleanResp')
+            this.$bvModal.show('modal-product-edit')
+        },
+
+        destroy(param) {
+            this.product= param
+            this.$bvModal.show('modal-destroy-confirmation')
+        },
+
+        async destroyConfirm() {
+            await this.$store.dispatch('product/destroy', this.product.id)
+            this.$bvModal.hide('modal-destroy-confirmation')
+        },
+
+        async getGroups() {
+            const groups= await this.$store.dispatch('product/getGroups')
+            this.typeList= JSON.stringify(groups.typeList)
+            this.umList= JSON.stringify(groups.umList)
+            this.categoryList= JSON.stringify(groups.categoryList)
+            this.locationList= JSON.stringify(groups.locationList)
+        },
+        
+
+        reload() {
+            this.$store.commit('product/cleanProduct')
+            this.$store.commit('product/cleanResp')
+            this.filterList()
         }
     },
 
     mounted() {
-        
+        this.filterList()
+        this.getGroups()
+    },
+
+    watch: {
+        error: function(newValue) {
+            if (newValue!=null) {
+                this.modal.msg= newValue
+                this.$bvModal.show('modal-msg')
+            }
+        },
+
+        resp: function(newValue) {
+            if (newValue!=null) {
+                this.modal.msg= newValue
+                this.$bvModal.show('modal-msg')
+            }
+        }
     }
 }
 </script>

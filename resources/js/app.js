@@ -53,11 +53,16 @@ Vue.component('c-autocomplete', require('./components/form/Autocomplete.vue').de
 Vue.component('c-autocomplete-axios', require('./components/form/AutocompleteAxios.vue').default);
 Vue.component('c-cep', require('./components/form/Cep.vue').default);
 
+Vue.component('c-teste', require('./components/Teste.vue').default);
+
 Vue.component('c-people-table-list', require('./components/people/TableList.vue').default);
 Vue.component('c-people-form-edit', require('./components/people/FormEdit.vue').default);
+Vue.component('c-people-card-info', require('./components/people/CardInfo.vue').default);
+Vue.component('c-people-form-search', require('./components/people/FormSearch.vue').default);
 
 Vue.component('c-product-search', require('./components/product/InputSearch.vue').default);
 Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);
+Vue.component('c-product-table-list', require('./components/product/TableList.vue').default);
 
 Vue.component('c-group-search', require('./components/group/InputSearch.vue').default);
 Vue.component('c-group-table-list', require('./components/group/TableList.vue').default);
