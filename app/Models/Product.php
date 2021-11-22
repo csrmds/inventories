@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Location;
 
 class Product extends Model
 {
@@ -34,4 +35,8 @@ class Product extends Model
         'create_at',
         'updated_at'
     ];
+
+    public function location() {
+        return $this->hasOne(Location::class, "id", "location_id");
+    }
 }

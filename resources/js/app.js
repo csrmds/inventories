@@ -75,6 +75,8 @@ Vue.component('c-ocs-card-info', require('./components/ocs/CardInfo.vue').defaul
 Vue.component('c-location-table-list', require('./components/location/TableList.vue').default);
 Vue.component('c-location-form', require('./components/location/Form.vue').default);
 
+Vue.component('c-csv-import-products', require('./components/csv/ImportProducts.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

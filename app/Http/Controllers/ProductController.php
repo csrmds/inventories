@@ -99,8 +99,10 @@ class ProductController extends Controller
     {
         $data= $request->input('word');
         $products= DB::table('products')
-            ->where('name', 'like', $data.'%')
-            ->orWhere('property_id', 'like', $data.'%')
+            ->join('locations', 'products.location_id', '=', 'locations.id')
+            ->select('products.*', 'locations.name as location_name')
+            ->where('products.name', 'like', $data.'%')
+            ->orWhere('products.property_id', 'like', $data.'%')
             ->paginate(10);
         return json_encode($products);
     }
@@ -125,8 +127,24 @@ class ProductController extends Controller
     public function getbyid(Request $request)
     {
         $id= $request->input('id');
-        $product= DB::table('products')->where('id', $id)->get();
-        return json_encode($product);
+        $this->product= Product::Find($id);
+        $location= $this->product->location()->get();
+        $this->product->location= $location[0]['name'];
+        
+        return json_encode($this->product);
+    }
+
+    public function teste(Request $request)
+    {
+        $id= $request->input('id');
+        $teste= Product::Find(6);
+        $y= $teste->location()->get();
+
+        echo "<pre>";
+        print_r($y);
+        echo "</pre>";
+        
+        //return json_encode($y);
     }
 
     public function getgroups()

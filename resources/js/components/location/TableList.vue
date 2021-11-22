@@ -2,7 +2,13 @@
     <div>
         <div class="row">
             <div class="col-sm-9 input-group">
-                <input v-model='word' type="text" class="form-control form-control-sm" placeholder="Busca" >
+                <input 
+                    v-model='word' 
+                    @click="filterList"
+                    @keypress.enter="filterList"
+                    type="text" 
+                    class="form-control form-control-sm" 
+                    placeholder="Busca" >
             </div>
 
             <div class="col-sm">

@@ -18,6 +18,10 @@ Route::get('/', function () {
     return view('home');
 });
 
+Route::get('/laravel', function () {
+    return view('welcome');
+});
+
 
 Route::post('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
 Route::get('/authenticate/logout', [App\Http\Controllers\AuthenticateController::class, 'logout'])->name('authenticate.logout');
@@ -46,6 +50,7 @@ Route::post('/product/search', [App\Http\Controllers\ProductController::class, '
 Route::post('/product/searchby', [App\Http\Controllers\ProductController::class, 'searchBy'])->name('product.searchBy');
 Route::post('/product/getbyid', [App\Http\Controllers\ProductController::class, 'getbyid'])->name('product.getbyid');
 Route::post('/product/getgroups', [App\Http\Controllers\ProductController::class, 'getgroups'])->name('product.getgroups');
+Route::get('/product/teste', [App\Http\Controllers\ProductController::class, 'teste'])->name('product.teste');
 
 
 Route::post('/user/search', [App\Http\Controllers\UserController::class, 'search'])->name('user.search');
@@ -67,6 +72,10 @@ Route::post('/location/getbyid', [App\Http\Controllers\LocationController::class
 Route::post('/ocs/search', [App\Http\Controllers\OcsHardwareController::class, 'search'])->name('ocs.search');
 Route::post('/ocs/searchbyid/{id?}', [App\Http\Controllers\OcsHardwareController::class, 'searchById'])->name('ocs.searchById');
 //Route::get('/ocs/tag', [App\Http\Controllers\OcsHardwareController::class, 'tag'])->name('ocs.tag');
+
+Route::get('/csv', [App\Http\Controllers\CsvController::class, 'index'])->name('csv');
+Route::post('/csv/import/products', [App\Http\Controllers\CsvController::class, 'importProducts'])->name('csv.import.products');
+Route::post('/csv/import/people', [App\Http\Controllers\CsvController::class, 'importPeople'])->name('csv.import.people');
 
 Route::get('/teste', function() {
     return view('teste');

@@ -26,6 +26,7 @@ export default {
 		ocs_mon_id: null,
 		people_id: null,
 		location_id: null,
+		location: null,
 		created_at: null,
 		updated_at: null,
 
@@ -75,11 +76,12 @@ export default {
 			state.um= product.um
 			state.status= product.status
 			state.obs= product.obs
-			state.ocs_hw_id= product.ocs_hw_id,
-			state.ocs_mon_id= product.ocs_mon_id,
-			state.people_id= product.people_id,
-			state.location_id= product.location_id,
-			state.created_at= product.created_at,
+			state.ocs_hw_id= product.ocs_hw_id
+			state.ocs_mon_id= product.ocs_mon_id
+			state.people_id= product.people_id
+			state.location_id= product.location_id
+			state.location= product.location
+			state.created_at= product.created_at
 			state.updated_at= product.updated_at
 		},
 
@@ -105,6 +107,7 @@ export default {
 			state.ocs_mon_id= null,
 			state.people_id= null,
 			state.location_id= null,
+			state.location= null,
 			state.created_at= null,
 			state.updated_at= null
 		},
@@ -135,9 +138,9 @@ export default {
 
 		async getById(context, payload) {
 			const resp= await axios.post('/product/getbyid', {id: payload})
-			if (resp.data[0].id>0) {
-				context.commit('setProduct', resp.data[0])
-				return resp.data[0]
+			if (resp.data.id>0) {
+				context.commit('setProduct', resp.data)
+				return resp.data
 			} else {
 				return resp
 			}

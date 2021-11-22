@@ -25,20 +25,22 @@
 
                 <table class="table table-striped table-sm">
                     <thead>
-                        <th>ID</th>
+                        <th>Id</th>
+                        <th>Patrimonio</th>
                         <th>Tipo</th>
                         <th>Nome</th>
-                        <th>Descrição</th>
                         <th>Modelo</th>
+                        <th>Localização</th>
                         <th></th>
                     </thead>
                     <tbody>
                         <tr v-for="(product, i) in list" :key="i">
                             <td>{{ product.id }}</td>
+                            <td>{{ product.property_id }}</td>
                             <td>{{ product.type }}</td>
                             <td>{{ product.name }}</td>
-                            <td>{{ product.description }}</td>
                             <td>{{ product.model }}</td>
+                            <td>{{ product.location_name }}</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-primary" @click="edit(product.id)">Editar</button>
                                 <button class="btn btn-sm btn-outline-danger" @click="destroy(product)">Deletar</button>
@@ -189,7 +191,9 @@ export default {
         },
 
         async edit(id) {
-            const product= await this.$store.dispatch('product/getById', { id: id })
+            const product= await this.$store.dispatch('product/getById', id)
+            console.log("edit...")
+            console.log(product)
             if (product.id) {
                 this.$store.dispatch('product/loadInputs', product)
                 this.$bvModal.show('modal-product-edit')
