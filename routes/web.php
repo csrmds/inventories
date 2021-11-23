@@ -22,6 +22,10 @@ Route::get('/laravel', function () {
     return view('welcome');
 });
 
+Route::get('/phpinfo', function() {
+    return phpinfo();
+});
+
 
 Route::post('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
 Route::get('/authenticate/logout', [App\Http\Controllers\AuthenticateController::class, 'logout'])->name('authenticate.logout');
