@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="form-row">
-            <div class="col-sm">
+            <div class="col-sm-4">
                 <label for="">Input Label</label>
                 <input 
                     v-model="cValue"
@@ -11,9 +11,22 @@
                     class="form-control form-control-sm">
             </div>
 
-            <div class="col-sm">
+            <div class="col-sm-2">
                 <label for="">savar</label><br>
                 <button class="btn btn-sm btn-dark" @click="save" >Salvar</button>
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <div class="col-sm-4">
+                <label for="">input</label>
+                <input type="text" class="form-control form-control-sm" placeholder="teste">
+
+            </div>
+            <div class="col-sm-2">
+                <label for="btn">&nbsp;x</label><br>
+                <button id="btn" class="btn btn-sm btn-outline-secondary" @click="createUser">Teste</button>
             </div>
         </div>
         
@@ -48,9 +61,16 @@ export default {
             // console.log(x)
         },
 
-        async loadList() {
+        async loadList(e) {
+            e.preventDefault()
             const resp= await this.$store.dispatch('product/getGroups')
             this.list= resp.categoryList
+        },
+
+        async createUser(e) {
+            e.preventDefault()
+            const resp= await axios.post('/teste/teste')
+            console.log(resp)
         }
 
     },

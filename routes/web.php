@@ -84,3 +84,6 @@ Route::post('/csv/import/people', [App\Http\Controllers\CsvController::class, 'i
 Route::get('/teste', function() {
     return view('teste');
 })->name('teste');
+
+Route::match(['get', 'post'], '/teste/teste', [App\Http\Controllers\TesteController::class, 'teste'])->name('teste.teste');
+Route::match(['get', 'post'], '/teste/createuser', [App\Http\Controllers\TesteController::class, 'createUser'])->name('teste.createUser');

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class People extends Model
 {
@@ -33,5 +34,9 @@ class People extends Model
         "created_at",
         "updated_at"
     ];
+
+    public function getUser() {
+        return $this->hasOne(User::class, "people_id", "id");
+    }
     
 }
