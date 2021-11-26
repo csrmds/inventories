@@ -4,7 +4,7 @@
             <div class="col-sm-4">
                 <label for="">Input Label</label>
                 <input 
-                    v-model="cValue"
+                    v-model="word"
                     autocomplete="false"
                     type="text"
                     name="campo-teste"
@@ -13,7 +13,7 @@
 
             <div class="col-sm-2">
                 <label for="">savar</label><br>
-                <button class="btn btn-sm btn-dark" @click="save" >Salvar</button>
+                <button class="btn btn-sm btn-dark" >Salvar</button>
             </div>
         </div>
 
@@ -26,7 +26,7 @@
             </div>
             <div class="col-sm-2">
                 <label for="btn">&nbsp;x</label><br>
-                <button id="btn" class="btn btn-sm btn-outline-secondary" @click="createUser">Teste</button>
+                <button id="btn" class="btn btn-sm btn-outline-secondary" @click="teste">teste</button>
             </div>
         </div>
         
@@ -42,7 +42,7 @@ export default {
 
     data() {
         return {
-            word: "",
+            word: null,
             product: this.$store.state.product,
             list: null
         }
@@ -54,11 +54,11 @@ export default {
 
     methods: {
 
-        async save(e) {
+        async teste(e) {
             e.preventDefault()
-            console.log(this.cValue)
-            // const x= await this.$store.dispatch('product/save', this.product )
-            // console.log(x)
+            //console.log(this.cValue)
+            const x= await axios.post('/ldap/searchuser', {word: this.word})
+            console.log(x)
         },
 
         async loadList(e) {
@@ -67,9 +67,15 @@ export default {
             this.list= resp.categoryList
         },
 
-        async createUser(e) {
+        async ldapLogin(e) {
             e.preventDefault()
-            const resp= await axios.post('/teste/teste')
+            const resp= await axios.post('/teste/ldaplogin')
+            console.log(resp)
+        },
+
+        async dbLogin(e) {
+            e.preventDefault()
+            const resp= await axios.post('/teste/dblogin')
             console.log(resp)
         }
 

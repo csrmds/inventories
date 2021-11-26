@@ -81,9 +81,14 @@ Route::get('/csv', [App\Http\Controllers\CsvController::class, 'index'])->name('
 Route::post('/csv/import/products', [App\Http\Controllers\CsvController::class, 'importProducts'])->name('csv.import.products');
 Route::post('/csv/import/people', [App\Http\Controllers\CsvController::class, 'importPeople'])->name('csv.import.people');
 
+Route::post('/ldap/searchuser', [App\Http\Controllers\LdapController::class, 'searchUser'])->name('ldap.searchUser');
+Route::post('/ldap/searchgroup', [App\Http\Controllers\LdapController::class, 'searchGroup'])->name('ldap.searchGroup');
+
 Route::get('/teste', function() {
     return view('teste');
 })->name('teste');
 
 Route::match(['get', 'post'], '/teste/teste', [App\Http\Controllers\TesteController::class, 'teste'])->name('teste.teste');
 Route::match(['get', 'post'], '/teste/createuser', [App\Http\Controllers\TesteController::class, 'createUser'])->name('teste.createUser');
+Route::match(['get', 'post'], '/teste/ldaplogin', [App\Http\Controllers\TesteController::class, 'ldapLogin'])->name('teste.ldapLogin');
+Route::match(['get', 'post'], '/teste/dblogin', [App\Http\Controllers\TesteController::class, 'dbLogin'])->name('teste.dbLogin');

@@ -8,6 +8,7 @@ import ocsHardware from "./ocshardware"
 import alert from "./alert"
 import people from "./people"
 import location from "./location"
+import ldapUser from "./ldapUser"
 
 
 Vue.use(Vuex)
@@ -82,6 +83,7 @@ export default new Vuex.Store({
         ocsHardware: ocsHardware,
         alert: alert,
         people: people,
-        location: location
+        location: location,
+        ldapUser: ldapUser
     }
 })

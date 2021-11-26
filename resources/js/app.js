@@ -77,6 +77,8 @@ Vue.component('c-location-form', require('./components/location/Form.vue').defau
 
 Vue.component('c-csv-import-products', require('./components/csv/ImportProducts.vue').default);
 
+Vue.component('c-ldapuser-table-list', require('./components/ldap/TableListUser.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -112,9 +112,9 @@
 				<button type="submit" class="btn btn-sm btn-success container-fluid" @click="validate" >Salvar</button>
 			</div>
 
-			<!-- <div class="col-sm-2">
-				<button type="submit" class="btn btn-sm btn-success container-fluid" @click="cleanInputs">teste</button>
-			</div> -->
+			<div class="col-sm-2">
+				<button type="submit" class="btn btn-sm btn-success container-fluid" @click="ldapModal">LDAP User</button>
+			</div>
 			<!--
 			<div class="col-sm-2">
 				<button class="btn btn-sm btn-outline-success container-fluid" @click="teste2">teste2</button>
@@ -139,6 +139,15 @@
 					title="Pessoas"
 					size="xl">
 					<c-people-form-search />
+				</b-modal>
+			</div>
+
+			<div class="col-sm-6">
+				<b-modal
+					id="modal-user-search"
+					title="Ad User"
+					size="xl">
+					<c-ldapuser-table-list />
 				</b-modal>
 			</div>
 		</div>
@@ -238,6 +247,11 @@ export default {
 		modalOcsSearch(event) {
 			this.$bvModal.show('modal-ocs-search')
 			event.preventDefault()
+		},
+
+		ldapModal(e) {
+			e.preventDefault()
+			this.$bvModal.show('modal-user-search')
 		},
 
 		async validate(event) {
