@@ -2,6 +2,13 @@
 
 @section('content')
 
+<?php
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\People;
+
+?>
+
 <div class="container">
     <h1>Teste</h1>
 
@@ -16,6 +23,17 @@
     </div>
 
     </form>
+
+    <pre>
+        <?php
+            $people= People::Find('110');
+
+            $user= $people-getUser();
+            
+
+            
+        ?>
+    </pre>
 
 
 </div>

@@ -18,6 +18,10 @@
                 <button class="btn btn-sm btn-outline-primary container-fluid" @click="newPeople" >Novo</button>
             </div>
 
+            <div class='col-sm'>
+                <button class="btn btn-sm btn-outline-primary container-fluid" @click="teste" >teste</button>
+            </div>
+
         </div>
         <br>
 
@@ -211,6 +215,11 @@ export default {
             this.$store.commit('people/cleanPeople')
             this.$store.commit('people/cleanResp')
             this.filterList()
+        },
+
+        async teste() {
+            const resp= await axios.post('/ldap/teste')
+            console.log(resp.data)
         }
     },
 

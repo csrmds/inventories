@@ -10,6 +10,10 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\People;
 use LdapRecord\Laravel\Auth\LdapAuthenticatable;
 use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
+use Illuminate\Support\Facades\DB;
+use LdapRecord\Models\ActiveDirectory\User as LdapUser;
+use LdapRecord\Models\ActiveDirectory\Entry;
+use LdapRecord\Utilities;
 
 
 class User extends Authenticatable implements LdapAuthenticatable
@@ -26,8 +30,8 @@ class User extends Authenticatable implements LdapAuthenticatable
         'email',
         'password',
         'people_id',
-        'ldap_guid',
-        'ldap_domain'
+        'guid',
+        'domain'
     ];
 
     /**
@@ -51,5 +55,17 @@ class User extends Authenticatable implements LdapAuthenticatable
 
     public function getPeople() {
         return $this->hasOne(People::class, "id", "people_id");
+    }
+
+    public function getLdapUser() {
+
+        $ldapUser= LdapUser::where('samaccountname', $this->name)->first();
+        if ($ldapUser && $this->guid===$ldapUser->getconvertedguid()) {
+            return $ldapUser;
+        } else {
+            return null;
+        }
+
+        
     }
 }

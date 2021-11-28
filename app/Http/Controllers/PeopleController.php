@@ -6,6 +6,9 @@ use App\Models\People;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Group;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use Faker\Factory;
 
 class PeopleController extends Controller
@@ -80,10 +83,22 @@ class PeopleController extends Controller
 
     public function save(Request $request)
     {
-        $this->setProperties($request->input('people'));
+        $people= $request->input('people');
+        $ldapUser= $request->input('ldapUser');
+        
+        $this->setProperties($people);
         
         try {
             $this->people->save();
+
+            $user= new User;
+            $user->name= $ldapUser['samaccountname'];
+            $user->email= $ldapUser['mail'];
+            $user->people_id= $this->people->id;
+            $user->guid= $ldapUser['objectguid'];
+            $user->domain= 'default';
+            $user->save();
+
             return response(json_encode($this->people));
         } catch(\Exception $e) {
             return response(json_encode($e->getMessage()), 418);
@@ -93,8 +108,36 @@ class PeopleController extends Controller
 
     public function update(Request $request, People $people)
     {
-        $this->people= People::Find($request->input('id'));
-        $this->setProperties($request->all());
+        $people= $request->input('people');
+        $ldapUser= $request->input('ldapUser');
+
+        if ($ldapUser) { 
+            //atualiza usuario na tabela users
+            $user= DB::table('users')
+            ->where('guid', '=', $ldapUser['objectguid'])
+            ->update([
+                'name'=> $ldapUser['samaccountname'],
+                'email'=> $ldapUser['mail'],
+                'people_id'=> $people['id'],
+                'guid'=> $ldapUser['objectguid'],
+                'domain'=> 'default',
+                'updated_at'=> now()
+            ]);
+            
+            if ($user==0) {
+                //cria novo usuario na tabela users
+                $user= new User;
+                $user->name= $ldapUser['samaccountname'];
+                $user->email= $ldapUser['mail'];
+                $user->people_id= $people['id'];
+                $user->guid= $ldapUser['objectguid'];
+                $user->domain= 'default';
+                $user->save();
+            }  
+        }
+
+        $this->people= People::Find($people['id']);
+        $this->setProperties($people);
 
         try {
             $this->people->save();
@@ -102,6 +145,16 @@ class PeopleController extends Controller
         } catch(\Exception $e) {
             return response(json_encode($e->getMessage()), 418);
         }
+    }
+
+    public function removeLdapUser(Resquest $request)
+    {
+        //$id= $request->input('id');
+        $ldapUser= $request->input('ldapUser');
+
+        $removeUser= DB::table('users')->where('guid', $ldapUser['objectguid'])->delete();
+
+        return json_encode($removeUser);
     }
 
 
@@ -150,6 +203,15 @@ class PeopleController extends Controller
     {
         $category= DB::table('groups')->where('table', 'people_category')->get();
         return json_encode($category);
+    }
+
+    public function getUser(Request $request)
+    {
+        $id= $request->input('id');
+        $people= People::find($id);
+        $user= $people->getUser()->first();
+
+        return json_encode($user);
     }
 
     public function faker() {

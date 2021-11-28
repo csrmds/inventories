@@ -114,6 +114,19 @@
                     <option v-for="(uf, i) in ufs" :key="i" :value="uf.uf">{{ uf.uf }}</option>
                 </select>
             </div>
+
+            <div class="col-sm-2">
+                <label for="">UserLogin</label>
+                <input type="text" readonly class="form-control form-control-sm" v-model="userLogin.name">
+            </div>
+            <div class="col-sm-2">
+                <label for="">AD User</label>
+                <input type="text" readonly class="form-control form-control-sm" v-model="ldapUser.samaccountname">
+            </div>
+            <div class="col-sm-2">
+                <label for="">DN</label>
+                <input type="text" readonly class="form-control form-control-sm" v-model="ldapUser.distinguishedname">
+            </div>
         </div>
         <br>
 
@@ -127,8 +140,25 @@
 
         <div class="row">
             <div class="col-sm-2">
-                <button class="btn btn-sm btn-primary" @click="validate">Salvar</button>
+                <button class="btn btn-sm btn-primary container-fluid" @click="validate">Salvar</button>
             </div>
+            <div class="col-sm-2">
+                <button class="btn btn-sm btn-secondary container-fluid" @click="ldapUserModal">Add LDAP User</button>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-sm btn-secondary container-fluid" @click="removeLdapUser">Remover LDAP User</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+				<b-modal
+					id="modal-user-search"
+					title="Ad User"
+					size="xl">
+					<c-ldapuser-table-list />
+				</b-modal>
+			</div>
         </div>
 
 
@@ -172,6 +202,8 @@ export default {
 
     computed: {
         people() { return this.$store.state.people },
+        ldapUser() { return this.$store.state.ldapUser },
+        userLogin() { return this.$store.state.user },
         error() { return this.$store.state.people.error },
         resp() { return this.$store.state.people.resp },
         alert() { return this.$store.state.alert },
@@ -183,15 +215,22 @@ export default {
     mounted() {
         this.loadCategory()
         this.birthDate()
+        this.loadUser()
     },
 
     methods: {
 
         async save() {
             if (this.people.id>0) {
-                await this.$store.dispatch('people/update', this.people)
+                await this.$store.dispatch('people/update', {
+                    people: this.people,
+                    ldapUser: this.ldapUser
+                })
             } else {
-                await this.$store.dispatch('people/save', this.people)
+                await this.$store.dispatch('people/save', {
+                    people: this.people,
+                    ldapUser: this.ldapUser
+                })
             }
         },
 
@@ -224,6 +263,37 @@ export default {
         birthDate() {
             let date= this.$store.state.people.birth_date.split("-")
             this.birth_date= date[2]+"/"+date[1]+"/"+date[0]
+        },
+
+        ldapUserModal(e) {
+			e.preventDefault()
+            this.$bvModal.show('modal-user-search')
+        },
+
+        ldapUserClean(e) {
+            e.preventDefault()
+            this.$store.commit('ldapUser/cleanLdapUser')
+        },
+
+        async loadUser() {
+            const resp= await this.$store.dispatch('people/getUser', this.people.id)
+            if (resp.data) {
+                this.$store.commit('user/setUser', resp.data)
+                let getLdapUser= await this.$store.dispatch('user/getLdapUser', resp.data.id)
+                if (getLdapUser.data.distinguishedname) {
+                    this.$store.commit('ldapUser/setLdapUser', getLdapUser.data)
+                }
+            } else {
+                this.$store.commit('user/cleanUser')
+                this.$store.commit('ldapUser/cleanLdapUser')
+            }
+            
+        },
+
+        async removeLdapUser(e) {
+            e.preventDefault()
+            const resp= await this.$store.dispatch('people/removeLdapUser', this.ldapUser)
+            console.log(resp)
         }
 
         // async convertBirthDate() {

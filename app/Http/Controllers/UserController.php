@@ -94,11 +94,26 @@ class UserController extends Controller
                 'name', 
                 'email', 
                 'email_verified_at', 
-                'remember_token', 
+                'remember_token',
+                'people_id',
+                'guid',
+                'domain', 
                 'created_at',
                 'updated_at')
             ->where('name', 'like', $data['word'].'%')->get();
 
         return json_encode($users);
+    }
+
+    public function getLdapUser(Request $request) {
+        $id= $request->input('id');
+        $user= User::Find($id);
+
+        $ldapUser= $user->getLdapUser();
+        if ($ldapUser) {
+            return $ldapUser;
+        } else {
+            return null;
+        }
     }
 }

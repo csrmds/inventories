@@ -70,4 +70,8 @@ return [
         'driver' => env('CACHE_DRIVER', 'file'),
     ],
 
+    'options'=> [
+        //'LDAP_OPT_PROTOCOL_VERSION'=> 3,
+    ],
+
 ];

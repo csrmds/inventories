@@ -26,11 +26,13 @@
                     </thead>
                     <tbody>
                         <tr v-for="(user, i) in list" :key="i">
-                            <td>{{ user.samaccountname }}</td>
-                            <td>{{ user.description }}</td>
-                            <td>{{ user.objectguid }}</td>
+                            <td>{{ user.samaccountname[0] }}</td>
+                            <td v-if="user.description">{{ user.description[0] }}</td>
+                            <td v-else></td>
+                            <td>{{ user.objectguid[0] }}</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-primary" @click="selectUser(user)">Selecionar</button>
+                                <button class="btn btn-sm btn-outline-primary" @click="teste(user)">Teste</button>
                             </td>
                         </tr>
                     </tbody>
@@ -69,8 +71,14 @@ export default {
             this.list= resp.data
         },
 
-        async select(param) {
+        async selectUser(param) {
+            this.$store.commit('ldapUser/cleanLdapUser')
             this.$store.commit('ldapUser/setLdapUser', param)
+            this.$bvModal.hide('modal-user-search')
+        },
+
+        teste(param) {
+            console.log(param)
         }
     }
 }

@@ -9,6 +9,7 @@ use LdapRecord\Models\ActiveDirectory\Entry;
 use LdapRecord\Models\ActiveDirectory\Computer;
 use LdapRecord\Models\ActiveDirectory\OrganizationalUnit;
 use LdapRecord\Models\ActiveDirectory\Container;
+use LdapRecord\Models\Attributes\AccountControl;
 use LdapRecord\Models\ModelNotFoundException;
 use App\Models\User;
 use App\Models\People;
@@ -22,15 +23,42 @@ class LdapController extends Controller
 
         try {
             if ($word!=null) {
-                $users= LdapUser::where('samaccountname', 'contains', $word)->get();
+                $users= LdapUser::where('iscriticalsystemobject', '!=', 'TRUE')
+                    ->where('samaccountname', 'contains', $word)
+                    ->orWhere('cn', 'contains', $word)->get();
             } else {
-                $users= LdapUser::get();
+                $users= LdapUser::where('iscriticalsystemobject', '!=', 'TRUE')->get();
             }
             return json_encode($users);
         } catch (\Exception $e){
             return response(json_encode($e->getMessage()), 418);
         }
         
+    }
+
+    public function teste(Request $request)
+    {
+        $user= LdapUser::where('samaccountname', 'luciana.mello')->first();
+
+        $uac = new AccountControl($user->getFirstAttribute('userAccountControl'));
+
+
+        // if ($uac->has(AccountControl::LOCKOUT)) {
+        //     $user->contaBloqueada= true;
+        // } else {
+        //     $user->contaBloqueada= false;
+        // };
+
+        
+        //$user= LdapUser::where('lockouttime', '>=', '1')->get();
+
+        // if ($user->getFirstAttribute('lockouttime') > 0) {
+        //     $user->contaBloqueada=true;
+        // } else {
+        //     $user->contrBloqueada= false;
+        // }
+
+        return json_encode($user);
     }
 
     public function searchGroup(Request $request)

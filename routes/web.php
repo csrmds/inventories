@@ -41,6 +41,7 @@ Route::match(['get','post'], '/people/search', [App\Http\Controllers\PeopleContr
 Route::post('/people/searchby', [App\Http\Controllers\PeopleController::class, 'searchby'])->name('people.searchby');
 Route::post('/people/getbyid', [App\Http\Controllers\PeopleController::class, 'getbyid'])->name('people.getbyid');
 Route::post('/people/listcategory', [App\Http\Controllers\PeopleController::class, 'listcategory'])->name('people.listcategory');
+Route::post('/people/getuser', [App\Http\Controllers\PeopleController::class, 'getUser'])->name('people.getUser');
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
 Route::match(['get','post'], '/product/create', [App\Http\Controllers\ProductController::class, 'create'])->name('product.create');
@@ -58,6 +59,7 @@ Route::get('/product/teste', [App\Http\Controllers\ProductController::class, 'te
 
 
 Route::post('/user/search', [App\Http\Controllers\UserController::class, 'search'])->name('user.search');
+Route::post('/user/getldapuser', [App\Http\Controllers\UserController::class, 'getLdapUser'])->name('user.getLdapUser');
 
 Route::get('/group', [App\Http\Controllers\GroupController::class, 'index'])->name('group.index');
 Route::get('/group/all', [App\Http\Controllers\GroupController::class, 'all'])->name('group.all');
@@ -83,6 +85,7 @@ Route::post('/csv/import/people', [App\Http\Controllers\CsvController::class, 'i
 
 Route::post('/ldap/searchuser', [App\Http\Controllers\LdapController::class, 'searchUser'])->name('ldap.searchUser');
 Route::post('/ldap/searchgroup', [App\Http\Controllers\LdapController::class, 'searchGroup'])->name('ldap.searchGroup');
+Route::post('/ldap/teste', [App\Http\Controllers\LdapController::class, 'teste'])->name('ldap.teste');
 
 Route::get('/teste', function() {
     return view('teste');

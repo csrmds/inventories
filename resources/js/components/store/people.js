@@ -149,14 +149,17 @@ export default {
 
         async save(context, payload) {
             context.commit('cleanResp')
-            const resp= await axios.post('/people/save', { people: payload })
-                .then(function(response) {
-                    context.commit('cleanPeople')
-                    context.commit('setResp', "Cadastro salvo com sucesso")
-                })
-                .catch(function (error) {
-                    context.commit('setError', error.response.data)
-                })
+            const resp= await axios.post('/people/save', {
+                people: payload.people,
+                ldapUser: payload.ldapUser 
+            })
+            .then(function(response) {
+                context.commit('cleanPeople')
+                context.commit('setResp', "Cadastro salvo com sucesso")
+            })
+            .catch(function (error) {
+                context.commit('setError', error.response.data)
+            })
         },
 
         async update(context, payload) {
@@ -209,6 +212,14 @@ export default {
                     console.log("error: "+error)
                     return error
                 })
+        },
+
+        async getUser(context, payload) {
+            return await axios.post('/people/getuser', {id: payload})
+        },
+
+        async removeLdapUser(context, payload) {
+            return await axios.post('/people/removeldapuser', {ldapUser: payload})
         }
     }
 }
