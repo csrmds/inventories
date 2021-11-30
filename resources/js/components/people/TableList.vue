@@ -18,9 +18,9 @@
                 <button class="btn btn-sm btn-outline-primary container-fluid" @click="newPeople" >Novo</button>
             </div>
 
-            <div class='col-sm'>
+            <!-- <div class='col-sm'>
                 <button class="btn btn-sm btn-outline-primary container-fluid" @click="teste" >teste</button>
-            </div>
+            </div> -->
 
         </div>
         <br>

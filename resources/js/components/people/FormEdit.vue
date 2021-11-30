@@ -214,7 +214,7 @@ export default {
 
     mounted() {
         this.loadCategory()
-        this.birthDate()
+        //this.birthDate()
         this.loadUser()
     },
 
@@ -270,15 +270,15 @@ export default {
             this.$bvModal.show('modal-user-search')
         },
 
-        ldapUserClean(e) {
-            e.preventDefault()
+        ldapUserClean() {
             this.$store.commit('ldapUser/cleanLdapUser')
         },
 
         async loadUser() {
             const resp= await this.$store.dispatch('people/getUser', this.people.id)
+            console.log('loadUser formedit: '+this.people.id)
             if (resp.data) {
-                this.$store.commit('user/setUser', resp.data)
+                await this.$store.commit('user/setUser', resp.data)
                 let getLdapUser= await this.$store.dispatch('user/getLdapUser', resp.data.id)
                 if (getLdapUser.data.distinguishedname) {
                     this.$store.commit('ldapUser/setLdapUser', getLdapUser.data)
@@ -293,7 +293,16 @@ export default {
         async removeLdapUser(e) {
             e.preventDefault()
             const resp= await this.$store.dispatch('people/removeLdapUser', this.ldapUser)
-            console.log(resp)
+            if (resp.data=="1") {
+                this.alert.msg= "Usuário removido com sucesso."
+                this.alert.classType= "alert-info"
+                this.$store.dispatch('alert/showAlert', this.alert)
+                this.ldapUserClean
+            } else {
+                this.alert.msg= resp.data
+                this.alert.classType= "alert-danger"
+                this.$store.dispatch('alert/showAlert', this.alert)
+            }
         }
 
         // async convertBirthDate() {

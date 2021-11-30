@@ -215,6 +215,7 @@ export default {
         },
 
         async getUser(context, payload) {
+            console.log('getUser people.js: '+payload)
             return await axios.post('/people/getuser', {id: payload})
         },
 

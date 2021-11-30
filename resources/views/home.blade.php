@@ -8,45 +8,7 @@
 
 <div class="container">
 
-    @if (!session()->has('userLogin'))
-    <form>
-        <div class="form-group">
-            <label>Email</label>
-            <input 
-                type="text" 
-                name="login"
-                id="login"
-                class="form-control input-sm" 
-                placeholder="Email de login" 
-                required>
-        </div>
-
-        <div class="form-group">
-            <label>Senha</label>
-            <input 
-                type="password"
-                name="password" 
-                id="password"
-                class="form-control input-sm" 
-                required>
-        </div>
-
-        <button type="submit" class="btn btn-primary" id="btnLogin">Login</button>
-    </form>
-
-    <br/><br/>
-    <div id="return-msg" class="alert alert-warning" style="display:none">
-        
-    </div>
-    @endif
-
-    <div>
-        <button class="btn btn-secondary btn-sm" v-b-modal="'modal-1'">Launch demo modal</button>
-      
-        <b-modal id="modal-1" title="Título">
-          <p class="my-4">Hello from modal!</p>
-        </b-modal>
-    </div>
+    <c-login-form></c-login-form>
 
 </div>
 

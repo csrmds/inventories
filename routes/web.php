@@ -26,6 +26,9 @@ Route::get('/phpinfo', function() {
     return phpinfo();
 });
 
+Route::get('login', function() {
+    return view('home');
+})->name('login');
 
 Route::post('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
 Route::get('/authenticate/logout', [App\Http\Controllers\AuthenticateController::class, 'logout'])->name('authenticate.logout');
@@ -42,6 +45,7 @@ Route::post('/people/searchby', [App\Http\Controllers\PeopleController::class, '
 Route::post('/people/getbyid', [App\Http\Controllers\PeopleController::class, 'getbyid'])->name('people.getbyid');
 Route::post('/people/listcategory', [App\Http\Controllers\PeopleController::class, 'listcategory'])->name('people.listcategory');
 Route::post('/people/getuser', [App\Http\Controllers\PeopleController::class, 'getUser'])->name('people.getUser');
+Route::post('/people/removeldapuser', [App\Http\Controllers\PeopleController::class, 'removeLdapUser'])->name('people.removeLdapUser');
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
 Route::match(['get','post'], '/product/create', [App\Http\Controllers\ProductController::class, 'create'])->name('product.create');

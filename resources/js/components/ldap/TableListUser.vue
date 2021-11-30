@@ -32,7 +32,7 @@
                             <td>{{ user.objectguid[0] }}</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-primary" @click="selectUser(user)">Selecionar</button>
-                                <button class="btn btn-sm btn-outline-primary" @click="teste(user)">Teste</button>
+                                <!-- <button class="btn btn-sm btn-outline-primary" @click="teste(user)">Teste</button> -->
                             </td>
                         </tr>
                     </tbody>

@@ -112,9 +112,9 @@
 				<button type="submit" class="btn btn-sm btn-success container-fluid" @click="validate" >Salvar</button>
 			</div>
 
-			<div class="col-sm-2">
+			<!-- <div class="col-sm-2">
 				<button type="submit" class="btn btn-sm btn-success container-fluid" @click="ldapModal">LDAP User</button>
-			</div>
+			</div> -->
 			<!--
 			<div class="col-sm-2">
 				<button class="btn btn-sm btn-outline-success container-fluid" @click="teste2">teste2</button>

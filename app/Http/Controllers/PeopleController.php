@@ -91,13 +91,29 @@ class PeopleController extends Controller
         try {
             $this->people->save();
 
-            $user= new User;
-            $user->name= $ldapUser['samaccountname'];
-            $user->email= $ldapUser['mail'];
-            $user->people_id= $this->people->id;
-            $user->guid= $ldapUser['objectguid'];
-            $user->domain= 'default';
-            $user->save();
+            if ($ldapUser) {
+                //atualiza usuario na tabela users
+                $user= DB::table('users')
+                ->where('guid', '=', $ldapUser['objectguid'])
+                ->update([
+                    'name'=> $ldapUser['samaccountname'],
+                    'email'=> $ldapUser['mail'],
+                    'people_id'=> $this->people->id,
+                    'domain'=> 'default',
+                    'updated_at'=> now()
+                ]);
+
+                if ($user==0) {
+                    //cria novo usuario na tabela users
+                    $user= new User;
+                    $user->name= $ldapUser['samaccountname'];
+                    $user->email= $ldapUser['mail'];
+                    $user->people_id= $this->people->id;
+                    $user->guid= $ldapUser['objectguid'];
+                    $user->domain= 'default';
+                    $user->save();
+                }  
+            }
 
             return response(json_encode($this->people));
         } catch(\Exception $e) {
@@ -111,6 +127,8 @@ class PeopleController extends Controller
         $people= $request->input('people');
         $ldapUser= $request->input('ldapUser');
 
+        //criar condição para verificar se já existe um usuario para o ID da pessoa
+
         if ($ldapUser) { 
             //atualiza usuario na tabela users
             $user= DB::table('users')
@@ -119,7 +137,6 @@ class PeopleController extends Controller
                 'name'=> $ldapUser['samaccountname'],
                 'email'=> $ldapUser['mail'],
                 'people_id'=> $people['id'],
-                'guid'=> $ldapUser['objectguid'],
                 'domain'=> 'default',
                 'updated_at'=> now()
             ]);
@@ -147,14 +164,18 @@ class PeopleController extends Controller
         }
     }
 
-    public function removeLdapUser(Resquest $request)
+    public function removeLdapUser(Request $request)
     {
         //$id= $request->input('id');
         $ldapUser= $request->input('ldapUser');
 
-        $removeUser= DB::table('users')->where('guid', $ldapUser['objectguid'])->delete();
-
-        return json_encode($removeUser);
+        try {
+            $removeUser= DB::table('users')->where('guid', $ldapUser['objectguid'])->delete();
+            return json_encode($removeUser);
+        } catch (\Exception $e) {
+            return json_encode($e->getMessage());
+        }
+        
     }
 
 
@@ -210,6 +231,7 @@ class PeopleController extends Controller
         $id= $request->input('id');
         $people= People::find($id);
         $user= $people->getUser()->first();
+        //dd($id);
 
         return json_encode($user);
     }

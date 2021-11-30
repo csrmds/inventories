@@ -79,6 +79,8 @@ Vue.component('c-csv-import-products', require('./components/csv/ImportProducts.
 
 Vue.component('c-ldapuser-table-list', require('./components/ldap/TableListUser.vue').default);
 
+Vue.component('c-login-form', require('./components/authentication/LoginForm.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
