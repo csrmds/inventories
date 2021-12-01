@@ -16,7 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('/');
+
+Route::get('/home', function () {
+    return view('home');
+})->name('home');
 
 Route::get('/laravel', function () {
     return view('welcome');
@@ -26,12 +30,12 @@ Route::get('/phpinfo', function() {
     return phpinfo();
 });
 
-Route::get('login', function() {
-    return view('home');
-})->name('login');
+// Route::get('login', function() {
+//     return view('home');
+// })->name('login');
 
 Route::post('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
-Route::get('/authenticate/logout', [App\Http\Controllers\AuthenticateController::class, 'logout'])->name('authenticate.logout');
+Route::post('/authenticate/logout', [App\Http\Controllers\AuthenticateController::class, 'logout'])->name('authenticate.logout');
 
 Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.index');
 Route::get('/people/create', [App\Http\Controllers\PeopleController::class, 'create'])->name('people.create');
@@ -89,13 +93,26 @@ Route::post('/csv/import/people', [App\Http\Controllers\CsvController::class, 'i
 
 Route::post('/ldap/searchuser', [App\Http\Controllers\LdapController::class, 'searchUser'])->name('ldap.searchUser');
 Route::post('/ldap/searchgroup', [App\Http\Controllers\LdapController::class, 'searchGroup'])->name('ldap.searchGroup');
-Route::post('/ldap/teste', [App\Http\Controllers\LdapController::class, 'teste'])->name('ldap.teste');
+// Route::post('/ldap/teste', [App\Http\Controllers\LdapController::class, 'teste'])->name('ldap.teste');
+
+Route::prefix('/ldap')->name('ldap.')->group(function() {
+    Route::get('/', [App\Http\Controllers\LdapUserController::class, 'home'])->name('home');
+    Route::match(['get', 'post'], '/home', [App\Http\Controllers\LdapUserController::class, 'home'])->name('home');
+    Route::post('/login', [App\Http\Controllers\LdapUserController::class, 'login'])->name('login');
+    Route::post('/logout', [App\Http\Controllers\LdapUserController::class, 'logout'])->name('logout');
+    Route::get('/teste', [App\Http\Controllers\LdapUserController::class, 'teste'])->name('teste');
+    
+});
 
 Route::get('/teste', function() {
     return view('teste');
 })->name('teste');
 
-Route::match(['get', 'post'], '/teste/teste', [App\Http\Controllers\TesteController::class, 'teste'])->name('teste.teste');
-Route::match(['get', 'post'], '/teste/createuser', [App\Http\Controllers\TesteController::class, 'createUser'])->name('teste.createUser');
-Route::match(['get', 'post'], '/teste/ldaplogin', [App\Http\Controllers\TesteController::class, 'ldapLogin'])->name('teste.ldapLogin');
-Route::match(['get', 'post'], '/teste/dblogin', [App\Http\Controllers\TesteController::class, 'dbLogin'])->name('teste.dbLogin');
+// Route::match(['get', 'post'], '/teste/teste', [App\Http\Controllers\TesteController::class, 'teste'])->name('teste.teste');
+// Route::match(['get', 'post'], '/teste/createuser', [App\Http\Controllers\TesteController::class, 'createUser'])->name('teste.createUser');
+// Route::match(['get', 'post'], '/teste/ldaplogin', [App\Http\Controllers\TesteController::class, 'ldapLogin'])->name('teste.ldapLogin');
+// Route::match(['get', 'post'], '/teste/dblogin', [App\Http\Controllers\TesteController::class, 'dbLogin'])->name('teste.dbLogin');
+
+Auth::routes();
+
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

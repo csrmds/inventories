@@ -13,89 +13,37 @@ class AuthenticateController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials= [
-            "name"=> $request->input('user'),
-            "password"=> $request->input('password')
-        ];
+        $credentials = $request->only('name', 'password');
 
         if (Auth::attempt($credentials)) {
+            Auth::guard('ldapusers')->logout();
             $request->session()->regenerate();
             $userLogin= Auth::user();
             session()->put('userLogin',[
+                'id'=> $userLogin['id'],
                 'name'=> $userLogin['name'],
                 'email'=> $userLogin['email'],
-                'id'=> $userLogin['id'],
                 'people_id'=> $userLogin['people_id'],
-                'domain'=> $userLogin['domain'],
-                'guid'=> $userLogin['guid']
+                'guard'=> 'users'
             ]);
-            $response=[ "login"=> true ];
-            return json_encode($response);
+
+            return redirect()->route('people.index');
         } else {
-            $response= [
-                "login"=> false,
-                "msg"=> "Falha ao validar o usuário"
-            ];
-            return json_encode($response);
-        }
-        
+            $msg= "Não foi possível autenticar...";
+            return back()->withInput()->with('loginError', $msg);
+        }   
     }
+
 
     public function logout() {
-
-        if (Auth::check()) {
+        if (Auth::check() || Auth::guard('ldapusers')->check()) {
             Auth::logout();
+            Auth::guard('ldapusers')->logout();
             session()->forget('userLogin');
         }
-
-        return redirect()->route('login');
+        return redirect()->route('home');
     }
 
-    // public function loginOld(Request $request) {
-    //     $data= $request->all();
-    //     $user= new User;
-    //     $return= [];
-
-    //     $count= count($user->where('name', $data['login'])->get());
-    //     if ($count>0) {
-    //         $userLogin= $user->where('name', $data['login'])->get();
-
-    //         if(password_verify($data['password'], $userLogin[0]->password)) {
-    //             //echo "senha bateu: <br/>";
-    //             session()->put(
-    //                 'userLogin', [
-    //                     'id'=> $userLogin[0]->id,
-    //                     'name'=> $userLogin[0]->name,
-    //                     'email'=> $userLogin[0]->email
-    //             ]);
-    //             $return= session()->get('userLogin');
-    //             $return["error"]= false;
-
-    //         } else {
-    //             $return= [
-    //                 "error"=> true,
-    //                 "msg"=> "Usuário ou senha inválido"
-    //             ];
-    //         }
-            
-    //     } else {
-    //         $return= [
-    //             "error"=> true,
-    //             "msg"=> "Usuário ou senha inválido"
-    //         ];
-    //     };
-
-    //     return json_encode($return);
-
-    // }
-
-    // public function logoutOld() {
-    //     if (session()->has('userLogin')) {
-    //         session()->forget('userLogin');
-    //     }
-
-    //     return redirect('/');
-    // }
 
     public function teste() {
         $user= new User;

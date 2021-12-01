@@ -23,6 +23,7 @@
 			<li class="nav-item">
 				<a class="nav-link" href="{{ url('/') }}">HOME</a>
 			</li>
+			@if (Auth::check() || Auth::guard('ldapusers')->check())
 			<li class="nav-item">
 				<a class="nav-link" href="{{ route('people.index') }}">PESSOAS</a>
 			</li>
@@ -41,17 +42,71 @@
 			<li class="nav-item">
 				<a class="nav-link" href="{{ route('teste') }}">TESTE</a>
 			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{{ route('ldap.home') }}">LDAP</a>
+			</li>
+			@endif
 		</ul>
 
+		<ul class="navbar-nav ml-auto">
+			<!-- Authentication Links -->
+			@guest
+				@if (Route::has('login'))
+					<li class="nav-item">
+						<a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+					</li>
+				@endif
 
-		@if (session()->has('userLogin'))
-		<?php $userLogin= session()->get('userLogin');  ?>
-		<form class="form-inline my-2 my-lg-0">
+				@if (Route::has('register'))
+					<li class="nav-item">
+						<a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+					</li>
+				@endif
+			@else
+				{{-- <li class="nav-item dropdown">
+					<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+						{{ Auth::user()->name }}
+					</a>
+
+					<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="{{ route('logout') }}"
+						   onclick="event.preventDefault();
+										 document.getElementById('logout-form').submit();">
+							{{ __('Logout') }}
+						</a>
+
+						<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+							@csrf
+						</form>
+					</div>
+				</li> --}}
+			@endguest
+		</ul>
+
+		@if (Auth::check() || Auth::guard('ldapusers')->check())
+		<?php 
+			$userLogin= session()->get('userLogin');
+		?>
+		<form class="form-inline my-2 my-lg-0" id="logout-form" action="{{ route('authenticate.logout') }}" method="POST">
+			@csrf
 			<div class="navbar-nav">
 				<li class="nav-item dropdown" >
-					<a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ $userLogin['name'] }}</a>
+					<a 
+						class="nav-link dropdown-toggle" 
+						id="navbarDropdown" 
+						role="button" 
+						data-toggle="dropdown" 
+						aria-haspopup="true" 
+						aria-expanded="false">
+						{{ $userLogin['name'] }} {{ $userLogin['guard']=="ldapusers" ? " AD" : null }}
+					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="{{ route('authenticate.logout') }}">Logout</a>
+						<a 
+							class="dropdown-item" 
+							href="" 
+							onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+							Logout
+						</a>
 					</div>
 				</li>	
 			</div>

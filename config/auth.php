@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'ldapusers'=> [
+            'driver'=> 'session',
+            'provider'=> 'ldapusers',
+        ],
     ],
 
     /*
@@ -65,6 +70,11 @@ return [
             'model' => App\Models\User::class,
         ],
 
+        'ldapusers' => [
+            'driver' => 'eloquent',
+            'model'=> App\Models\LdapUser::class,
+        ],
+
         // 'users'=> [
         //     'driver'=> 'ldap',
         //     'model'=> LdapRecord\Models\ActiveDirectory\User::class,
@@ -79,10 +89,6 @@ return [
         //     ],
         // ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -103,6 +109,13 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'ldapusers' => [
+            'provider' => 'ldapusers',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

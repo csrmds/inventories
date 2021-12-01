@@ -28,7 +28,7 @@ use App\Models\People;
         <?php
             $people= People::Find('110');
 
-            $user= $people-getUser();
+            $user= $people->getUser();
             
 
             

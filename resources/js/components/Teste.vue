@@ -57,7 +57,7 @@ export default {
         async teste(e) {
             e.preventDefault()
             //console.log(this.cValue)
-            const x= await axios.post('/ldap/searchuser', {word: this.word})
+            const x= await axios.get('/ldap/teste')
             console.log(x)
         },
 
