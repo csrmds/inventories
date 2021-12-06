@@ -64,10 +64,5 @@ export default {
             return resp
         },
 
-        async getLdapUser(context, payload) {
-            const resp= await axios.post('/user/getldapuser', {id: payload})
-            return resp
-        }
-
     }
 }

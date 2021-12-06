@@ -35,7 +35,7 @@ Route::get('/phpinfo', function() {
 // })->name('login');
 
 Route::post('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
-Route::post('/authenticate/logout', [App\Http\Controllers\AuthenticateController::class, 'logout'])->name('authenticate.logout');
+Route::match(['get','post'], '/authenticate/logout', [App\Http\Controllers\AuthenticateController::class, 'logout'])->name('authenticate.logout');
 
 Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.index');
 Route::get('/people/create', [App\Http\Controllers\PeopleController::class, 'create'])->name('people.create');
@@ -67,7 +67,7 @@ Route::get('/product/teste', [App\Http\Controllers\ProductController::class, 'te
 
 
 Route::post('/user/search', [App\Http\Controllers\UserController::class, 'search'])->name('user.search');
-Route::post('/user/getldapuser', [App\Http\Controllers\UserController::class, 'getLdapUser'])->name('user.getLdapUser');
+//Route::post('/user/getldapuser', [App\Http\Controllers\UserController::class, 'getLdapUser'])->name('user.getLdapUser');
 
 Route::get('/group', [App\Http\Controllers\GroupController::class, 'index'])->name('group.index');
 Route::get('/group/all', [App\Http\Controllers\GroupController::class, 'all'])->name('group.all');
@@ -99,8 +99,10 @@ Route::prefix('/ldap')->name('ldap.')->group(function() {
     Route::get('/', [App\Http\Controllers\LdapUserController::class, 'home'])->name('home');
     Route::match(['get', 'post'], '/home', [App\Http\Controllers\LdapUserController::class, 'home'])->name('home');
     Route::post('/login', [App\Http\Controllers\LdapUserController::class, 'login'])->name('login');
-    Route::post('/logout', [App\Http\Controllers\LdapUserController::class, 'logout'])->name('logout');
-    Route::get('/teste', [App\Http\Controllers\LdapUserController::class, 'teste'])->name('teste');
+    Route::match(['get', 'post'], '/logout', [App\Http\Controllers\LdapUserController::class, 'logout'])->name('logout');
+    Route::post('/teste', [App\Http\Controllers\LdapUserController::class, 'teste'])->name('teste');
+    Route::post('/checkCred', [App\Http\Controllers\LdapUserController::class, 'checkCred'])->name('checkCred');
+    Route::post('/getldapuser', [App\Http\Controllers\LdapUserController::class, 'getLdapUser'])->name('getLdapUser');
     
 });
 

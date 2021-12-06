@@ -279,7 +279,7 @@ export default {
             console.log('loadUser formedit: '+this.people.id)
             if (resp.data) {
                 await this.$store.commit('user/setUser', resp.data)
-                let getLdapUser= await this.$store.dispatch('user/getLdapUser', resp.data.id)
+                let getLdapUser= await this.$store.dispatch('ldapUser/getLdapUser', resp.data.id)
                 if (getLdapUser.data.distinguishedname) {
                     this.$store.commit('ldapUser/setLdapUser', getLdapUser.data)
                 }

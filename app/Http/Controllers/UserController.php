@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\LdapUser;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -105,15 +106,4 @@ class UserController extends Controller
         return json_encode($users);
     }
 
-    public function getLdapUser(Request $request) {
-        $id= $request->input('id');
-        $user= User::Find($id);
-
-        $ldapUser= $user->getLdapUser();
-        if ($ldapUser) {
-            return $ldapUser;
-        } else {
-            return null;
-        }
-    }
 }

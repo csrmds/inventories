@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\LdapUser;
-use Illuminate\Support\Facades\Hash;
+use LdapRecord\Container;
 
 class LdapUserController extends Controller
 {
@@ -31,7 +32,10 @@ class LdapUserController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('name', 'password');
+        $credentials= [
+            'samaccountname'=> $request->input('name'),
+            'password'=> $request->input('password'),
+        ];
 
         if (Auth::guard('ldapusers')->attempt($credentials)) {
             Auth::logout();
@@ -53,40 +57,6 @@ class LdapUserController extends Controller
 
     }
 
-    public function teste(Request $request)
-    {
-        $userLogin= Auth::user();
-        $userLdapLogin= Auth::guard('ldapusers')->user();
-
-        // echo "<pre>";
-        // echo "USER LOGIN: <BR>";
-        // print_r($userLogin)
-        // echo "<br/><br/><br/>";
-        // echo "USER LOGIN: <BR>";
-        // print_r($userLogin)
-        // echo "</pre>";
-
-        return json_encode([$userLogin, $userLdapLogin]);
-
-        // if (session('userLogin')) {
-        //     return json_encode(session('userLogin'));
-        // } else {
-        //     return "sem userLdapLogin";
-        // }
-        // $ldapUser= new LdapUser;
-
-        // $ldapUser->name= "cesar.ldap";
-        // $ldapUser->password= Hash::make('ldap');
-        // $ldapUser->email= "cesar.ldap@cmelos.com.br";
-
-        // try {
-        //     $ldapUser->save();
-        //     return json_encode($ldapUser);
-        // } catch(\Exception $e) {
-        //     return $e->getMessage();
-        // }
-    }
-
     public function logout() {
         if (Auth::guard('ldapusers')->check()) {
             Auth::guard('ldapusers')->logout();
@@ -94,6 +64,67 @@ class LdapUserController extends Controller
             return view('ldap.login');
         }
     }
+
+    public function getLdapUser(Request $request) {
+        $user= LdapUser::Find($request->input('id'));
+
+        $ldapUser= $user->getLdapUser();
+        if ($ldapUser) {
+            return $ldapUser;
+        } else {
+            return null;
+        }
+    }
+
+    public function teste(Request $request)
+    {
+        $samaccountname= $request->input('samaccountname');
+        $password= $request->input('password');
+        $credentials = $request->only('samaccountname', 'password');
+
+        //dd($credentials);
+        //$ldapUser= new LdapUser::where('name', 'contains', 'ce')->get();
+        //$ldapUser= new LdapUser;
+        if (Auth::guard('ldapusers')->attempt($credentials)) {
+            $ldapUser= Auth::guard('ldapusers')->user();
+            return json_encode($ldapUser);
+        } else {
+            return json_encode(Auth::guard('ldapusers')->attempt($credentials));
+        }
+
+        
+        //return json_encode($ldapUser);
+
+        // $userLogin= Auth::user();
+        // $userLdapLogin= Auth::guard('ldapusers')->user();
+
+        // return json_encode([$userLogin, $userLdapLogin]);
+
+    }
+
+    public function checkCred(Request $request) 
+    {
+        $samaccountname= $request->input('samaccountname');
+        $password= $request->input('password');
+        
+        $connection = Container::getDefaultConnection();
+        $ldapUser= LdapUser::where('name', $samaccountname)->first();
+        //$ldapUser= LdapUser::where('samaccountname', $samaccountname)->first();
+        dd($ldapUser);
+
+        if ($ldapUser && $password && $connection->auth()->attempt($ldapUser->getDn(), $password)) {
+            return true;
+        } else {
+            $message = $connection->getLdapConnection()->getDiagnosticMessage();
+            if (strpos($message, '532') !== false) {
+                return "Your password has expired.";
+            }
+            return false;
+        }
+
+    }
+
+    
 
 
 }

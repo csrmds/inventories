@@ -48,7 +48,7 @@
 			@endif
 		</ul>
 
-		<ul class="navbar-nav ml-auto">
+		{{--<ul class="navbar-nav ml-auto">
 			<!-- Authentication Links -->
 			@guest
 				@if (Route::has('login'))
@@ -63,7 +63,7 @@
 					</li>
 				@endif
 			@else
-				{{-- <li class="nav-item dropdown">
+				 <li class="nav-item dropdown">
 					<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
 						{{ Auth::user()->name }}
 					</a>
@@ -79,9 +79,9 @@
 							@csrf
 						</form>
 					</div>
-				</li> --}}
+				</li> 
 			@endguest
-		</ul>
+		</ul>--}}
 
 		@if (Auth::check() || Auth::guard('ldapusers')->check())
 		<?php 

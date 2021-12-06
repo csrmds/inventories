@@ -134,6 +134,11 @@ export default {
         async search(context, payload) {
             const resp= await axios.post('/ldap/searchuser', {word: payload})
             return resp
+        },
+
+        async getLdapUser(context, payload) {
+            const resp= await axios.post('/ldap/getldapuser', {id: payload})
+            return resp
         }
 
         

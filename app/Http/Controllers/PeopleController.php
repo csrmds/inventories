@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Group;
 use App\Models\User;
+use App\Models\LdapUser;
 use Illuminate\Support\Facades\Auth;
-use LdapRecord\Models\ActiveDirectory\User as LdapUser;
+//use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 use Faker\Factory;
 
 class PeopleController extends Controller
@@ -93,7 +94,7 @@ class PeopleController extends Controller
 
             if ($ldapUser) {
                 //atualiza usuario na tabela users
-                $user= DB::table('users')
+                $user= DB::table('ldap_users')
                 ->where('guid', '=', $ldapUser['objectguid'])
                 ->update([
                     'name'=> $ldapUser['samaccountname'],
@@ -105,7 +106,7 @@ class PeopleController extends Controller
 
                 if ($user==0) {
                     //cria novo usuario na tabela users
-                    $user= new User;
+                    $user= new LdapUser;
                     $user->name= $ldapUser['samaccountname'];
                     $user->email= $ldapUser['mail'];
                     $user->people_id= $this->people->id;
@@ -131,7 +132,7 @@ class PeopleController extends Controller
 
         if ($ldapUser) { 
             //atualiza usuario na tabela users
-            $user= DB::table('users')
+            $user= DB::table('ldap_users')
             ->where('guid', '=', $ldapUser['objectguid'])
             ->update([
                 'name'=> $ldapUser['samaccountname'],
@@ -143,13 +144,18 @@ class PeopleController extends Controller
             
             if ($user==0) {
                 //cria novo usuario na tabela users
-                $user= new User;
+                $user= new LdapUser;
                 $user->name= $ldapUser['samaccountname'];
                 $user->email= $ldapUser['mail'];
                 $user->people_id= $people['id'];
                 $user->guid= $ldapUser['objectguid'];
                 $user->domain= 'default';
-                $user->save();
+                try {
+                    $user->save();
+                } catch(\Exception $e) {
+                    return response(json_encode($e->getMessage()), 418);
+                }
+                
             }  
         }
 
@@ -170,7 +176,7 @@ class PeopleController extends Controller
         $ldapUser= $request->input('ldapUser');
 
         try {
-            $removeUser= DB::table('users')->where('guid', $ldapUser['objectguid'])->delete();
+            $removeUser= DB::table('ldap_users')->where('guid', $ldapUser['objectguid'])->delete();
             return json_encode($removeUser);
         } catch (\Exception $e) {
             return json_encode($e->getMessage());

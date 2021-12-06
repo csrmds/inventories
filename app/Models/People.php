@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
+use App\Models\LdapUser;
 
 class People extends Model
 {
@@ -36,7 +36,7 @@ class People extends Model
     ];
 
     public function getUser() {
-        return $this->hasOne(User::class, "people_id", "id");
+        return $this->hasOne(LdapUser::class, "people_id", "id");
     }
     
 }

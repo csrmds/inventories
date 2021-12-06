@@ -19,10 +19,13 @@
 
 
         <div class="form-row">
-            <div class="col-sm-4">
-                <label for="">input</label>
-                <input type="text" class="form-control form-control-sm" placeholder="teste">
-
+            <div class="col-sm-3">
+                <label for="">user name</label>
+                <input v-model="word" type="text" class="form-control form-control-sm" placeholder="login">
+            </div>
+            <div class="col-sm-3">
+                <label for="">password</label>
+                <input v-model="password" type="password" class="form-control form-control-sm" >
             </div>
             <div class="col-sm-2">
                 <label for="btn">&nbsp;x</label><br>
@@ -43,6 +46,7 @@ export default {
     data() {
         return {
             word: null,
+            password: null,
             product: this.$store.state.product,
             list: null
         }
@@ -57,8 +61,11 @@ export default {
         async teste(e) {
             e.preventDefault()
             //console.log(this.cValue)
-            const x= await axios.get('/ldap/teste')
-            console.log(x)
+            const x= await axios.post('/ldap/teste', {
+                samaccountname: this.word,
+                password: this.password
+            })
+            console.log(x.data)
         },
 
         async loadList(e) {

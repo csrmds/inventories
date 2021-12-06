@@ -59,6 +59,7 @@ Vue.component('c-people-table-list', require('./components/people/TableList.vue'
 Vue.component('c-people-form-edit', require('./components/people/FormEdit.vue').default);
 Vue.component('c-people-card-info', require('./components/people/CardInfo.vue').default);
 Vue.component('c-people-form-search', require('./components/people/FormSearch.vue').default);
+Vue.component('c-people-form-create-simple', require('./components/people/FormCreateSimple.vue').default);
 
 Vue.component('c-product-search', require('./components/product/InputSearch.vue').default);
 Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);

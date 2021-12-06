@@ -17,6 +17,9 @@
             <div class='col-sm'>
                 <button class="btn btn-sm btn-outline-primary container-fluid" @click="newPeople" >Novo</button>
             </div>
+            <div class='col-sm'>
+                <button class="btn btn-sm btn-outline-primary container-fluid" @click="newPeopleSimple" >simple</button>
+            </div>
 
             <!-- <div class='col-sm'>
                 <button class="btn btn-sm btn-outline-primary container-fluid" @click="teste" >teste</button>
@@ -94,6 +97,16 @@
 
 
         <div class="row">
+            <div class="col-sm">	
+				<b-modal 
+					id="modal-people-create-simple" 
+					title="Pessoas"
+                    button-size="sm"
+                    hide-footer>
+					<c-people-form-create-simple></c-people-form-create-simple>
+				</b-modal>
+			</div>
+
 			<div class="col-sm">	
 				<b-modal 
 					id="modal-people-edit" 
@@ -199,6 +212,12 @@ export default {
             this.$store.commit('people/cleanPeople')
             this.$store.commit('people/cleanResp')
             this.$bvModal.show('modal-people-edit')
+        },
+
+        newPeopleSimple() {
+            this.$store.commit('people/cleanPeople')
+            this.$store.commit('people/cleanResp')
+            this.$bvModal.show('modal-people-create-simple')
         },
 
         destroy(param) {

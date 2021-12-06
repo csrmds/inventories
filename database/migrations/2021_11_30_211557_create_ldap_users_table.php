@@ -21,7 +21,7 @@ class CreateLdapUsersTable extends Migration
             $table->string('name')->unique();
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('guid')->nullable();
             $table->string('domain')->nullable();
             $table->rememberToken();

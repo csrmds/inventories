@@ -57,15 +57,4 @@ class User extends Authenticatable implements LdapAuthenticatable
         return $this->hasOne(People::class, "id", "people_id");
     }
 
-    public function getLdapUser() {
-
-        $ldapUser= LdapUser::where('samaccountname', $this->name)->first();
-        if ($ldapUser && $this->guid===$ldapUser->getconvertedguid()) {
-            return $ldapUser;
-        } else {
-            return null;
-        }
-
-        
-    }
 }
