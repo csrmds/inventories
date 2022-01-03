@@ -171,7 +171,9 @@ export default {
     methods: {
         async filterList() {
             const resp= await this.$store.dispatch('people/search', { word: this.word })
-            this.filterPaginate= resp.data
+            console.log('filterList...')
+            console.log(resp.data)
+            this.filterPaginate= resp
             this.list= this.filterPaginate.data
         },
 
@@ -180,7 +182,7 @@ export default {
                 word: this.word,
                 page: param
             })
-            this.filterPaginate= resp.data
+            this.filterPaginate= resp
             this.list= this.filterPaginate.data
         },
 
@@ -192,7 +194,7 @@ export default {
                     word: this.word,
                     page: page
                 })
-                this.filterPaginate= resp.data
+                this.filterPaginate= resp
                 this.list= this.filterPaginate.data
             }
         },

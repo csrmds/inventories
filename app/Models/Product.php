@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Location;
+use App\Models\People;
 
 class Product extends Model
 {
@@ -38,5 +39,9 @@ class Product extends Model
 
     public function location() {
         return $this->hasOne(Location::class, "id", "location_id");
+    }
+
+    public function people() {
+        return $this->hasOne(People::class, "id", "people_id");
     }
 }

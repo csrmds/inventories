@@ -48,9 +48,9 @@ class AuthenticateController extends Controller
     public function teste() {
         $user= new User;
 
-        $user->name= "Marcia";
-        $user->email= "marcia@gmail.com";
-        $user->password= password_hash("marcia", PASSWORD_DEFAULT);
+        $user->name= "Cesar Melo";
+        $user->email= "cesar.melo@gmail.com";
+        $user->password= password_hash("1234", PASSWORD_DEFAULT);
 
         $user->save();
 

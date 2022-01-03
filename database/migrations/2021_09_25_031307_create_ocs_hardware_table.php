@@ -61,7 +61,7 @@ class CreateOcsHardwareTable extends Migration
 						 key memory (memory) ) 
 				ENGINE=federated
 				default charset=utf8
-				connection='mysql://ocs:ocs@192.168.18.25:3306/ocsweb_zurich/hardware'"
+				connection='mysql://ocs:ocs@192.168.18.25:3306/ocsweb/hardware'"
 			);
 	 }
 

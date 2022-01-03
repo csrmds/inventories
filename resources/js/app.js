@@ -51,6 +51,7 @@ Vue.use(VueTheMask)
 Vue.component('c-select', require('./components/form/Select.vue').default);
 Vue.component('c-autocomplete', require('./components/form/Autocomplete.vue').default);
 Vue.component('c-autocomplete-axios', require('./components/form/AutocompleteAxios.vue').default);
+Vue.component('c-autocomplete-axios-ldap', require('./components/form/AutocompleteAxiosLdap.vue').default);
 Vue.component('c-cep', require('./components/form/Cep.vue').default);
 
 Vue.component('c-teste', require('./components/Teste.vue').default);
@@ -64,6 +65,7 @@ Vue.component('c-people-form-create-simple', require('./components/people/FormCr
 Vue.component('c-product-search', require('./components/product/InputSearch.vue').default);
 Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);
 Vue.component('c-product-table-list', require('./components/product/TableList.vue').default);
+Vue.component('c-product-card-info', require('./components/product/CardInfo.vue').default);
 
 Vue.component('c-group-search', require('./components/group/InputSearch.vue').default);
 Vue.component('c-group-table-list', require('./components/group/TableList.vue').default);
@@ -81,6 +83,11 @@ Vue.component('c-csv-import-products', require('./components/csv/ImportProducts.
 Vue.component('c-ldapuser-table-list', require('./components/ldap/TableListUser.vue').default);
 
 Vue.component('c-login-form', require('./components/authentication/LoginForm.vue').default);
+
+Vue.component('c-order-form-local', require('./components/order/FormLocalMovement.vue').default);
+Vue.component('c-order-form-transfer', require('./components/order/FormTransferMovement.vue').default);
+Vue.component('c-order-table-list', require('./components/order/TableList.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

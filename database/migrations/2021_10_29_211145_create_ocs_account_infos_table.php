@@ -21,7 +21,7 @@ class CreateOcsAccountInfosTable extends Migration
                 key tag (tag) )
             engine=federated
             default charset=utf8
-            connection='mysql://ocs:ocs@192.168.18.25:3306/ocsweb_zurich/accountinfo'"
+            connection='mysql://ocs:ocs@192.168.18.25:3306/ocsweb/accountinfo'"
         );
     }
 

@@ -9,7 +9,8 @@ import alert from "./alert"
 import people from "./people"
 import location from "./location"
 import ldapUser from "./ldapUser"
-import maria from "./user"
+import order from "./order"
+import orderItem from './orderItem'
 
 
 Vue.use(Vuex)
@@ -86,6 +87,7 @@ export default new Vuex.Store({
         people: people,
         location: location,
         ldapUser: ldapUser,
-        maria: maria
+        order: order,
+        orderItem: orderItem
     }
 })

@@ -25,6 +25,7 @@ export default {
 		ocs_hw_id: null,
 		ocs_mon_id: null,
 		people_id: null,
+		people: null,
 		location_id: null,
 		location: null,
 		created_at: null,
@@ -206,7 +207,8 @@ export default {
 				product= JSON.parse(product)
 				context.commit('setProduct', product)
 			}
-		}
+		},
+
 	}
 }
 

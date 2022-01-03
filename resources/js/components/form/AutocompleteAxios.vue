@@ -2,22 +2,38 @@
 	
 	<div class="autocomplete">
 		<label :for="id" v-if="label" >{{label}}</label>
-		<input 
-			v-model="word" 
-			@input="list" 
-			@keydown.down="onArrowDown"
-			@keydown.up="onArrowUp"
-			@keydown.enter="onEnter"
-			@keydown.esc="isOpen=false"
-			@blur="onBlur"
-			:id="id"
-			type="text" 
-			class="form-control form-control-sm"
-			autocomplete="off"
-		/>
+		<div class="input-group">
+			<input 
+				v-model="word" 
+				@input="list" 
+				@keydown.down="onArrowDown"
+				@keydown.up="onArrowUp"
+				@keydown.enter="onEnter"
+				@keydown.esc="isOpen=false"
+				@blur="onBlur2"
+				:id="id"
+				type="text" 
+				class="form-control form-control-sm"
+				autocomplete="off"
+				:readonly="itemSelected"
+			/>
+			<div
+				v-if="itemSelected" 
+				class="input-group-append">
+				<button 
+					@click="clean"
+					class="btn btn-sm btn-outline-secondary" 
+					type="button">
+					Editar
+				</button>
+			</div>
+		</div>
+		
 		<ul	v-show="isOpen" class="autocomplete-results">
 			<li v-if="isLoading" class="loading">
-				Carregando lista...
+				<div class="spinner-border text-secondary" role="status">
+					<span class="sr-only">Loading...</span>
+				</div>
 			</li>
 
 			<li
@@ -29,7 +45,7 @@
 				@click= "setResult(result)"
 				class= "autocomplete-result"
 			>
-				{{ column ? result.column : result.name }}
+				{{ column ? result[column] : result.name }}
 			</li>
 		</ul>
 
@@ -79,7 +95,7 @@ export default {
 			isOpen: false,
 			arrowCounter: -1,
 			isLoading: false,
-			itemSelected: false,
+			itemSelected: null,
 		};
 	},
 
@@ -88,6 +104,7 @@ export default {
 			this.results= this.items.filter(
 				item=> item.toLowerCase().indexOf(this.word.toLowerCase()) > -1
 			);
+			//console.log(this.results)
 		},
 	
 		async list() {
@@ -112,10 +129,23 @@ export default {
 		},
 
 		setResult(result) {
-			this.word= result.column
+			this.word= result[this.column]
 			this.itemSelected= result
 			this.isOpen= false
 
+			this.$emit('itemSelected', this.itemSelected)
+		},
+
+		onEnter() {
+			this.word= this.results[this.arrowCounter][this.column]
+			this.itemSelected= this.results[this.arrowCounter]
+			this.arrowCounter= -1
+			this.isOpen= false
+
+			this.$emit('itemSelected', this.itemSelected)
+		},
+
+		onBlur2() {
 			this.$emit('itemSelected', this.itemSelected)
 		},
 
@@ -126,17 +156,17 @@ export default {
 			})
 			
 			if (this.itemSelected.column==this.word) {
-				console.log("o campo é igual")
-				console.log(this.itemSelected.column+" -> "+this.word)
+				// console.log("o campo é igual")
+				// console.log(this.itemSelected.column+" -> "+this.word)
 			} else {
-				console.log("o campo é difrerente")
-				console.log(this.itemSelected.column+" -> "+this.word)	
+				// console.log("o campo é difrerente")
+				// console.log(this.itemSelected.column+" -> "+this.word)	
 
 				if (resp.data.length>0 && resp.data[0].column==this.word) {
-					console.log("o registro existe.. retornar itemSelected")
+					// console.log("o registro existe.. retornar itemSelected")
 					this.itemSelected= resp.data[0]
 				} else {
-					console.log("o registro não existe.. retornar itemSelected false")
+					// console.log("o registro não existe.. retornar itemSelected false")
 					this.itemSelected= false
 				}
 			}
@@ -168,15 +198,6 @@ export default {
 			}
 		},
 
-		onEnter() {
-			this.word= this.results[this.arrowCounter].column
-			this.itemSelected= this.results[this.arrowCounter]
-			this.arrowCounter= -1
-			this.isOpen= false
-
-			this.$emit('itemSelected', this.itemSelected)
-		},
-
 		cleanResults() {
 			this.results=[]
 			this.isOpen= false
@@ -186,6 +207,12 @@ export default {
 		},
 
 		cleanWord() { this.word= null },
+
+		clean() {
+			this.cleanResults()
+			this.cleanWord()
+			document.getElementById(this.id).focus()
+		}
 
 		// loadInput() {
 		// 	if (this.itemInput!=null) {

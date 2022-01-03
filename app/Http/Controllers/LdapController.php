@@ -17,24 +17,6 @@ use Illuminate\Support\Facades\Auth;
 
 class LdapController extends Controller
 {
-    public function searchUser(Request $request)
-    {
-        $word= $request->input('word');
-
-        try {
-            if ($word!=null) {
-                $users= LdapUser::where('iscriticalsystemobject', '!=', 'TRUE')
-                    ->where('samaccountname', 'contains', $word)
-                    ->orWhere('cn', 'contains', $word)->get();
-            } else {
-                $users= LdapUser::where('iscriticalsystemobject', '!=', 'TRUE')->get();
-            }
-            return json_encode($users);
-        } catch (\Exception $e){
-            return response(json_encode($e->getMessage()), 418);
-        }
-        
-    }
 
     public function teste(Request $request)
     {

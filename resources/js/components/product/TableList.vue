@@ -192,8 +192,6 @@ export default {
 
         async edit(id) {
             const product= await this.$store.dispatch('product/getById', id)
-            console.log("edit...")
-            console.log(product)
             if (product.id) {
                 this.$store.dispatch('product/loadInputs', product)
                 this.$bvModal.show('modal-product-edit')

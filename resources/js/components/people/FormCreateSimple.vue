@@ -139,7 +139,7 @@ export default {
                 people: this.people,
                 ldapUser: this.ldapUser
             })
-            consoel.log(resp)
+            console.log(resp)
         },
 
         switchLdapUser() {

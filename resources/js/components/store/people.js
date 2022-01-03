@@ -123,8 +123,14 @@ export default {
                 word: payload.word,
                 page: payload.page
             })
-            //console.log(payload)
-            return resp
+            
+            if (typeof resp.data.data == 'object') {
+                //console.log(resp.data)
+                return resp.data
+            } else {
+                return resp
+            }
+            
         },
 
         async searchBy(context, payload) {

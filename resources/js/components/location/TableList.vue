@@ -15,9 +15,9 @@
                 <button @click="newLocation" class="form-control form-control-sm" >Novo</button>
             </div>
 
-            <div class="col-sm">
+            <!-- <div class="col-sm">
                 <button class="form-control form-control-sm" >Teste</button>
-            </div>
+            </div> -->
         </div>
         <br>
 

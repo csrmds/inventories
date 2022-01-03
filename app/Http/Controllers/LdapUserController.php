@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Illuminate\Http\Request;
+use LdapRecord\Models\ActiveDirectory\User as LdapUser;
+use LdapRecord\Models\Attributes\AccountControl;
+use LdapRecord\Models\ModelNotFoundException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\Models\LdapUser;
+//use App\Models\LdapUser;
 use LdapRecord\Container;
 
 class LdapUserController extends Controller
@@ -76,31 +80,25 @@ class LdapUserController extends Controller
         }
     }
 
-    public function teste(Request $request)
+    public function searchUser(Request $request)
     {
-        $samaccountname= $request->input('samaccountname');
-        $password= $request->input('password');
-        $credentials = $request->only('samaccountname', 'password');
+        $word= $request->input('word') ;
 
-        //dd($credentials);
-        //$ldapUser= new LdapUser::where('name', 'contains', 'ce')->get();
-        //$ldapUser= new LdapUser;
-        if (Auth::guard('ldapusers')->attempt($credentials)) {
-            $ldapUser= Auth::guard('ldapusers')->user();
-            return json_encode($ldapUser);
-        } else {
-            return json_encode(Auth::guard('ldapusers')->attempt($credentials));
+        try {
+            if ($word!=null) {
+                $users= LdapUser::where('iscriticalsystemobject', '!=', 'TRUE')
+                    ->where('samaccountname', 'contains', $word)
+                    ->orWhere('cn', 'contains', $word)->get();
+            } else {
+                $users= LdapUser::where('iscriticalsystemobject', '!=', 'TRUE')->get();
+            }
+            return json_encode($users);
+        } catch (\Exception $e){
+            return response(json_encode($e->getMessage()), 418);
         }
-
         
-        //return json_encode($ldapUser);
-
-        // $userLogin= Auth::user();
-        // $userLdapLogin= Auth::guard('ldapusers')->user();
-
-        // return json_encode([$userLogin, $userLdapLogin]);
-
     }
+
 
     public function checkCred(Request $request) 
     {
@@ -120,6 +118,28 @@ class LdapUserController extends Controller
                 return "Your password has expired.";
             }
             return false;
+        }
+
+    }
+
+    public function teste(Request $request)
+    {
+        $word= $request->input('word');
+        print_r($word);
+        //$word= "lu";
+        DB::enableQueryLog();
+        try {
+            if ($word!=null) {
+                $users= LdapUser::where('iscriticalsystemobject', '!=', 'TRUE')
+                    ->where('samaccountname', 'contains', $word)
+                    ->orWhere('cn', 'contains', $word)->get();
+                //dd(DB::getQueryLog());
+            } else {
+                $users= LdapUser::where('iscriticalsystemobject', '!=', 'TRUE')->get();
+            }
+            return json_encode($users);
+        } catch (\Exception $e){
+            return response(json_encode($e->getMessage()), 418);
         }
 
     }

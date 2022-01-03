@@ -247,7 +247,7 @@ class PeopleController extends Controller
         $faker= Factory::create('pt_BR');
 
         echo "<pre>";
-        for ($i=0; $i<100; $i++) {
+        for ($i=0; $i<85; $i++) {
             $this->people= new People;
             
             $this->people->first_name= $faker->firstName;
@@ -264,9 +264,9 @@ class PeopleController extends Controller
             $this->people->number= $faker->buildingNumber;
             $this->people->cpf= $faker->cpf;
 
-            //print_r($this->people);
+            print_r($this->people);
 
-            //$this->people->save();
+            $this->people->save();
         }
         echo "</pre>";
     }

@@ -80,6 +80,8 @@ class ProductController extends Controller
         $data= $request->input('product');
         $this->product= Product::Find($data['id']);
         $this->setProperties($data);
+
+        //return json_encode($this->product);
         
         try {
             $this->product->save();
@@ -97,13 +99,17 @@ class ProductController extends Controller
 
     public function search(Request $request)
     {
+        DB::enableQueryLog();
         $data= $request->input('word');
         $products= DB::table('products')
-            ->join('locations', 'products.location_id', '=', 'locations.id')
+            ->leftJoin('locations', 'products.location_id', '=', 'locations.id')
             ->select('products.*', 'locations.name as location_name')
             ->where('products.name', 'like', $data.'%')
             ->orWhere('products.property_id', 'like', $data.'%')
+            ->orderBy('products.id')
             ->paginate(10);
+        
+        //dd(DB::getQueryLog());
         return json_encode($products);
     }
 
@@ -129,9 +135,18 @@ class ProductController extends Controller
         $id= $request->input('id');
         $this->product= Product::Find($id);
         $location= $this->product->location()->get();
-        $this->product->location= $location[0]['name'];
-        
+        $people= $this->product->people()->get();
+
+        if (isset($location[0]['id'])) {
+            $this->product->location= $location[0]['name'];
+        }
+
+        if (isset($people[0]['id'])) {
+            $this->prodcut->people= $people[0]['first_name']." ".$people[0]['last_name'];
+        }
+
         return json_encode($this->product);
+
     }
 
     public function teste(Request $request)

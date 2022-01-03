@@ -36,6 +36,7 @@ Route::get('/phpinfo', function() {
 
 Route::post('/authenticate', [App\Http\Controllers\AuthenticateController::class, 'login'])->name('authenticate.login');
 Route::match(['get','post'], '/authenticate/logout', [App\Http\Controllers\AuthenticateController::class, 'logout'])->name('authenticate.logout');
+Route::get('/authenticate/teste', [App\Http\Controllers\AuthenticateController::class, 'teste'])->name('authenticate.teste');
 
 Route::get('/people', [App\Http\Controllers\PeopleController::class, 'index'])->name('people.index');
 Route::get('/people/create', [App\Http\Controllers\PeopleController::class, 'create'])->name('people.create');
@@ -44,7 +45,7 @@ Route::post('/people/save', [App\Http\Controllers\PeopleController::class, 'save
 Route::post('/people/update', [App\Http\Controllers\PeopleController::class, 'update'])->name('people.update');
 Route::post('/people/destroy', [App\Http\Controllers\PeopleController::class, 'destroy'])->name('people.destroy');
 Route::get('/people/faker', [App\Http\Controllers\PeopleController::class, 'faker'])->name('people.faker');
-Route::match(['get','post'], '/people/search', [App\Http\Controllers\PeopleController::class, 'search'])->name('people.search');
+Route::post('/people/search', [App\Http\Controllers\PeopleController::class, 'search'])->name('people.search');
 Route::post('/people/searchby', [App\Http\Controllers\PeopleController::class, 'searchby'])->name('people.searchby');
 Route::post('/people/getbyid', [App\Http\Controllers\PeopleController::class, 'getbyid'])->name('people.getbyid');
 Route::post('/people/listcategory', [App\Http\Controllers\PeopleController::class, 'listcategory'])->name('people.listcategory');
@@ -91,8 +92,8 @@ Route::get('/csv', [App\Http\Controllers\CsvController::class, 'index'])->name('
 Route::post('/csv/import/products', [App\Http\Controllers\CsvController::class, 'importProducts'])->name('csv.import.products');
 Route::post('/csv/import/people', [App\Http\Controllers\CsvController::class, 'importPeople'])->name('csv.import.people');
 
-Route::post('/ldap/searchuser', [App\Http\Controllers\LdapController::class, 'searchUser'])->name('ldap.searchUser');
 Route::post('/ldap/searchgroup', [App\Http\Controllers\LdapController::class, 'searchGroup'])->name('ldap.searchGroup');
+//Route::post('/ldap/searchuser', [App\Http\Controllers\LdapController::class, 'searchUser'])->name('ldap.searchUser');
 // Route::post('/ldap/teste', [App\Http\Controllers\LdapController::class, 'teste'])->name('ldap.teste');
 
 Route::prefix('/ldap')->name('ldap.')->group(function() {
@@ -100,11 +101,20 @@ Route::prefix('/ldap')->name('ldap.')->group(function() {
     Route::match(['get', 'post'], '/home', [App\Http\Controllers\LdapUserController::class, 'home'])->name('home');
     Route::post('/login', [App\Http\Controllers\LdapUserController::class, 'login'])->name('login');
     Route::match(['get', 'post'], '/logout', [App\Http\Controllers\LdapUserController::class, 'logout'])->name('logout');
-    Route::post('/teste', [App\Http\Controllers\LdapUserController::class, 'teste'])->name('teste');
     Route::post('/checkCred', [App\Http\Controllers\LdapUserController::class, 'checkCred'])->name('checkCred');
     Route::post('/getldapuser', [App\Http\Controllers\LdapUserController::class, 'getLdapUser'])->name('getLdapUser');
-    
+    Route::post('/searchuser', [App\Http\Controllers\LdapUserController::class, 'searchUser'])->name('searchUser');
+    Route::get('/teste', [App\Http\Controllers\LdapUserController::class, 'teste'])->name('teste');
 });
+
+Route::prefix('/order')->name('order.')->group(function() {
+    Route::get('/', [App\Http\Controllers\OrderController::class, 'index'])->name('home');
+    Route::post('/save', [App\Http\Controllers\OrderController::class, 'save'])->name('save');
+    Route::post('/update', [App\Http\Controllers\OrderController::class, 'update'])->name('update');
+    Route::post('/itemsave', [App\Http\Controllers\OrderItemController::class, 'save'])->name('itemsave');
+    Route::post('/itemdestroy', [App\Http\Controllers\OrderItemController::class, 'destroy'])->name('itemdestroy');
+});
+
 
 Route::get('/teste', function() {
     return view('teste');
