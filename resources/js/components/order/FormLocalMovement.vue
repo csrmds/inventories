@@ -89,7 +89,8 @@ export default {
         people() { return this.$store.state.people },
         ldapUser() { return this.$store.state.ldapUser },
         product() { return this.$store.state.product },
-        order() { return this.$store.state.order }
+        order() { return this.$store.state.order },
+        orderItem() { return this.$store.state.orderItem }
     },
 
     methods: {
@@ -141,12 +142,11 @@ export default {
         },
 
         async itemOrderSave(orderId) {
-            this.$store.dispatch('orderItem/save', {
-                orderItem: {
-                    order_id: orderId,
-                    product_id: this.product.id,
-                }
-            })
+            console.log("itemOrderSave: "+orderId)
+            console.log("productID: "+this.product.id)
+            this.orderItem.order_id= orderId
+            this.orderItem.product_id= this.product.id
+            this.$store.dispatch('orderItem/save', this.orderItem)
         }
     }
 }

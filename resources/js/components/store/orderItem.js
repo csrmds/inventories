@@ -74,9 +74,11 @@ export default {
         },
 
         async save(context, payload) {
+            console.log("orderItemSaveJs: ")
+            console.log(payload)
             context.commit('cleanResp')
             context.commit('setOrderItem', payload)
-            console.log("teste conext")
+            console.log('setOrderItem: ')
             console.log(context.state)
             const resp= await axios.post('/order/itemsave', {order_item: context.state} )
                 .then((response)=> {

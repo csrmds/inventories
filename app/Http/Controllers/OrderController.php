@@ -54,7 +54,7 @@ class OrderController extends Controller
         $this->setProperties($request->input('order'));
 
         if ($this->order->location_origin==null) {
-            $this->order->location_origin= 9 ;
+            $this->order->location_origin= 1 ;
         }
 
         if ($this->order->people_origin==null) {
@@ -82,6 +82,15 @@ class OrderController extends Controller
             return json_encode($this->order);
         } catch(\Exception $e) {
             return response(json_encode($e->getMessage()), 418);
+        }
+    }
+
+    public function getLastOrderItem($orderId) {
+        if (DB::table('order_item')->where('order_id', $orderId)->exists()) {
+            $order= DB::table('order_item')->max('order')->where('order_id', $orderId);
+            return $order++;
+        } else {
+            return 1;
         }
     }
 }

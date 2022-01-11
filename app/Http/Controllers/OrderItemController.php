@@ -37,7 +37,7 @@ class OrderItemController extends Controller
     public function save(Request $request) {
         $orderItem= $request->input('order_item');
 
-        dd($orderItem);
+        //dd($orderItem);
         // $orderId= $request->input('order_id');
         // $productId= $request->input('product_id');
         //$orderItem= $request->input('order_item');
@@ -46,8 +46,16 @@ class OrderItemController extends Controller
 
         if (DB::table('orders')->where('id', $orderItem['order_id'])->exists() && 
             DB::table('products')->where('id', $orderItem['product_id'])) {
+
+            if (DB::table('order_items')->where('order_id', $orderItem['order_id'])->exists()) {
+                $order= DB::table('order_items')->max('order')->where('order_id', $orderItem['order_id']);
+                $orderItem['order']= $order++;
+            } else {
+                $orderItem['order']= 1;
+            }
             
             $this->setProperties($orderItem);
+            
             try {
                 $this->orderItem->save();
                 return json_encode($this->orderItem);
