@@ -61,7 +61,8 @@ export default {
             state.updated_at= payload.updated_at
         },
 
-        cleaOrder(state, payload) {
+        cleanOrder(state, payload) {
+            console.log('order cleanOrder')
             state.id= null
             state.people_origin= null
             state.people_destiny= null
@@ -83,12 +84,23 @@ export default {
 
     actions: {
         async search(context, payload) {
-            const resp= await axios.post('/order/search', {word: payload})
-            return resp.data
+            const resp= await axios.post('/order/search', {
+                word: payload.word,
+                page: payload.page
+            })
+            
+            if (typeof resp.data.data == 'object') {
+                //console.log(resp.data)
+                return resp.data
+            } else {
+                return resp
+            }
         },
 
         async getById(context, payload) {
-            const resp= await axios.post('/order/getbyid', {id: payload})
+            // console.log('getById order.js')
+            // console.log(payload)
+            const resp= await axios.post('/order/getById', {id: payload})
             return resp.data[0]
         },
 
@@ -98,7 +110,7 @@ export default {
                 .then((response)=>{
                     context.commit('cleanOrder')
                     context.commit('setResp', "Pedido salvo com sucesso")
-                    console.log(response)
+                    //console.log(response)
                     return response
                 })
                 .catch((error)=> {
@@ -112,9 +124,9 @@ export default {
                 .then((response)=> {
                     context.commit('cleanOrder')
                     context.commit('setResp', "Pedido atualizado com sucesso")
-                    console.log("terminou update... segue resp e response")
-                    console.log(resp)
-                    console.log(response) 
+                    // console.log("terminou update... segue resp e response")
+                    // console.log(resp)
+                    // console.log(response) 
                 })
                 .catch((error)=> {
                     context.commit('setError', error.response.data)

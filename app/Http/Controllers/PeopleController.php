@@ -201,10 +201,11 @@ class PeopleController extends Controller
     {
         $data= $request->input('word');
         
-        $people= DB::table('people')
+        $people= DB::table('people')->selectRaw('*, concat(first_name, " ", last_name) as "full_name"')
             ->where('first_name', 'like', $data.'%')
             ->orWhere('last_name', 'like', $data.'%')
             ->orWhere('nick_name', 'like', $data.'%')
+            ->orderBy('first_name')
             ->paginate(10);
         
         return json_encode($people);

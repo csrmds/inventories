@@ -27,6 +27,56 @@ class OrderItemController extends Controller
         $this->orderItem->category= $properties['category'];
     }
 
+    public function index() {
+        $locations= DB::table('locations')->get();
+
+        return view('orderItem.index', compact('locations'));
+    }
+
+    public function search(Request $request) {
+        $data= $request->input('word');
+
+        $orderItems= DB::table('order_items')
+            ->leftJoin('orders', 'order_items.order_id', '=', 'orders.id')
+            ->leftJoin('products', 'order_items.product_id', '=', 'products.id')
+            ->leftJoin('people', 'products.people_id', '=', 'people.id')
+            ->leftJoin('locations', 'products.location_id', '=', 'locations.id')
+            ->leftJoin('ocs_hardware', 'products.ocs_hw_id', '=', 'ocs_hardware.id')
+            ->select('order_items.*',
+                'ocs_hardware.*',
+                'products.name as product_name',
+                'products.reference as product_reference',
+                'products.description as product_description',
+                'products.type as product_type',
+                'products.category as product_category',
+                'products.manufacturer as product_manufacturer',
+                'products.brand as product_brand',
+                'products.model as product_model',
+                'products.sn as product_sn',
+                'products.tag as product_tag',
+                'products.property_id as product_property_id',
+                'products.um as product_um',
+                'products.status as product_status',
+                'products.ocs_hw_id as product_ocs_hw_id',
+                'products.ocs_mon_id as product_ocs_mon_id',
+                'products.people_id as product_people_id',
+                'products.location_id as product_location_id',
+                'people.first_name as people_first_name',
+                'people.last_name as people_last_name',
+                'locations.name as location_name')
+            ->where('products.property_id', 'like', $data.'%')
+            ->orWhere('products.name', 'like', $data.'%')
+            ->orWhere('products.manufacturer', 'like', $data.'%')
+            ->orWhere('products.type', 'like', $data.'%')
+            ->orWhere('products.model', 'like', $data.'%')
+            ->orWhere('people.first_name', 'like', $data.'%')
+            ->orWhere('people.last_name', 'like', $data.'%')
+            ->orWhere('locations.name', 'like', $data.'%')
+            ->paginate(10);
+
+        return json_encode($orderItems);
+    }
+
     public function getByOrder(Request $request) {
         $orderId= $request->input('order_id');
         $orderItems= DB::table('order_items')->where('order_id', $orderId)->get();
@@ -36,8 +86,9 @@ class OrderItemController extends Controller
 
     public function save(Request $request) {
         $orderItem= $request->input('order_item');
+        $order= $request->input('order');
 
-        //dd($orderItem);
+        //dd($request->all());
         // $orderId= $request->input('order_id');
         // $productId= $request->input('product_id');
         //$orderItem= $request->input('order_item');
@@ -55,10 +106,29 @@ class OrderItemController extends Controller
             }
             
             $this->setProperties($orderItem);
+            $product= Product::Find($orderItem['product_id']);
+            $product->people_id= $order['people_destiny'];
+            $product->location_id= $order['location_destiny'];
+            $order= Order::Find($order['id']);
             
             try {
                 $this->orderItem->save();
-                return json_encode($this->orderItem);
+                
+                try {
+                    $product->save();
+                    $order->status= "CONCLUIDO";
+
+                    try {
+                        $order->save();
+                    } catch(\Exception $e) {
+                        return json_encode($e->getMessage());
+                    }
+
+                } catch(\Exception $e) {
+                    return json_encode($e->getMessage());
+                }
+                
+                return json_encode([$order, $this->orderItem]);
             } catch(\Exception $e) {
                 return json_encode($e->getMessage());
             }

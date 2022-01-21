@@ -7,9 +7,7 @@
 
     <div class="form-row">
         <div class="col-sm">
-            <c-order-form-local
-                location-list="{{ json_encode($locations) }}"
-            />
+            <c-order-table-list>
         </div>
     </div>
 

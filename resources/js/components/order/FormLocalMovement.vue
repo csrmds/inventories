@@ -5,7 +5,7 @@
                 <c-autocomplete-axios 
 					:input-value="people.first_name"
 					@itemSelected="setRequester($event)"
-                    column="first_name"
+                    column="full_name"
 					label="Solicitante" 
 					source="people/search" 
 					id="requester" 
@@ -33,7 +33,7 @@
             <div class="col-sm-3">
                 <label for="location">Destino</label>
 				<select v-model="product.location_id" name="location" id="location" class="form-control form-control-sm">
-					<option v-for="(location, i) in JSON.parse(locationList)" :key="i" :value="location.id">{{ location.name }}</option>
+					<option v-for="(location, i) in locationList" :key="i" :value="location.id">{{ location.name }}</option>
 				</select>
             </div>
             
@@ -41,7 +41,7 @@
                 <c-autocomplete-axios 
 					:input-value="people.first_name"
 					@itemSelected="setResponsible($event)"
-                    column="first_name"
+                    column="full_name"
 					label="Responsável" 
 					source="people/search" 
 					id="requester" 
@@ -66,22 +66,25 @@
 
         <div class="form-row">
             <div class="col-sm">
-                <p>mensagens...</p>
+                <c-alert dismissible="true"></c-alert>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import eventbus from '../eventbus'
+
 export default {
     props: {
-        locationList: String, Object
+        //locationList: String, Object
     },
 
     data() {
         return {
             peopleWord: null,
-            productWord: null
+            productWord: null,
+            locationList: null
         }
     },
 
@@ -90,7 +93,8 @@ export default {
         ldapUser() { return this.$store.state.ldapUser },
         product() { return this.$store.state.product },
         order() { return this.$store.state.order },
-        orderItem() { return this.$store.state.orderItem }
+        orderItem() { return this.$store.state.orderItem },
+        alert() { return this.$store.state.alert },
     },
 
     methods: {
@@ -117,7 +121,9 @@ export default {
 
         setProduct(param) {
             if (param!==null) {
-                this.$store.dispatch('product/loadInputs', param)
+                this.$store.dispatch('product/getById', param.id)
+                param.location_id!=null ? this.order.location_origin= param.location_id : null
+                param.people_id!=null ? this.order.people_origin= param.people_id : null
             } else {
                 this.$store.commit('product/cleanProduct')
             }
@@ -136,18 +142,56 @@ export default {
             this.order.status= "ABERTO";
             this.order.category= "TRANSFERENCIA";
             const resp= await axios.post('order/save', {order: this.order})
-            console.log(resp);
-            console.log("add item ao pedido...")
-            this.itemOrderSave(resp.data.id)
+            // console.log(resp);
+            // console.log("add item ao pedido...")
+            this.itemOrderSave(resp.data)
         },
 
-        async itemOrderSave(orderId) {
-            console.log("itemOrderSave: "+orderId)
-            console.log("productID: "+this.product.id)
-            this.orderItem.order_id= orderId
+        async itemOrderSave(order) {
+            // console.log("itemOrderSave: "+order.id)
+            // console.log("productID: "+this.product.id)
+            this.orderItem.order_id= order.id
             this.orderItem.product_id= this.product.id
-            this.$store.dispatch('orderItem/save', this.orderItem)
+            this.$store.dispatch('orderItem/save', { 
+                orderItem: this.orderItem,
+                order: order
+                })
+
+            this.checkOrder(order.id)
+        },
+
+        async loadLocationList() {
+            const resp= await this.$store.dispatch('location/search')
+            // console.log('locationList')
+            // console.log(resp)
+            this.locationList= resp
+        },
+
+        inputsClean() {
+            this.$store.commit('orderItem/cleanOrderItem')
+            this.$store.commit('order/cleanOrder')
+            this.$store.commit('product/cleanProduct')
+            eventbus.$emit('cleanAutocomplete')
+        },
+
+        async checkOrder(order) {
+            const resp= await this.$store.dispatch('order/getById', order)
+            this.$store.dispatch('order/loadInputs', resp)
+            if (this.order.status=="CONCLUIDO") {
+                this.alert.msg= "Pedido concluido."
+                this.alert.classType= "alert-info"
+                this.$store.dispatch('alert/showAlert', this.alert)
+                this.inputsClean()
+            } else {
+                this.alert.msg= this.orderItem.resp+"\n"+this.orderItem.error
+                this.alert.classType= "alert-danger"
+                this.$store.dispatch('alert/showAlert', this.alert)
+            }
         }
+    },
+
+    mounted() {
+        this.loadLocationList()
     }
 }
 </script>

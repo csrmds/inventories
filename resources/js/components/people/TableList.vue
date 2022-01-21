@@ -171,8 +171,8 @@ export default {
     methods: {
         async filterList() {
             const resp= await this.$store.dispatch('people/search', { word: this.word })
-            console.log('filterList...')
-            console.log(resp.data)
+            // console.log('filterList...')
+            // console.log(resp.data)
             this.filterPaginate= resp
             this.list= this.filterPaginate.data
         },

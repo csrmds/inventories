@@ -40,9 +40,47 @@ class OrderController extends Controller
 
     public function search(Request $request) {
         //busca por nome de pessoas ou locais
+        //DB::enableQueryLog();
+        $data= $request->input('word');
+
+        $orders= DB::table('orders')
+            ->leftJoin('people as people_destiny', 'orders.people_destiny', '=', 'people_destiny.id')
+            ->leftJoin('people as people_origin', 'orders.people_origin', '=', 'people_origin.id')
+            ->leftJoin('people as people_request', 'orders.request_from', '=', 'people_request.id')
+            ->leftJoin('locations as location_destiny', 'orders.location_destiny', '=', 'location_destiny.id')
+            ->leftJoin('locations as location_origin', 'orders.location_origin', '=', 'location_origin.id')
+            ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id', '&&', 'order_items.order=1' )
+            ->leftJoin('products', 'order_items.product_id', '=', 'products.id')
+            ->select('orders.*', 
+                'people_origin.first_name as people_origin_first_name', 
+                'people_origin.last_name as people_origin_last_name',
+                'people_destiny.first_name as people_destiny_first_name', 
+                'people_destiny.last_name as people_destiny_last_name', 
+                'people_request.first_name as people_request_first_name',
+                'people_request.last_name as people_request_last_name',
+                'location_origin.name as location_origin_name',
+                'location_destiny.name as location_destiny_name',
+                'products.name as product_name',
+                'products.property_id as product_property_id',
+                'order_items.*')
+            ->where('people_origin.first_name', 'like', $data.'%')
+            ->orWhere('people_origin.last_name', 'like', $data.'%')
+            ->orWhere('people_destiny.first_name', 'like', $data.'%')
+            ->orWhere('people_destiny.last_name', 'like', $data.'%')
+            ->orWhere('people_request.first_name', 'like', $data.'%')
+            ->orWhere('people_request.last_name', 'like', $data.'%')
+            ->orWhere('location_origin.name', 'like', $data.'%')
+            ->orWhere('location_destiny.name', 'like', $data.'%')
+            ->paginate(10);
+            
+            //dd(DB::getQueryLog());
+
+
+        return json_encode($orders);
     }
 
     public function getById(Request $request) {
+        //dd($request->all());
         $id= $request->input('id');
         $order= DB::table('orders')->where('id', $id)->get();
 

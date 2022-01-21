@@ -80,6 +80,7 @@ export default {
 			state.ocs_hw_id= product.ocs_hw_id
 			state.ocs_mon_id= product.ocs_mon_id
 			state.people_id= product.people_id
+			state.people= product.people
 			state.location_id= product.location_id
 			state.location= product.location
 			state.created_at= product.created_at
@@ -107,6 +108,7 @@ export default {
 			state.ocs_hw_id= null,
 			state.ocs_mon_id= null,
 			state.people_id= null,
+			state.people= null,
 			state.location_id= null,
 			state.location= null,
 			state.created_at= null,

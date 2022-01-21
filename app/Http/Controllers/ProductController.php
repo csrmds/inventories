@@ -137,12 +137,14 @@ class ProductController extends Controller
         $location= $this->product->location()->get();
         $people= $this->product->people()->get();
 
+        //dd($people[0]);
+
         if (isset($location[0]['id'])) {
             $this->product->location= $location[0]['name'];
         }
 
         if (isset($people[0]['id'])) {
-            $this->prodcut->people= $people[0]['first_name']." ".$people[0]['last_name'];
+            $this->product->people= $people[0]['first_name']." ".$people[0]['last_name'];
         }
 
         return json_encode($this->product);

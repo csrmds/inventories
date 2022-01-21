@@ -88,6 +88,8 @@ Vue.component('c-order-form-local', require('./components/order/FormLocalMovemen
 Vue.component('c-order-form-transfer', require('./components/order/FormTransferMovement.vue').default);
 Vue.component('c-order-table-list', require('./components/order/TableList.vue').default);
 
+Vue.component('c-order-item-table-list', require('./components/orderItem/TableList.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

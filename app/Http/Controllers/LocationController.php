@@ -71,6 +71,10 @@ class LocationController extends Controller
     public function search(Request $request)
     {
         $data= $request->input('word');
+        if (empty($data)) {
+            $data['word']= null;
+        } 
+
         $location= DB::table('locations')
             ->where('name', 'like', $data['word'].'%')
             ->orWhere('description', 'like', $data['word'].'%')->get();
