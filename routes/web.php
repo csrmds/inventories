@@ -115,10 +115,13 @@ Route::prefix('/order')->name('order.')->group(function() {
     Route::post('/update', [App\Http\Controllers\OrderController::class, 'update'])->name('update');
     
     Route::get('/item', [App\Http\Controllers\OrderItemController::class, 'index'])->name('itemhome');
+    Route::post('/itembyorder', [App\Http\Controllers\OrderItemController::class, 'getByOrder'])->name('itembyorder');
     Route::post('/itemsave', [App\Http\Controllers\OrderItemController::class, 'save'])->name('itemsave');
     Route::post('/itemdestroy', [App\Http\Controllers\OrderItemController::class, 'destroy'])->name('itemdestroy');
     Route::post('/itemsearch', [App\Http\Controllers\OrderItemController::class, 'search'])->name('itemsearch');
 });
+
+Route::get('/movement/savebyorder', [App\Http\Controllers\MovementController::class, 'saveByOrder'])->name('movement.saveByOrder');
 
 
 Route::get('/teste', function() {

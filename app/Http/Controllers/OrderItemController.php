@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Movement;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -79,7 +80,32 @@ class OrderItemController extends Controller
 
     public function getByOrder(Request $request) {
         $orderId= $request->input('order_id');
-        $orderItems= DB::table('order_items')->where('order_id', $orderId)->get();
+        $orderItems= DB::table('order_items')
+            ->leftJoin('products', 'order_items.product_id', '=', 'products.id')
+            ->leftJoin('people', 'products.people_id', '=', 'people.id')
+            ->leftJoin('locations', 'products.location_id', '=', 'locations.id')
+            ->select('order_items.*',
+                'products.name as product_name',
+                'products.reference as product_reference',
+                'products.description as product_description',
+                'products.type as product_type',
+                'products.category as product_category',
+                'products.manufacturer as product_manufacturer',
+                'products.brand as product_brand',
+                'products.model as product_model',
+                'products.sn as product_sn',
+                'products.tag as product_tag',
+                'products.property_id as product_property_id',
+                'products.um as product_um',
+                'products.status as product_status',
+                'products.ocs_hw_id as product_ocs_hw_id',
+                'products.ocs_mon_id as product_ocs_mon_id',
+                'products.people_id as product_people_id',
+                'products.location_id as product_location_id',
+                'people.first_name as people_first_name',
+                'people.last_name as people_last_name',
+                'locations.name as location_name')
+            ->where('order_id', $orderId)->get();
 
         return json_encode($orderItems);
     }
@@ -87,13 +113,6 @@ class OrderItemController extends Controller
     public function save(Request $request) {
         $orderItem= $request->input('order_item');
         $order= $request->input('order');
-
-        //dd($request->all());
-        // $orderId= $request->input('order_id');
-        // $productId= $request->input('product_id');
-        //$orderItem= $request->input('order_item');
-
-        //dd($request->all());
 
         if (DB::table('orders')->where('id', $orderItem['order_id'])->exists() && 
             DB::table('products')->where('id', $orderItem['product_id'])) {
@@ -111,15 +130,29 @@ class OrderItemController extends Controller
             $product->location_id= $order['location_destiny'];
             $order= Order::Find($order['id']);
             
+            $movement= new Movement;
+            $movement->order_id= $orderItem['order_id'];
+            $movement->product_id= $orderItem['product_id'];
+            $movement->amount= $orderItem['amount']!=null ? $item['amount'] : 1;
+            $movement->order_item_order= $orderItem['order'];
+            $movement->movement= $order->category;
+            
             try {
                 $this->orderItem->save();
                 
                 try {
                     $product->save();
-                    $order->status= "CONCLUIDO";
 
                     try {
-                        $order->save();
+                        $movement->save();
+                        $order->status= "CONCLUIDO";
+
+                        try {
+                            $order->save();
+                        } catch(\Exception $e) {
+                            return json_encode($e->getMessage());
+                        }
+
                     } catch(\Exception $e) {
                         return json_encode($e->getMessage());
                     }
@@ -127,8 +160,10 @@ class OrderItemController extends Controller
                 } catch(\Exception $e) {
                     return json_encode($e->getMessage());
                 }
+
+                //return redirect()->action([MovementController::class, 'saveByOrder'], ['order_id'=>$order->id]);
                 
-                return json_encode([$order, $this->orderItem]);
+                return json_encode([$order, $orderItem, $movement]);
             } catch(\Exception $e) {
                 return json_encode($e->getMessage());
             }

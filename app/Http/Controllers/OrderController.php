@@ -82,7 +82,22 @@ class OrderController extends Controller
     public function getById(Request $request) {
         //dd($request->all());
         $id= $request->input('id');
-        $order= DB::table('orders')->where('id', $id)->get();
+        $order= DB::table('orders')
+            ->leftJoin('people as people_destiny', 'orders.people_destiny', '=', 'people_destiny.id')
+            ->leftJoin('people as people_origin', 'orders.people_origin', '=', 'people_origin.id')
+            ->leftJoin('people as people_request', 'orders.request_from', '=', 'people_request.id')
+            ->leftJoin('locations as location_destiny', 'orders.location_destiny', '=', 'location_destiny.id')
+            ->leftJoin('locations as location_origin', 'orders.location_origin', '=', 'location_origin.id')
+            ->select('orders.*', 
+                'people_origin.first_name as people_origin_first_name', 
+                'people_origin.last_name as people_origin_last_name',
+                'people_destiny.first_name as people_destiny_first_name', 
+                'people_destiny.last_name as people_destiny_last_name', 
+                'people_request.first_name as people_request_first_name',
+                'people_request.last_name as people_request_last_name',
+                'location_origin.name as location_origin_name',
+                'location_destiny.name as location_destiny_name')
+            ->where('orders.id', $id)->get();
 
         return json_encode($order);
     }

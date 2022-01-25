@@ -31,20 +31,22 @@
                         <th>Fabricante</th>
                         <th>Localização</th>
                         <th>Responsável</th>
-                        <th></th>
                     </thead>
 
                     <tbody>
                         <tr v-for="(orderItem, i) in list" :key="i">
-                            <td>{{ orderItem.order_id }}</td>
-                            <td>{{ orderItem.product_property_id }}</td>
+                            <td class="d-flex bd-highlight">
+                                <button class="btn btn-sm btn-outline-primary flex-fill bd-highlight" @click="orderView(orderItem.order_id)">
+                                    {{ orderItem.order_id }}
+                                </button>
+                            </td>
+                            <td>
+                                <a href="#" @click="productView(orderItem.product_id)">{{ orderItem.product_property_id }}</a>
+                            </td>
                             <td>{{ orderItem.product_type }}</td>
                             <td>{{ orderItem.product_manufacturer }}</td>
                             <td>{{ orderItem.location_name }}</td>
                             <td>{{ orderItem.people_first_name+" "+orderItem.people_last_name }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary" @click="view(orderItem.order_id)">Visualizar</button>
-                            </td>
                         </tr>
                     </tbody>
 
@@ -81,19 +83,7 @@
             </div>
         </div>
 
-
-        <div class="col-sm">	
-            <b-modal 
-                id="modal-order-create" 
-                title="Pedido"
-                size="xl"
-                button-size="sm"
-                hide-footer>
-                <c-order-form-local></c-order-form-local>
-            </b-modal>
-        </div>
-
-        <div class="col-sm">
+        <div>
             <b-modal
                 id="modal-msg"
                 size="sm"
@@ -102,6 +92,29 @@
                 @hide="reload"
             >
                 {{ modal.msg }}
+            </b-modal>
+        </div>
+
+        <div>
+            <b-modal
+                id="modal-product-view"
+                title="Produto"
+                size="xl"
+                button-size="sm"
+                hide-footer
+                hide-header>
+                <c-product-form-view :prp-product="product"></c-product-form-view>
+            </b-modal>
+        </div>
+
+        <div>
+            <b-modal 
+                id="modal-order-view"
+                size="xl"
+                button-size="sm"
+                hide-footer
+                hide-header>
+                <c-order-form-view :order="order"></c-order-form-view>
             </b-modal>
         </div>
         
@@ -156,6 +169,25 @@ export default {
                 this.filterPaginate= resp
                 this.list= this.filterPaginate.data
             }
+        },
+
+        async orderView(id) {
+            const order= await this.$store.dispatch('order/getById', { id: id })
+            if (order.id) {
+                this.$store.dispatch('order/loadInputs', order)
+                this.$bvModal.show('modal-order-view')
+            } else {
+                this.modal.msg= order
+                this.$bvModal.show('modal-msg')
+            }
+        },
+
+        async productView(product_id) {
+            this.$store.commit('product/cleanProduct')
+            this.$store.commit('product/cleanResp')
+            const resp= await this.$store.dispatch('product/getById', product_id)
+            this.$store.commit('product/setProduct', resp)  
+            this.$bvModal.show('modal-product-view')
         },
 
         newOrder() {

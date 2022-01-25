@@ -78,17 +78,13 @@ export default {
         },
 
         async getByOrderId(context, payload) {
-            const resp= await axios.post('/order/itemsearch', {order_id: payload})
+            const resp= await axios.post('/order/itembyorder', {order_id: payload})
             return resp.data
         },
 
         async save(context, payload) {
-            // console.log("orderItemSaveJs: ")
-            // console.log(payload)
             context.commit('cleanResp')
             context.commit('setOrderItem', payload.orderItem)
-            // console.log('setOrderItem: ')
-            // console.log(context.state)
             const resp= await axios.post('/order/itemsave', {
                 order_item: context.state,
                 order: payload.order
@@ -96,7 +92,8 @@ export default {
                 .then((response)=> {
                     context.commit('cleanOrderItem')
                     context.commit('setResp', "Item salvo no pedido")
-                    // console.log(response)
+                    console.log("response do orderItem save...")
+                    console.log(response)
                     return response
                 })
                 .catch((error)=> {

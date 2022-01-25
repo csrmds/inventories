@@ -21,6 +21,15 @@ export default {
         created_at: null,
         updated_at: null,
 
+        location_destiny_name: null,
+        location_origin_name: null,
+        people_destiny_first_name: null,
+        people_destiny_last_name: null,
+        people_origin_first_name: null,
+        people_origin_last_name: null,
+        people_request_first_name: null,
+        people_request_last_name: null,
+
         error: null,
         resp: null
     },
@@ -59,6 +68,15 @@ export default {
             state.status= payload.status
             state.created_at= payload.created_at
             state.updated_at= payload.updated_at
+
+            state.location_destiny_name= payload.location_destiny_name
+            state.location_origin_name= payload.location_origin_name
+            state.people_destiny_first_name= payload.people_destiny_first_name
+            state.people_destiny_last_name= payload.people_destiny_last_name
+            state.people_origin_first_name= payload.people_origin_first_name
+            state.people_origin_last_name= payload.people_origin_last_name
+            state.people_request_first_name= payload.people_request_first_name
+            state.people_request_last_name= payload.people_request_last_name
         },
 
         cleanOrder(state, payload) {
@@ -78,6 +96,15 @@ export default {
             state.status= null
             state.created_at= null
             state.updated_at= null
+
+            state.location_destiny_name= null
+            state.location_origin_name= null
+            state.people_destiny_first_name= null
+            state.people_destiny_last_name= null
+            state.people_origin_first_name= null
+            state.people_origin_last_name= null
+            state.people_request_first_name= null
+            state.people_request_last_name= null
         }
 
     },

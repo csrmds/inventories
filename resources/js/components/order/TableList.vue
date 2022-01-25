@@ -39,15 +39,17 @@
                     </thead>
                     <tbody>
                         <tr v-for="(order, i) in list" :key="i">
-                            <td>{{ order.id }}</td>
+                            <td class="d-flex bd-highlight">
+                                <button class="btn btn-sm btn-outline-primary flex-fill bd-highlight" @click="view(order.id)">
+                                    {{ order.id }}
+                                </button>
+                            </td>
                             <td>{{ order.people_request_first_name+" "+order.people_request_last_name }}</td>
                             <td>{{ order.location_origin_name }}</td>
                             <td>{{ order.location_destiny_name }}</td>
                             <td>{{ order.people_destiny_first_name+" "+order.people_destiny_last_name }}</td>
                             <td>{{ order.created_at }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary" @click="view(order.id)">Visualizar</button>
-                            </td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -89,7 +91,7 @@
 			</div>
 		</div>
 
-        <div class="col-sm">	
+        <div>	
             <b-modal 
                 id="modal-order-create" 
                 title="Pedido"
@@ -100,7 +102,18 @@
             </b-modal>
         </div>
 
-        <div class="col-sm">
+        <div>
+            <b-modal 
+                id="modal-order-view"
+                size="xl"
+                button-size="sm"
+                hide-footer
+                hide-header>
+                <c-order-form-view :order="order"></c-order-form-view>
+            </b-modal>
+        </div>
+
+        <div>
             <b-modal
                 id="modal-msg"
                 size="sm"
