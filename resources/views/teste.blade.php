@@ -25,14 +25,7 @@ use App\Models\People;
     </form>
 
     <pre>
-        <?php
-            $people= People::Find('110');
 
-            $user= $people->getUser();
-            
-
-            
-        ?>
     </pre>
 
 

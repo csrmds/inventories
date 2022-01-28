@@ -29,7 +29,7 @@
             </div>
             <div class="col-sm-2">
                 <label for="btn">&nbsp;x</label><br>
-                <button id="btn" class="btn btn-sm btn-outline-secondary" @click="teste">teste</button>
+                <button id="btn" class="btn btn-sm btn-outline-secondary" @click="teste">OCS Teste</button>
             </div>
         </div>
         
@@ -61,36 +61,39 @@ export default {
         async teste(e) {
             e.preventDefault()
             //console.log(this.cValue)
-            const x= await axios.post('/ldap/teste', {
-                samaccountname: this.word,
-                password: this.password
+            const x= await axios.post('/servers/ocscreatetables', {
+                ocs_server: '192.168.42.141',
+                ocs_user: 'ocs',
+                ocs_password: 'ocs',
+                ocs_port: '3306'
+
             })
             console.log(x.data)
         },
 
-        async loadList(e) {
-            e.preventDefault()
-            const resp= await this.$store.dispatch('product/getGroups')
-            this.list= resp.categoryList
-        },
+        // async loadList(e) {
+        //     e.preventDefault()
+        //     const resp= await this.$store.dispatch('product/getGroups')
+        //     this.list= resp.categoryList
+        // },
 
-        async ldapLogin(e) {
-            e.preventDefault()
-            const resp= await axios.post('/teste/ldaplogin')
-            console.log(resp)
-        },
+        // async ldapLogin(e) {
+        //     e.preventDefault()
+        //     const resp= await axios.post('/teste/ldaplogin')
+        //     console.log(resp)
+        // },
 
-        async dbLogin(e) {
-            e.preventDefault()
-            const resp= await axios.post('/teste/dblogin')
-            console.log(resp)
-        }
+        // async dbLogin(e) {
+        //     e.preventDefault()
+        //     const resp= await axios.post('/teste/dblogin')
+        //     console.log(resp)
+        // }
 
     },
 
 
     mounted() {
-        this.loadList()
+        //this.loadList()
     }
 
 }

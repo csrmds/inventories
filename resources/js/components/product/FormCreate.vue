@@ -86,9 +86,15 @@
 
 			<div class="col-sm-2">
 				<label for="location">Localização</label>
-				<select v-model="product.location_id" name="location" id="location" class="form-control form-control-sm">
-					<option v-for="(location, i) in JSON.parse(locationList)" :key="i" :value="location.id">{{ location.name }}</option>
-				</select>
+				<template v-for="(location, i) in JSON.parse(locationList)">
+					<input 
+						:key="i"
+						v-if="(location.id==product.location_id)"
+						v-model="location.name"
+						type="text"
+						class="form-control form-control-sm input-text" 
+						readonly>
+				</template>
 			</div>
 
 		</div>
