@@ -92,6 +92,8 @@ Vue.component('c-order-form-view', require('./components/order/FormView.vue').de
 
 Vue.component('c-order-item-table-list', require('./components/orderItem/TableList.vue').default);
 
+Vue.component('c-config-ocs-form-create', require('./components/config/OcsServerFormCreate.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

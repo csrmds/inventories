@@ -16,6 +16,10 @@ class ServersController extends Controller
         );
     }
 
+    public function index() {
+        return view('config.index');
+    }
+
     public function ocsCreateTables(Request $request)
     {
         

@@ -124,6 +124,7 @@ Route::prefix('/order')->name('order.')->group(function() {
 Route::get('/movement/savebyorder', [App\Http\Controllers\MovementController::class, 'saveByOrder'])->name('movement.saveByOrder');
 
 Route::post('/servers/ocscreatetables', [App\Http\Controllers\ServersController::class, 'ocsCreateTables'])->name('servers.ocsCreateTables');
+Route::get('/servers', [App\Http\Controllers\ServersController::class, 'index'])->name('servers.index');
 
 
 Route::get('/teste', function() {
