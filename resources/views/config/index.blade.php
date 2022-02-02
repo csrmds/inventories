@@ -11,13 +11,15 @@
             <c-config-ocs-form-create/>
         </div>
     </div>
-    <br>
+    <hr>
 
     <div class="form-row">
         <div class="col-sm">
             <h3>DC Server</h3>
+            <c-config-dc-form-create/>
         </div>
     </div>
+    <hr>
 
 </div>
 

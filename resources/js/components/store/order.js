@@ -147,7 +147,7 @@ export default {
 
         async update(context, payload) {
             context.commit('cleanResp')
-            const resp= await axios.post('/order/update', {location: payload})
+            const resp= await axios.post('/order/update', {order: payload})
                 .then((response)=> {
                     context.commit('cleanOrder')
                     context.commit('setResp', "Pedido atualizado com sucesso")

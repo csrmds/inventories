@@ -11,6 +11,8 @@ import location from "./location"
 import ldapUser from "./ldapUser"
 import order from "./order"
 import orderItem from './orderItem'
+import ocsServer from "./ocsServer"
+import dcServer from "./dcServer"
 
 
 Vue.use(Vuex)
@@ -88,6 +90,8 @@ export default new Vuex.Store({
         location: location,
         ldapUser: ldapUser,
         order: order,
-        orderItem: orderItem
+        orderItem: orderItem,
+        ocsServer: ocsServer,
+        dcServer: dcServer
     }
 })

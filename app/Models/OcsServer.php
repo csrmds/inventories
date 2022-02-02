@@ -11,6 +11,7 @@ class OcsServer extends Model
 
     protected $fillable=[
         'id',
+        'alias',
         'host',
         'database_name',
         'database_user',

@@ -83,10 +83,22 @@ Route::post('/location/destroy', [App\Http\Controllers\LocationController::class
 Route::post('/location/search', [App\Http\Controllers\LocationController::class, 'search'])->name('location.search');
 Route::post('/location/getbyid', [App\Http\Controllers\LocationController::class, 'getbyid'])->name('location.getbyid');
 
+Route::prefix('/ocs')->name('ocs.')->group(function() {
+    Route::post('/search', [App\Http\Controllers\OcsHardwareController::class, 'search'])->name('search');
+    Route::post('/searchbyid/{id?}', [App\Http\Controllers\OcsHardwareController::class, 'searchById'])->name('searchById');
+    Route::post('/serversave', [App\Http\Controllers\OcsServerController::class, 'create'])->name('save');
+    Route::post('/serverupdate', [App\Http\Controllers\OcsServerController::class, 'update'])->name('update');
+    Route::post('/serverdestroy', [App\Http\Controllers\OcsServerController::class, 'destroy'])->name('destroy');
+    Route::post('/serverget', [App\Http\Controllers\OcsServerController::class, 'getById'])->name('getbyid');
+});
 
-Route::post('/ocs/search', [App\Http\Controllers\OcsHardwareController::class, 'search'])->name('ocs.search');
-Route::post('/ocs/searchbyid/{id?}', [App\Http\Controllers\OcsHardwareController::class, 'searchById'])->name('ocs.searchById');
-//Route::get('/ocs/tag', [App\Http\Controllers\OcsHardwareController::class, 'tag'])->name('ocs.tag');
+Route::prefix('/dc')->name('dc.')->group(function() {
+    Route::post('/serversave', [App\Http\Controllers\DcServerController::class, 'create'])->name('save');
+    Route::post('/serverupdate', [App\Http\Controllers\DcServerController::class, 'update'])->name('update');
+    Route::post('/serverdestroy', [App\Http\Controllers\DcServerController::class, 'destroy'])->name('destroy');
+    Route::post('/serverget', [App\Http\Controllers\DcServerController::class, 'getById'])->name('getbyid');
+});
+
 
 Route::get('/csv', [App\Http\Controllers\CsvController::class, 'index'])->name('csv');
 Route::post('/csv/import/products', [App\Http\Controllers\CsvController::class, 'importProducts'])->name('csv.import.products');
