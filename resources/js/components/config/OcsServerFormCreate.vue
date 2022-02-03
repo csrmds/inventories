@@ -5,6 +5,7 @@
             <div class="col-sm-2 col-form-label">
                 <input 
                     v-model="ocsServer.alias"
+                    :readonly="readonly"
                     type="text" 
                     class="form-control form-control-sm">
             </div>
@@ -15,6 +16,7 @@
             <div class="col-sm-2 col-form-label">
                 <input 
                     v-model="ocsServer.host"
+                    :readonly="readonly"
                     type="text" 
                     class="form-control form-control-sm">
             </div>
@@ -25,6 +27,7 @@
             <div class="col-sm-2 col-form-label">
                 <input 
                     v-model="ocsServer.database_name"
+                    :readonly="readonly"
                     type="text" 
                     class="form-control form-control-sm">
             </div>
@@ -35,6 +38,7 @@
             <div class="col-sm-2 col-form-label">
                 <input 
                     v-model="ocsServer.database_user"
+                    :readonly="readonly"
                     type="text" 
                     class="form-control form-control-sm">
             </div>
@@ -45,6 +49,7 @@
             <div class="col-sm-2 col-form-label">
                 <input 
                     v-model="ocsServer.database_password"
+                    :readonly="readonly"
                     type="password" 
                     class="form-control form-control-sm">
             </div>
@@ -55,6 +60,7 @@
             <div class="col-sm-2 col-form-label">
                 <input 
                     v-model="ocsServer.database_port"
+                    :readonly="readonly"
                     type="text" 
                     class="form-control form-control-sm"
                     placeholder="3306">
@@ -66,7 +72,7 @@
                 <button class="btn btn-sm btn-outline-primary" @click="getDefaultServer">Teste Conexão</button>
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-sm btn-outline-primary">Editar</button>
+                <button class="btn btn-sm btn-outline-primary" @click="editMode">Editar</button>
             </div>
             <div class="col-sm-2">
                 <button class="btn btn-sm btn-outline-success" @click="save">Salvar</button>
@@ -76,14 +82,11 @@
 </template>
 
 <script>
+import { readonly } from 'vue-demi'
 export default {
-    props: {
-        prpOcsServer: null
-    },
-
     data() {
         return {
-            x: null
+            readonly: true
         }
     },
 
@@ -95,10 +98,14 @@ export default {
         async save() {
             if (this.ocsServer.id== null) {
                 const resp= await axios.post('ocs/serversave', {ocsServer: this.ocsServer})
-                return resp
+                if (resp.data.success) {
+                    this.readonly= true
+                }
             } else {
                 const resp= await axios.post('ocs/serverupdate', {ocsServer: this.ocsServer})
-                return resp
+                if (resp.data.success) {
+                    this.readonly= true
+                }
             }
         },
 
@@ -108,9 +115,19 @@ export default {
 
         async getDefaultServer() {
             const resp= await axios.post('ocs/serverget', {id: 1})
-            console.log(resp.data)
+            if (resp.data.id==1) {
+                this.$store.commit('ocsServer/setOcsServer', resp.data)
+            }
+        },
+
+        editMode() {
+            this.readonly= !this.readonly
         }
 
+    },
+
+    mounted() {
+        this.getDefaultServer()
     }
 }
 </script>

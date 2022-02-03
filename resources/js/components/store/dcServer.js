@@ -65,8 +65,14 @@ export default {
 
     actions: {
         async getById(context, payload) {
-            const resp= await axios.post('/dc/serverget', {id: payload})
-            return resp.data[0]
+            const resp= await axios.post('dc/serverget', {id: payload})
+            //console.log(resp)
+            if (resp.data== null) {
+                context.commit('setResp', "Não foi encontrado nenhum registro")
+            } else {
+                return resp.data
+            }
+            
         },
 
         async save(context, payload) {

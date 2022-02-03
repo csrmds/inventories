@@ -22,7 +22,7 @@ export default {
     },
 
     mutations: {
-       setResp(state, payload) {
+        setResp(state, payload) {
             state.resp= payload
         },
 
@@ -72,8 +72,8 @@ export default {
             context.commit('cleanResp')
             const resp= await axios.post('ocs/serversave', {ocsServer: payload})
                 .then((response)=> {
-                    context.commit('cleanOcsServer')
-                    context.commit('setResp', "Registro salvo com sucesso")
+                    // context.commit('cleanOcsServer')
+                    // context.commit('setResp', "Registro salvo com sucesso")
                     return response
                 })
                 .catch((error)=> {
@@ -85,8 +85,8 @@ export default {
             context.commit('cleanResp')
             const resp= await axios.post('ocs/serverupdate', {ocsServer: payload})
                 .then((response)=> {
-                    context.commit('cleanOcsServer')
-                    context.commit('setResp', "Registro atualizado com sucesso")
+                    // context.commit('cleanOcsServer')
+                    // context.commit('setResp', "Registro atualizado com sucesso")
                     return response
                 })
                 .catch((error)=> {
