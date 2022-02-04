@@ -68,14 +68,21 @@
         </div>
 
         <div class="form-row">
-            <div class="col-sm-2">
-                <button class="btn btn-sm btn-outline-primary" @click="getDefaultServer">Teste Conexão</button>
-            </div>
-            <div class="col-sm-2">
-                <button class="btn btn-sm btn-outline-primary" @click="editMode">Editar</button>
-            </div>
-            <div class="col-sm-2">
-                <button class="btn btn-sm btn-outline-success" @click="save">Salvar</button>
+            <div class="col-sm-7">
+                <div class="form-row">
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-outline-primary container-fluid" @click="getDefaultServer">Teste Conexão</button>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-outline-primary container-fluid" @click="editMode">Editar</button>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-outline-success container-fluid" @click="save">Salvar</button>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-sm btn-outline-success container-fluid" @click="recreateTables">Reconf. Tabelas</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -122,6 +129,11 @@ export default {
 
         editMode() {
             this.readonly= !this.readonly
+        },
+
+        async recreateTables() {
+            const resp= await this.$store.dispatch('ocsServer/recreateTables');
+            console.log(resp)
         }
 
     },

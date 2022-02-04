@@ -90,6 +90,7 @@ Route::prefix('/ocs')->name('ocs.')->group(function() {
     Route::post('/serverupdate', [App\Http\Controllers\OcsServerController::class, 'update'])->name('update');
     Route::post('/serverdestroy', [App\Http\Controllers\OcsServerController::class, 'destroy'])->name('destroy');
     Route::post('/serverget', [App\Http\Controllers\OcsServerController::class, 'getById'])->name('getbyid');
+    Route::post('/recreatetables', [App\Http\Controllers\OcsServerController::class, 'recreateTables'])->name('recreateTables');
 });
 
 Route::prefix('/dc')->name('dc.')->group(function() {

@@ -101,6 +101,17 @@ export default {
                 payload= JSON.parse(payload)
                 context.commit('setOcsServer', payload)
             }
+        },
+
+        async recreateTables(context, payload) {
+            context.commit('cleanResp')
+            const resp= await axios.post('ocs/recreatetables')
+                .then((response)=> {
+                    return response
+                })
+                .catch((error)=> {
+                    context.commit('setError', error.response.data)
+                })
         }
     }
 }
