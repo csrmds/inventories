@@ -144,7 +144,6 @@ class OcsServerController extends Controller
                     uuid varchar(255) default null,
                     arch varchar(10) default null,
                     category_id int(11) default null,
-                    archive int(11) default null,
                     primary key (id),
                     key deviceid (deviceid),
                     key name (name),
