@@ -92,6 +92,22 @@ class ProductController extends Controller
         
     }
 
+    public function getByOrder(Request $request)
+    {
+        $orderId= $request->input('id');
+        $orderItems= DB::table('order_items')->where('order_id', $orderId)->get();
+        $products= [];
+        foreach ($orderItems as $item) {
+            //$this->product=  Product::Find($item['product_id']);
+            array_push($products, Product::Find($item->product_id));
+            //array_push($products, $item->product_id);
+            
+        }
+
+        return json_encode($products);
+
+    }
+
     public function destroy()
     {
 		return view('product.index'); 
@@ -128,6 +144,27 @@ class ProductController extends Controller
         $products= DB::table('products')->where('property_id', 'like', $data['word'].'%')->get();
 
         return json_encode($products);
+    }
+
+    public function searchByPeopleId(Request $request)
+    {
+        $peopleId= $request->input('peopleId');
+
+        try {
+            $products= DB::table('products')
+            ->leftJoin('people', 'products.people_id', '=', 'people.id')
+            ->leftJoin('locations', 'products.location_id', '=', 'locations.id')
+            ->select('products.*', 
+                'locations.name as location_name', 
+                'people.first_name as people_first_name', 
+                'people.last_name as people_last_name')
+            ->where('products.people_id', $peopleId)
+            ->get();
+            return response(json_encode($products));
+        }catch(\Exception $e) {
+            return response(json_encode($e->getMessage()), 418);
+        }
+        
     }
 
     public function getbyid(Request $request)
@@ -201,7 +238,7 @@ class ProductController extends Controller
             $product->sn= $faker->randomNumber(8, false);
             $product->property_id= $faker->numberBetween(1000, 9999);
 
-            $product->save();
+            //$product->save();
         }
         echo "</pre>";
     }

@@ -7,27 +7,38 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\People;
 
+
+
+
+
+
 ?>
 
 <div class="container">
-    <h1>Teste</h1>
+    <h1>TESTE</h1>
 
-    <br>
-    <form>
-    <div class="row">
-        <div class="col-sm">
-            
-            <c-teste value="cesar melo">
-            
-        </div>
-    </div>
+<?php
 
-    </form>
+echo "<pre>";
 
-    <pre>
+print_r($_SERVER);
 
-    </pre>
 
+
+
+
+
+
+echo "</pre>";
+
+// $teste= system('dir', $retval);
+
+// echo "<pre>
+// Linha: $teste <br/>
+// valor: $retval <br/>
+// </pre>";
+
+?>
 
 </div>
 

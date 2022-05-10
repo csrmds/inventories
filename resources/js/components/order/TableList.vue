@@ -17,10 +17,7 @@
             <div class='col-sm'>
                 <button class="btn btn-sm btn-outline-primary container-fluid" @click="newOrder" >Novo</button>
             </div>
-
-            <div class='col-sm'>
-                <button class="btn btn-sm btn-outline-primary container-fluid" @click="teste" >teste</button>
-            </div>
+            
         </div>
         <br>
 
@@ -154,6 +151,10 @@ export default {
             const resp= await this.$store.dispatch('order/search', { word: this.word })
             this.filterPaginate= resp
             this.list= this.filterPaginate.data
+            this.list.forEach(e => {
+                let created_at= new Date(e.created_at);
+                e.created_at= (created_at.getDate() +"/"+ (created_at.getMonth()+1) +"/"+ created_at.getFullYear())
+            });
         },
 
         async linkPage(param) {
@@ -163,6 +164,10 @@ export default {
             })
             this.filterPaginate= resp
             this.list= this.filterPaginate.data
+            this.list.forEach(e => {
+                let created_at= new Date(e.created_at);
+                e.created_at= (created_at.getDate() +"/"+ (created_at.getMonth()+1) +"/"+ created_at.getFullYear())
+            });
         },
 
         async prevNextPage(param) {
@@ -175,6 +180,10 @@ export default {
                 })
                 this.filterPaginate= resp
                 this.list= this.filterPaginate.data
+                this.list.forEach(e => {
+                    let created_at= new Date(e.created_at);
+                    e.created_at= (created_at.getDate() +"/"+ (created_at.getMonth()+1) +"/"+ created_at.getFullYear())
+                });
             }
         },
 

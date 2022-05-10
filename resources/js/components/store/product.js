@@ -31,6 +31,7 @@ export default {
 		created_at: null,
 		updated_at: null,
 
+		list: [],
 		error: [],
 		resp: null,
 		action: []
@@ -87,6 +88,12 @@ export default {
 			state.updated_at= product.updated_at
 		},
 
+		setList(state, payload) {
+			payload.forEach(element => {
+				state.list.push(element)
+			});
+		},
+
 		cleanProduct(state) {
 			state.id= null
 			state.name= null
@@ -137,6 +144,14 @@ export default {
 				column: payload.column
 			})
 			return resp
+		},
+
+		async searchByPeopleId(context, payload) {
+			const resp= await axios.post('/product/searchbypeopleid', {peopleId: payload})
+			if (resp.data.length>0) {
+				context.commit('setList', resp.data)
+				return resp.data
+			}
 		},
 
 		async getById(context, payload) {

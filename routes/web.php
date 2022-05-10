@@ -65,6 +65,8 @@ Route::post('/product/searchby', [App\Http\Controllers\ProductController::class,
 Route::post('/product/getbyid', [App\Http\Controllers\ProductController::class, 'getbyid'])->name('product.getbyid');
 Route::post('/product/getgroups', [App\Http\Controllers\ProductController::class, 'getgroups'])->name('product.getgroups');
 Route::get('/product/teste', [App\Http\Controllers\ProductController::class, 'teste'])->name('product.teste');
+Route::post('/product/getbyorder', [App\Http\Controllers\ProductController::class, 'getByOrder'])->name('product.getbyorder');
+Route::post('/product/searchbypeopleid', [App\Http\Controllers\ProductController::class, 'searchByPeopleId'])->name('product.searchByPeopleId');
 
 
 Route::post('/user/search', [App\Http\Controllers\UserController::class, 'search'])->name('user.search');
@@ -102,8 +104,9 @@ Route::prefix('/dc')->name('dc.')->group(function() {
 
 
 Route::get('/csv', [App\Http\Controllers\CsvController::class, 'index'])->name('csv');
-Route::post('/csv/import/products', [App\Http\Controllers\CsvController::class, 'importProducts'])->name('csv.import.products');
+Route::get('/csv/import/products', [App\Http\Controllers\CsvController::class, 'importProducts'])->name('csv.import.products');
 Route::post('/csv/import/people', [App\Http\Controllers\CsvController::class, 'importPeople'])->name('csv.import.people');
+Route::get('/csv/import/locations', [App\Http\Controllers\CsvController::class, 'importLocations'])->name('csv.import.locations');
 
 Route::post('/ldap/searchgroup', [App\Http\Controllers\LdapController::class, 'searchGroup'])->name('ldap.searchGroup');
 //Route::post('/ldap/searchuser', [App\Http\Controllers\LdapController::class, 'searchUser'])->name('ldap.searchUser');
@@ -134,6 +137,11 @@ Route::prefix('/order')->name('order.')->group(function() {
     Route::post('/itemsearch', [App\Http\Controllers\OrderItemController::class, 'search'])->name('itemsearch');
 });
 
+Route::get('/chatbot', [App\Http\Controllers\ChatBotController::class, 'index'])->name('chatbot.index');
+Route::post('/chatbot/getmenu', [App\Http\Controllers\ChatBotController::class, 'getmenu'])->name('chatbot.getmenu');
+Route::post('/chatbot/setmenu', [App\Http\Controllers\ChatBotController::class, 'setmenu'])->name('chatbot.setmenu');
+Route::post('/chatbot/getaction', [App\Http\Controllers\ChatBotController::class, 'getaction'])->name('chatbot.getaction');
+
 Route::get('/movement/savebyorder', [App\Http\Controllers\MovementController::class, 'saveByOrder'])->name('movement.saveByOrder');
 
 Route::post('/servers/ocscreatetables', [App\Http\Controllers\ServersController::class, 'ocsCreateTables'])->name('servers.ocsCreateTables');
@@ -143,6 +151,10 @@ Route::get('/servers', [App\Http\Controllers\ServersController::class, 'index'])
 Route::get('/teste', function() {
     return view('teste');
 })->name('teste');
+
+Route::get('/respostas', function() {
+    return view('respostas');
+})->name('respostas');
 
 // Route::match(['get', 'post'], '/teste/teste', [App\Http\Controllers\TesteController::class, 'teste'])->name('teste.teste');
 // Route::match(['get', 'post'], '/teste/createuser', [App\Http\Controllers\TesteController::class, 'createUser'])->name('teste.createUser');

@@ -1,133 +1,182 @@
 <template>
     <div class="container-fluid">
+        
         <div class="form-row">
-            <div class="col-sm-2">
-                <label for="type">Tipo</label>
-                <select 
-                    v-model="people.type"
-                    name="type" 
-                    id="type" 
-                    class="form-control form-control-sm"
-                    :class="validation.type.invalid ? 'is-invalid' : null"
-                    aria-describedby="type-invalid">
-                    <option value="F">Física</option>
-                    <option value="J">Jurídica</option>
-                </select>
-                <div id="type-invalid" class="invalid-feedback">
-                    {{ validation.type.msg }}
+            <div class="col-sm">
+                
+                <ul class="nav nav-tabs" id="peopleTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a 
+                            class="nav-link active" 
+                            id="data-tab" 
+                            data-toggle="tab" 
+                            href="#data" 
+                            role="tab" 
+                            aria-controls="data" 
+                            aria-selected="true">
+                            Dados
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a 
+                            class="nav-link" 
+                            id="produtcs-tab" 
+                            data-toggle="tab" 
+                            href="#products" 
+                            role="tab" 
+                            aria-controls="products" 
+                            aria-selected="false">
+                            Produtos
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="peopleTabContent">
+                    
+                    <div class="tab-pane fade show active" id="data" role="tabpanel" aria-labelledby="data-tab">
+                        <div class="form-row">
+
+                            <div class="col-sm-2">
+                                <label for="type">Tipo</label>
+                                <select 
+                                    v-model="people.type"
+                                    name="type" 
+                                    id="type" 
+                                    class="form-control form-control-sm"
+                                    :class="validation.type.invalid ? 'is-invalid' : null"
+                                    aria-describedby="type-invalid">
+                                    <option value="F">Física</option>
+                                    <option value="J">Jurídica</option>
+                                </select>
+                                <div id="type-invalid" class="invalid-feedback">
+                                    {{ validation.type.msg }}
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-3">
+                                <template v-if="people.type=='F'">
+                                    <label for="">Nome</label>
+                                    <input 
+                                        v-model="people.first_name" 
+                                        type="text" 
+                                        :class="validation.first_name.invalid ? 'is-invalid' : null"
+                                        class="form-control form-control-sm"
+                                        aria-describedby="first_name-invalid">
+                                </template>
+                                <template v-else>
+                                    <label for="">Razão Social</label>
+                                    <input 
+                                        v-model="people.first_name" 
+                                        type="text" 
+                                        :class="validation.first_name.invalid ? 'is-invalid' : null"
+                                        class="form-control form-control-sm"
+                                        aria-describedby="first_name-invalid">
+                                </template>
+                                <div id="first_name-invalid" class="invalid-feedback">
+                                    {{ validation.first_name.msg }}
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label for="">Categoria</label>
+                                <c-autocomplete 
+                                    :input-value="people.category" 
+                                    :list="categories" 
+                                    column="name" >
+                                </c-autocomplete>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label for="">Nascimento</label>
+                                <input v-if="people.type=='F'" v-model="birth_date" v-mask="'##/##/####'" type="text" class="form-control form-control-sm">
+                                <input v-else type="text" class="form-control form-control-sm" disabled>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <template v-if="people.type=='F'">
+                                    <label for="">CPF</label>
+                                    <input v-model="people.cpf" v-mask="'###.###.###-##'" type="text" class="form-control form-control-sm">
+                                </template>
+                                <template v-else>
+                                    <label for="">CNPJ</label>
+                                    <input v-model="people.cnpj" v-mask="'##.###.###/####-##'" type="text" class="form-control form-control-sm">
+                                </template>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-sm-2">
+                                <c-cep
+                                    :input-value="people.zipcode"
+                                    @ibge="loadCep($event)"
+                                    label="CEP">
+                                </c-cep>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label for="">Logradouro</label>
+                                <input v-model="people.address" type="text" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-sm-1">
+                                <label for="">Número</label>
+                                <input v-model="people.number" type="text" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label for="">Complemento</label>
+                                <input v-model="people.complement" type="text" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label for="">Bairro</label>
+                                <input v-model="people.district" type="text" class="form-control form-control-sm">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-sm-2">
+                                <label for="">Cidade</label>
+                                <input v-model="people.city" type="text" class="form-control form-control-sm">
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label for="">UF</label>
+                                <select v-model="people.state" name="state" id="state" class="form-control form-control-sm">
+                                    <option v-for="(uf, i) in ufs" :key="i" :value="uf.uf">{{ uf.uf }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label for="">UserLogin</label>
+                                <input type="text" readonly class="form-control form-control-sm" v-model="userLogin.name">
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="">AD User</label>
+                                <input type="text" readonly class="form-control form-control-sm" v-model="ldapUser.samaccountname">
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="">DN</label>
+                                <input type="text" readonly class="form-control form-control-sm" v-model="ldapUser.distinguishedname">
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="produtcs-tab">
+                        <c-people-product-list :people-id="people.id" />
+                    </div>
                 </div>
 
             </div>
-
-            <div class="col-sm-3">
-                <template v-if="people.type=='F'">
-                    <label for="">Nome</label>
-                    <input 
-                        v-model="people.first_name" 
-                        type="text" 
-                        :class="validation.first_name.invalid ? 'is-invalid' : null"
-                        class="form-control form-control-sm"
-                        aria-describedby="first_name-invalid">
-                </template>
-                <template v-else>
-                    <label for="">Razão Social</label>
-                    <input 
-                        v-model="people.first_name" 
-                        type="text" 
-                        :class="validation.first_name.invalid ? 'is-invalid' : null"
-                        class="form-control form-control-sm"
-                        aria-describedby="first_name-invalid">
-                </template>
-                <div id="first_name-invalid" class="invalid-feedback">
-                    {{ validation.first_name.msg }}
-                </div>
-
-            </div>
-
-            <div class="col-sm-2">
-                <label for="">Categoria</label>
-                <c-autocomplete 
-                    :input-value="people.category" 
-                    :list="categories" 
-                    column="name" >
-                </c-autocomplete>
-            </div>
-
-            <div class="col-sm-2">
-                <label for="">Nascimento</label>
-                <input v-if="people.type=='F'" v-model="birth_date" v-mask="'##/##/####'" type="text" class="form-control form-control-sm">
-                <input v-else type="text" class="form-control form-control-sm" disabled>
-            </div>
-
-            <div class="col-sm-2">
-                <template v-if="people.type=='F'">
-                    <label for="">CPF</label>
-                    <input v-model="people.cpf" v-mask="'###.###.###-##'" type="text" class="form-control form-control-sm">
-                </template>
-                <template v-else>
-                    <label for="">CNPJ</label>
-                    <input v-model="people.cnpj" v-mask="'##.###.###/####-##'" type="text" class="form-control form-control-sm">
-                </template>
-            </div>
+            
 
         </div>
 
-        <div class="form-row">
-            <div class="col-sm-2">
-                <c-cep
-                    :input-value="people.zipcode"
-                    @ibge="loadCep($event)"
-                    label="CEP">
-                </c-cep>
-            </div>
-
-            <div class="col-sm-3">
-                <label for="">Logradouro</label>
-                <input v-model="people.address" type="text" class="form-control form-control-sm">
-            </div>
-
-            <div class="col-sm-1">
-                <label for="">Número</label>
-                <input v-model="people.number" type="text" class="form-control form-control-sm">
-            </div>
-
-            <div class="col-sm-2">
-                <label for="">Complemento</label>
-                <input v-model="people.complement" type="text" class="form-control form-control-sm">
-            </div>
-
-            <div class="col-sm-2">
-                <label for="">Bairro</label>
-                <input v-model="people.district" type="text" class="form-control form-control-sm">
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="col-sm-2">
-                <label for="">Cidade</label>
-                <input v-model="people.city" type="text" class="form-control form-control-sm">
-            </div>
-
-            <div class="col-sm-2">
-                <label for="">UF</label>
-                <select v-model="people.state" name="state" id="state" class="form-control form-control-sm">
-                    <option v-for="(uf, i) in ufs" :key="i" :value="uf.uf">{{ uf.uf }}</option>
-                </select>
-            </div>
-
-            <div class="col-sm-2">
-                <label for="">UserLogin</label>
-                <input type="text" readonly class="form-control form-control-sm" v-model="userLogin.name">
-            </div>
-            <div class="col-sm-2">
-                <label for="">AD User</label>
-                <input type="text" readonly class="form-control form-control-sm" v-model="ldapUser.samaccountname">
-            </div>
-            <div class="col-sm-2">
-                <label for="">DN</label>
-                <input type="text" readonly class="form-control form-control-sm" v-model="ldapUser.distinguishedname">
-            </div>
-        </div>
+        
         <br>
 
         <div class="row">
@@ -148,6 +197,7 @@
             <div class="col-sm-2">
                 <button class="btn btn-sm btn-secondary container-fluid" @click="removeLdapUser">Remover LDAP User</button>
             </div>
+            
         </div>
 
         <div class="row">
@@ -175,6 +225,7 @@ export default {
         return {
             ufs: this.$store.state.ufs,
             birth_date: null,
+            toggle: true,
 
             validation: {
                 type: {
@@ -216,6 +267,17 @@ export default {
         this.loadCategory()
         //this.birthDate()
         this.loadUser()
+
+        // var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
+        // triggerTabList.forEach(function (triggerEl) {
+        //     var tabTrigger = new bootstrap.Tab(triggerEl)
+
+        //     triggerEl.addEventListener('click', function (event) {
+        //         event.preventDefault()
+        //         tabTrigger.show()
+        //     })
+        // })
+
     },
 
     methods: {

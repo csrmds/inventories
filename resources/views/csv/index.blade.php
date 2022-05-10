@@ -7,12 +7,13 @@
 
     <div class="row">
         <div class="col-sm">
-            <c-csv-import-products></c-csv-import-products>
+            <c-csv-table-products></c-csv-table-products>
         </div>
     </div>
+    <br>
 
 
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-sm">
             <table class="table table-sm table-striped">
                 <thead>
@@ -39,7 +40,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div> -->
 
 </div>
 

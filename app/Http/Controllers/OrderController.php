@@ -29,6 +29,7 @@ class OrderController extends Controller
         $this->order->value= $properties['value'];
         $this->order->discount= $properties['discount'];
         $this->order->status= $properties['status'];
+        $properties['created_at'] ? $this->order->created_at= strtotime($properties['created_at']) : null;
     }
 
     public function index() {
@@ -40,7 +41,7 @@ class OrderController extends Controller
 
     public function search(Request $request) {
         //busca por nome de pessoas ou locais
-        //DB::enableQueryLog();
+        DB::enableQueryLog();
         $data= $request->input('word');
 
         $orders= DB::table('orders')
@@ -71,6 +72,7 @@ class OrderController extends Controller
             ->orWhere('people_request.last_name', 'like', $data.'%')
             ->orWhere('location_origin.name', 'like', $data.'%')
             ->orWhere('location_destiny.name', 'like', $data.'%')
+            //->groupBy('order_items.order_id')
             ->paginate(10);
             
             //dd(DB::getQueryLog());

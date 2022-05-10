@@ -36,6 +36,7 @@ class OrderItemController extends Controller
 
     public function search(Request $request) {
         $data= $request->input('word');
+        //DB::enableQueryLog();
 
         $orderItems= DB::table('order_items')
             ->leftJoin('orders', 'order_items.order_id', '=', 'orders.id')
@@ -75,11 +76,16 @@ class OrderItemController extends Controller
             ->orWhere('locations.name', 'like', $data.'%')
             ->paginate(10);
 
+            //$resp= DB::getQueryLog();
+
         return json_encode($orderItems);
     }
 
     public function getByOrder(Request $request) {
         $orderId= $request->input('order_id');
+
+        //DB::enableQueryLog();
+
         $orderItems= DB::table('order_items')
             ->leftJoin('products', 'order_items.product_id', '=', 'products.id')
             ->leftJoin('people', 'products.people_id', '=', 'people.id')
@@ -107,71 +113,130 @@ class OrderItemController extends Controller
                 'locations.name as location_name')
             ->where('order_id', $orderId)->get();
 
+            //dd(DB::getQueryLog());
+
         return json_encode($orderItems);
     }
 
-    public function save(Request $request) {
-        $orderItem= $request->input('order_item');
+    public function save(Request $request) 
+    {
+        $orderItems= $request->input('order_items');
         $order= $request->input('order');
 
-        if (DB::table('orders')->where('id', $orderItem['order_id'])->exists() && 
-            DB::table('products')->where('id', $orderItem['product_id'])) {
-
-            if (DB::table('order_items')->where('order_id', $orderItem['order_id'])->exists()) {
-                $order= DB::table('order_items')->max('order')->where('order_id', $orderItem['order_id']);
-                $orderItem['order']= $order++;
-            } else {
-                $orderItem['order']= 1;
-            }
-            
-            $this->setProperties($orderItem);
-            $product= Product::Find($orderItem['product_id']);
-            $product->people_id= $order['people_destiny'];
-            $product->location_id= $order['location_destiny'];
+        if (DB::table('orders')->where('id', $order['id'])->exists()) {
             $order= Order::Find($order['id']);
             
-            $movement= new Movement;
-            $movement->order_id= $orderItem['order_id'];
-            $movement->product_id= $orderItem['product_id'];
-            $movement->amount= $orderItem['amount']!=null ? $item['amount'] : 1;
-            $movement->order_item_order= $orderItem['order'];
-            $movement->movement= $order->category;
-            
-            try {
-                $this->orderItem->save();
-                
+            foreach ($orderItems as $orderItem) {
+
+                $this->orderItem= new OrderItem;
+                $this->setProperties($orderItem);
+                $this->orderItem->order_id= $order->id;
+
+                $movement= new Movement;
+                $movement->order_id= $order->id;
+                $movement->product_id= $this->orderItem->product_id;
+                $movement->amount= $this->orderItem->amount!=null ? $this->orderItem->amount : 1;
+                $movement->order_item_order= $this->orderItem->order;
+                $movement->movement= $order->category;
+
                 try {
-                    $product->save();
+                    $this->orderItem->save();
 
                     try {
                         $movement->save();
-                        $order->status= "CONCLUIDO";
+
+                        $product= Product::Find($this->orderItem->product_id);
+                        $product->location_id= $order->location_destiny;
+                        $product->people_id= $order->people_destiny;
 
                         try {
-                            $order->save();
-                        } catch(\Exception $e) {
-                            return json_encode($e->getMessage());
+                            $product->save();
+                        } catch (\Exception $e) {
+                            return response(json_encode($e->getMessage()), 418);
                         }
 
-                    } catch(\Exception $e) {
-                        return json_encode($e->getMessage());
+                    } catch (\Exception $e) {
+                        return response(json_encode($e->getMessage()), 418);
                     }
 
                 } catch(\Exception $e) {
-                    return json_encode($e->getMessage());
+                    return response(json_encode($e->getMessage()), 418);
                 }
 
-                //return redirect()->action([MovementController::class, 'saveByOrder'], ['order_id'=>$order->id]);
-                
-                return json_encode([$order, $orderItem, $movement]);
-            } catch(\Exception $e) {
-                return json_encode($e->getMessage());
             }
+
+            $order->status= "CONCLUIDO";
+            $order->save();
+            return json_encode([$order, $orderItems, $product]);
+
             
         } else {
             return "O pedido ou produto não existe no banco de dados";
         }
     }
+
+    // public function saveOld(Request $request) {
+    //     $orderItem= $request->input('order_item');
+    //     $order= $request->input('order');
+
+    //     if (DB::table('orders')->where('id', $orderItem['order_id'])->exists() && 
+    //         DB::table('products')->where('id', $orderItem['product_id'])) {
+
+    //         if (DB::table('order_items')->where('order_id', $orderItem['order_id'])->exists()) {
+    //             $order= DB::table('order_items')->max('order')->where('order_id', $orderItem['order_id']);
+    //             $orderItem['order']= $order++;
+    //         } else {
+    //             $orderItem['order']= 1;
+    //         }
+            
+    //         $this->setProperties($orderItem);
+    //         $product= Product::Find($orderItem['product_id']);
+    //         $product->people_id= $order['people_destiny'];
+    //         $product->location_id= $order['location_destiny'];
+    //         $order= Order::Find($order['id']);
+            
+    //         $movement= new Movement;
+    //         $movement->order_id= $orderItem['order_id'];
+    //         $movement->product_id= $orderItem['product_id'];
+    //         $movement->amount= $orderItem['amount']!=null ? $item['amount'] : 1;
+    //         $movement->order_item_order= $orderItem['order'];
+    //         $movement->movement= $order->category;
+            
+    //         try {
+    //             $this->orderItem->save();
+                
+    //             try {
+    //                 $product->save();
+
+    //                 try {
+    //                     $movement->save();
+    //                     $order->status= "CONCLUIDO";
+
+    //                     try {
+    //                         $order->save();
+    //                     } catch(\Exception $e) {
+    //                         return json_encode($e->getMessage());
+    //                     }
+
+    //                 } catch(\Exception $e) {
+    //                     return json_encode($e->getMessage());
+    //                 }
+
+    //             } catch(\Exception $e) {
+    //                 return json_encode($e->getMessage());
+    //             }
+
+    //             //return redirect()->action([MovementController::class, 'saveByOrder'], ['order_id'=>$order->id]);
+                
+    //             return json_encode([$order, $orderItem, $movement]);
+    //         } catch(\Exception $e) {
+    //             return json_encode($e->getMessage());
+    //         }
+            
+    //     } else {
+    //         return "O pedido ou produto não existe no banco de dados";
+    //     }
+    // }
 
     public function destroy(Request $request) {
         $orderId= $request->input('order_id');

@@ -241,10 +241,12 @@ export default {
 
 	mounted() {
 		document.addEventListener('click', this.handleClickOutside);
-		eventbus.$on('cleanAutocomplete', ()=>{
-			//console.log('escutou clenaAutocomplete...')
-			this.cleanResults()
-			this.cleanWord()
+		eventbus.$on('cleanAutocomplete', (param)=>{
+			if (param== this.id) {
+				this.cleanResults()
+				this.cleanWord()
+			}
+			
 		})
 
 		eventbus.$on('loadAutocomplete', (param)=>{
