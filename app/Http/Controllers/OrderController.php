@@ -29,6 +29,7 @@ class OrderController extends Controller
         $this->order->value= $properties['value'];
         $this->order->discount= $properties['discount'];
         $this->order->status= $properties['status'];
+        $this->order->created_at= $properties['created_at'];
     }
 
     public function index() {
@@ -117,6 +118,12 @@ class OrderController extends Controller
         $userSession= session()->get('userLogin');
         $this->order->user_id= $userSession['id'];
 
+        $locationOrigin= $this->order->getLocationOrigin;
+        $locationDestiny= $this->order->getLocationDestiny;
+        if ($locationOrigin['people_id']==$locationDestiny['people_id']) {
+            $this->order->category="TRANSFERENCIA LOCAL";
+        }
+
         try {
             $this->order->save();
             return json_encode($this->order);
@@ -145,5 +152,15 @@ class OrderController extends Controller
         } else {
             return 1;
         }
+    }
+
+    public function teste(Request $request) {
+        $id= $request->input('id');
+
+        $this->order= Order::Find($id);
+        $locOrigin= $this->order->locationOrigin;
+        $locDestiny= $this->order->locationDestiny;
+
+        return [$locOrigin['people_id'], $locDestiny['people_id']];
     }
 }

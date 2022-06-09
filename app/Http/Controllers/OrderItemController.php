@@ -128,6 +128,7 @@ class OrderItemController extends Controller
             $product= Product::Find($orderItem['product_id']);
             $product->people_id= $order['people_destiny'];
             $product->location_id= $order['location_destiny'];
+            //dd($order);
             $order= Order::Find($order['id']);
             
             $movement= new Movement;

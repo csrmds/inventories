@@ -10,6 +10,7 @@
 	<title>@yield('titulo')</title>
 
 	<link rel="stylesheet" href="{{ asset('css/app.css') }}">
+	<script src="https://jsuites.net/v4/jsuites.js"></script>
 </head>
 
 <body>

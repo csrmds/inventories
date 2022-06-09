@@ -6,6 +6,7 @@
 
 require('./bootstrap');
 //require('./commom');
+import './commom'
 
 window.Vue = require('vue').default;
 

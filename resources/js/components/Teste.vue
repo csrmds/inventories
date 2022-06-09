@@ -61,14 +61,8 @@ export default {
         async teste(e) {
             e.preventDefault()
             //console.log(this.cValue)
-            const x= await axios.post('/servers/ocscreatetables', {
-                ocs_server: '192.168.42.141',
-                ocs_user: 'ocs',
-                ocs_password: 'ocs',
-                ocs_port: '3306'
-
-            })
-            console.log(x.data)
+            const resp= await axios.post('/order/teste', {id: this.word})
+            console.log(resp)
         },
 
         // async loadList(e) {

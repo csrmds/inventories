@@ -12,9 +12,9 @@
 				/>
             </div>
 
-            <div class="col-sm-2 offset-sm-3">
+            <div class="col-sm-2 offset-sm-2">
                 <label for="">Data</label>
-                <input type="text" class="form-control form-control-sm">
+                <input v-model="orderDate" type="text" class="form-control form-control-sm" data-mask='dd/mm/yyyy'>
             </div>
         </div>
 
@@ -48,6 +48,7 @@
 				/>
             </div>
         </div>
+        <hr>
         <br>
 
         <div class="form-row">
@@ -84,7 +85,10 @@ export default {
         return {
             peopleWord: null,
             productWord: null,
-            locationList: null
+            locationList: null,
+            orderDate: null,
+            error: false,
+            errorList: []
         }
     },
 
@@ -137,10 +141,45 @@ export default {
 			}
 		},
 
+        dateConvert(param) {
+            if (param!=null && param.length<10) {
+                // console.log("error...")
+                // console.log(param)
+                this.error= true
+                let errorCount= {
+                    msg: "Formato de data inválido"
+                }
+                this.errorList.push(errorCount)
+                return false
+            }
+
+            if (param==null) {
+                param= new Date()
+                param= param.getDate()+'/'+(param.getMonth()+1)+'/'+param.getFullYear()
+                console.log("param Date: "+param)
+            }
+            this.error= false
+            let date= param.split('/')
+            date[2]= date[2].substr(0, 4)
+            date= date[2]+'-'+date[1]+'-'+date[0]
+            this.orderDate= date
+        },
+
         async save() {
+            this.dateConvert(this.orderDate)
+            if (this.error) {
+                this.errorList.forEach(element => {
+                    this.alert.msg= element.msg
+                });
+                this.alert.classType= "alert-danger"
+                this.$store.dispatch('alert/showAlert', this.alert)
+                return false
+            }
+
             this.order.location_destiny= this.product.location_id
-            this.order.status= "ABERTO";
-            this.order.category= "TRANSFERENCIA";
+            this.order.status= "ABERTO"
+            this.order.category= "TRANSFERENCIA"
+            this.order.created_at= this.orderDate
             const resp= await axios.post('order/save', {order: this.order})
             // console.log(resp);
             // console.log("add item ao pedido...")
@@ -172,6 +211,9 @@ export default {
             this.$store.commit('order/cleanOrder')
             this.$store.commit('product/cleanProduct')
             eventbus.$emit('cleanAutocomplete')
+            this.error= false
+            this.errorList= []
+            this.orderDate= null
         },
 
         async checkOrder(order) {
