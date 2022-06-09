@@ -62,6 +62,7 @@ Vue.component('c-people-form-edit', require('./components/people/FormEdit.vue').
 Vue.component('c-people-card-info', require('./components/people/CardInfo.vue').default);
 Vue.component('c-people-form-search', require('./components/people/FormSearch.vue').default);
 Vue.component('c-people-form-create-simple', require('./components/people/FormCreateSimple.vue').default);
+Vue.component('c-people-product-list', require('./components/people/ProductList.vue').default);
 
 Vue.component('c-product-search', require('./components/product/InputSearch.vue').default);
 Vue.component('c-product-form-create', require('./components/product/FormCreate.vue').default);
@@ -81,6 +82,7 @@ Vue.component('c-location-table-list', require('./components/location/TableList.
 Vue.component('c-location-form', require('./components/location/Form.vue').default);
 
 Vue.component('c-csv-import-products', require('./components/csv/ImportProducts.vue').default);
+Vue.component('c-csv-table-products', require('./components/csv/TableProducts.vue').default);
 
 Vue.component('c-ldapuser-table-list', require('./components/ldap/TableListUser.vue').default);
 
@@ -96,6 +98,8 @@ Vue.component('c-order-item-table-list', require('./components/orderItem/TableLi
 Vue.component('c-config-ocs-form-create', require('./components/config/OcsServerFormCreate.vue').default);
 
 Vue.component('c-config-dc-form-create', require('./components/config/DcServerFormCreate.vue').default);
+
+Vue.component('c-chatbot-main-menu', require('./components/chatbot/MainMenu.vue').default);
 
 
 

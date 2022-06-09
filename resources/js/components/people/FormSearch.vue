@@ -56,7 +56,8 @@ export default {
         async search() {
             const resp= await this.$store.dispatch('people/search', {word: this.word} )
             this.filterPaginate= resp.data
-            this.list= this.filterPaginate.data
+            //console.log(this.filterPaginate)
+            this.list= this.filterPaginate
         },
 
         select(param) {

@@ -15,6 +15,8 @@ export default {
         created_at: null,
         updated_at: null,
 
+        list: [],
+
         error: null,
         resp: null
     },
@@ -48,6 +50,12 @@ export default {
             state.category= payload.category
         },
 
+        setOrderItems(state, payload) {
+            payload.forEach(element => {
+                state.list.push(element)
+            });
+        },
+
         cleanOrderItem(state, payload) {
             console.log('orderItem cleanOrderItem')
             state.order_id= null
@@ -60,6 +68,10 @@ export default {
             state.category= null
             state.created_at= null
             state.updated_at= null
+        },
+
+        cleanOrderItems(state) {
+            state.list= []
         }
     },
 
@@ -84,19 +96,20 @@ export default {
 
         async save(context, payload) {
             context.commit('cleanResp')
-            context.commit('setOrderItem', payload.orderItem)
+            context.commit('setOrderItems', payload.orderItems)
             const resp= await axios.post('/order/itemsave', {
-                order_item: context.state,
+                order_items: context.state.list,
                 order: payload.order
                 })
                 .then((response)=> {
                     context.commit('cleanOrderItem')
+                    context.commit('cleanOrderItems')
                     context.commit('setResp', "Item salvo no pedido")
-                    console.log("response do orderItem save...")
-                    console.log(response)
                     return response
                 })
                 .catch((error)=> {
+                    context.commit('cleanOrderItem')
+                    context.commit('cleanOrderItems')
                     context.commit('setError', error.response.data)
                 })
         },
