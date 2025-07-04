@@ -25,7 +25,7 @@
 				<a class="nav-link" href="{{ url('/') }}">HOME</a>
 			</li>
 			@if (Auth::check() || Auth::guard('ldapusers')->check())
-			<!-- <li class="nav-item">
+			<li class="nav-item">
 				<a class="nav-link" href="{{ route('people.index') }}">PESSOAS</a>
 			</li>
 			<li class="nav-item">
@@ -58,10 +58,10 @@
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="{{ route('ldap.home') }}">LDAP</a>
-			</li> -->
-			<li class="nav-item">
-				<a class="nav-link" href="{{ route('chatbot.index') }}">CHAT</a>
 			</li>
+			<!-- <li class="nav-item">
+				<a class="nav-link" href="{{ route('chatbot.index') }}">CHAT</a>
+			</li> -->
 			@endif
 		</ul>
 

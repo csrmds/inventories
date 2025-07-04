@@ -220,6 +220,11 @@ export default {
                 })
         },
 
+        async getLdapUserLogin(context, payload) {
+            console.log('getLdapUserLogin people.js: '+payload)
+            return await axios.post('/people/getldapuserlogin', {id: payload})
+        },
+
         async getUser(context, payload) {
             console.log('getUser people.js: '+payload)
             return await axios.post('/people/getuser', {id: payload})

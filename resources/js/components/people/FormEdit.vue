@@ -83,7 +83,8 @@
                                 <label for="">Categoria</label>
                                 <c-autocomplete 
                                     :input-value="people.category" 
-                                    :list="categories" 
+                                    :list="categories"
+                                    @itemSelected="setCategory($event)"
                                     column="name" >
                                 </c-autocomplete>
                             </div>
@@ -197,6 +198,10 @@
             <div class="col-sm-2">
                 <button class="btn btn-sm btn-secondary container-fluid" @click="removeLdapUser">Remover LDAP User</button>
             </div>
+
+            <!-- <div class="col-sm-2">
+                <button class="btn btn-sm btn-secondary container-fluid" @click="teste">Teste</button>
+            </div> -->
             
         </div>
 
@@ -226,7 +231,9 @@ export default {
             ufs: this.$store.state.ufs,
             birth_date: null,
             toggle: true,
-
+            hasLdapUser: false,
+            hasUserLogin: false,
+            
             validation: {
                 type: {
                     msg: "Campo obrigatório",
@@ -265,8 +272,8 @@ export default {
 
     mounted() {
         this.loadCategory()
-        //this.birthDate()
         this.loadUser()
+        this.birthDate()
 
         // var triggerTabList = [].slice.call(document.querySelectorAll('#myTab button'))
         // triggerTabList.forEach(function (triggerEl) {
@@ -294,6 +301,7 @@ export default {
                     ldapUser: this.ldapUser
                 })
             }
+            this.ldapUserClean()
         },
 
         async validate() {
@@ -318,6 +326,14 @@ export default {
             this.$store.dispatch('people/loadAddress', param)
         },
 
+        setCategory(param) {
+            console.log("escutou setCategory")
+            console.log(param)
+            this.people.category= param.description
+            console.log("this.people.category: ")
+            console.log(this.people.category)
+        },
+
         async loadCategory() {
             await this.$store.dispatch('people/listCategory')
         },
@@ -325,6 +341,7 @@ export default {
         birthDate() {
             let date= this.$store.state.people.birth_date.split("-")
             this.birth_date= date[2]+"/"+date[1]+"/"+date[0]
+            //console.log(date)
         },
 
         ldapUserModal(e) {
@@ -334,17 +351,26 @@ export default {
 
         ldapUserClean() {
             this.$store.commit('ldapUser/cleanLdapUser')
+            this.$store.commit('user/cleanUser')
         },
 
         async loadUser() {
-            const resp= await this.$store.dispatch('people/getUser', this.people.id)
-            console.log('loadUser formedit: '+this.people.id)
-            if (resp.data) {
-                await this.$store.commit('user/setUser', resp.data)
-                let getLdapUser= await this.$store.dispatch('ldapUser/getLdapUser', resp.data.id)
-                if (getLdapUser.data.distinguishedname) {
-                    this.$store.commit('ldapUser/setLdapUser', getLdapUser.data)
+            this.ldapUserClean
+            const ldapUserLogin= await this.$store.dispatch('people/getLdapUserLogin', this.people.id)
+            //console.log('loadUser formedit: '+this.people.id)
+            
+            if (ldapUserLogin.data) {
+                //this.hasLdapUser= true
+                await this.$store.commit('user/setUser', ldapUserLogin.data)
+                // console.log("ldapUser by peopleId:")
+                // console.log(ldapUserLogin.data)
+                let ldapUserAd= await this.$store.dispatch('ldapUser/getLdapUser', ldapUserLogin.data.name)
+                if (ldapUserAd.data) {
+                    await this.$store.commit('ldapUser/setLdapUser', ldapUserAd.data)
                 }
+                // console.log("ldapUserAd")
+                // console.log(ldapUserAd.data)
+
             } else {
                 this.$store.commit('user/cleanUser')
                 this.$store.commit('ldapUser/cleanLdapUser')
@@ -365,6 +391,11 @@ export default {
                 this.alert.classType= "alert-danger"
                 this.$store.dispatch('alert/showAlert', this.alert)
             }
+        },
+
+        teste() {
+            console.log("Teste loadUser...\n")
+            this.loadUser()
         }
 
         // async convertBirthDate() {

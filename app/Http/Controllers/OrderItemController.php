@@ -123,7 +123,6 @@ class OrderItemController extends Controller
         $orderItems= $request->input('order_items');
         $order= $request->input('order');
 
-<<<<<<< HEAD
         if (DB::table('orders')->where('id', $orderItem['order_id'])->exists() && 
             DB::table('products')->where('id', $orderItem['product_id'])) {
 
@@ -139,9 +138,6 @@ class OrderItemController extends Controller
             $product->people_id= $order['people_destiny'];
             $product->location_id= $order['location_destiny'];
             //dd($order);
-=======
-        if (DB::table('orders')->where('id', $order['id'])->exists()) {
->>>>>>> c7f9a8b964a2c29a7634347dfa4b017e1d174c04
             $order= Order::Find($order['id']);
             
             foreach ($orderItems as $orderItem) {

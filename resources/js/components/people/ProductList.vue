@@ -43,9 +43,9 @@ export default {
     methods: {
         async getProducts(param) {
             const resp= await this.$store.dispatch('product/searchByPeopleId', param)
-            console.log("getProducts")
+            // console.log("getProducts")
             console.log(resp)
-            if (resp.length>0) {
+            if (resp) {
                 this.productList= resp
             }
         }

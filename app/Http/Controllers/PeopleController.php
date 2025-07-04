@@ -130,7 +130,7 @@ class PeopleController extends Controller
 
         //criar condição para verificar se já existe um usuario para o ID da pessoa
 
-        if ($ldapUser) { 
+        if ($ldapUser['samaccountname']!=null) { 
             //atualiza usuario na tabela users
             $user= DB::table('ldap_users')
             ->where('guid', '=', $ldapUser['objectguid'])
@@ -235,12 +235,18 @@ class PeopleController extends Controller
 
     public function getUser(Request $request)
     {
-        $id= $request->input('id');
-        $people= People::find($id);
+        $people= People::find($request->input('id'));
         $user= $people->getUser()->first();
-        //dd($id);
 
         return json_encode($user);
+    }
+
+    public function getLdapUserLogin(Request $request) 
+    {
+        $people= People::find($request->input('id'));
+        $ldapUser= $people->getLdapUserLogin()->first();
+
+        return json_encode($ldapUser);
     }
 
     public function faker() {

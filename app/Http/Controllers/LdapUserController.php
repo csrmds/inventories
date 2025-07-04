@@ -70,15 +70,16 @@ class LdapUserController extends Controller
     }
 
     public function getLdapUser(Request $request) {
-        $user= LdapUser::Find($request->input('id'));
+        $user= LdapUser::findBy('samaccountname', $request->input('samaccountname'));
 
-        $ldapUser= $user->getLdapUser();
-        if ($ldapUser) {
-            return $ldapUser;
+        if ($user) {
+            return json_encode($user);
         } else {
             return null;
         }
+
     }
+
 
     public function searchUser(Request $request)
     {

@@ -47,9 +47,10 @@ Route::post('/people/destroy', [App\Http\Controllers\PeopleController::class, 'd
 Route::get('/people/faker', [App\Http\Controllers\PeopleController::class, 'faker'])->name('people.faker');
 Route::post('/people/search', [App\Http\Controllers\PeopleController::class, 'search'])->name('people.search');
 Route::post('/people/searchby', [App\Http\Controllers\PeopleController::class, 'searchby'])->name('people.searchby');
-Route::post('/people/getbyid', [App\Http\Controllers\PeopleController::class, 'getbyid'])->name('people.getbyid');
+Route::match(['get','post'], '/people/getbyid', [App\Http\Controllers\PeopleController::class, 'getbyid'])->name('people.getbyid');
 Route::post('/people/listcategory', [App\Http\Controllers\PeopleController::class, 'listcategory'])->name('people.listcategory');
 Route::post('/people/getuser', [App\Http\Controllers\PeopleController::class, 'getUser'])->name('people.getUser');
+Route::post('/people/getldapuserlogin', [App\Http\Controllers\PeopleController::class, 'getLdapUserLogin'])->name('people.getLdapUserLogin');
 Route::post('/people/removeldapuser', [App\Http\Controllers\PeopleController::class, 'removeLdapUser'])->name('people.removeLdapUser');
 
 Route::get('/product', [App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
@@ -119,6 +120,7 @@ Route::prefix('/ldap')->name('ldap.')->group(function() {
     Route::match(['get', 'post'], '/logout', [App\Http\Controllers\LdapUserController::class, 'logout'])->name('logout');
     Route::post('/checkCred', [App\Http\Controllers\LdapUserController::class, 'checkCred'])->name('checkCred');
     Route::post('/getldapuser', [App\Http\Controllers\LdapUserController::class, 'getLdapUser'])->name('getLdapUser');
+    Route::match(['get', 'post'], '/getldapuserpeopleid', [App\Http\Controllers\LdapUserController::class, 'getLdapUserPeopleId'])->name('getLdapUserPeopleId');
     Route::post('/searchuser', [App\Http\Controllers\LdapUserController::class, 'searchUser'])->name('searchUser');
     Route::get('/teste', [App\Http\Controllers\LdapUserController::class, 'teste'])->name('teste');
 });

@@ -132,15 +132,20 @@ export default {
 
     actions: {
         async search(context, payload) {
-            const resp= await axios.post('/ldap/searchuser', payload)
+            const resp= await axios.post('/ldap/searchuser', {word: payload})
             console.log(resp)
             return resp
         },
 
         async getLdapUser(context, payload) {
-            const resp= await axios.post('/ldap/getldapuser', {id: payload})
+            const resp= await axios.post('/ldap/getldapuser', {samaccountname: payload})
             return resp
         },
+
+        // async getLdapUserPeopleId(context, payload) {
+        //     const resp= await axios.post('/ldap/getldapuserpeopleid', {samaccountname: payload})
+        //     return resp
+        // },
 
         loadInputs(context, payload) {
 			if (typeof(payload)=="object") {

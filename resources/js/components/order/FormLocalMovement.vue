@@ -26,15 +26,9 @@
 				/>
             </div>
 
-<<<<<<< HEAD
-            <div class="col-sm-2 offset-sm-2">
-                <label for="">Data</label>
-                <input v-model="orderDate" type="text" class="form-control form-control-sm" data-mask='dd/mm/yyyy'>
-=======
             <div class="col-sm-2">
                 <label for="">Data</label>
                 <input v-model="order.created_at" v-mask="'##-##-####'" type="data" class="form-control form-control-sm">
->>>>>>> c7f9a8b964a2c29a7634347dfa4b017e1d174c04
             </div>
         </div>
 
@@ -155,15 +149,12 @@ export default {
             peopleWord: null,
             productWord: null,
             locationList: null,
-<<<<<<< HEAD
             orderDate: null,
             error: false,
-            errorList: []
-=======
+            errorList: [],
             types: null,
             orderItemList: [],
             orderLocationDestiny: null
->>>>>>> c7f9a8b964a2c29a7634347dfa4b017e1d174c04
         }
     },
 
@@ -222,7 +213,6 @@ export default {
 			}
 		},
 
-<<<<<<< HEAD
         dateConvert(param) {
             if (param!=null && param.length<10) {
                 // console.log("error...")
@@ -262,7 +252,8 @@ export default {
             this.order.status= "ABERTO"
             this.order.category= "TRANSFERENCIA"
             this.order.created_at= this.orderDate
-=======
+        },
+
         addItem(param) {
             console.log(param)
             let itemOrder= this.orderItemList.length+1
@@ -294,8 +285,7 @@ export default {
 
         async save() {
             this.order.location_destiny= this.orderLocationDestiny
-            this.order.status= "ABERTO";
->>>>>>> c7f9a8b964a2c29a7634347dfa4b017e1d174c04
+            this.order.status= "ABERTO"
             const resp= await axios.post('order/save', {order: this.order})
             // console.log(resp);
             // console.log("add item ao pedido...")
@@ -330,17 +320,10 @@ export default {
             this.$store.commit('orderItem/cleanOrderItem')
             this.$store.commit('order/cleanOrder')
             this.$store.commit('product/cleanProduct')
-<<<<<<< HEAD
-            eventbus.$emit('cleanAutocomplete')
-            this.error= false
-            this.errorList= []
-            this.orderDate= null
-=======
             this.orderItemList= []
             eventbus.$emit('cleanAutocomplete', 'product')
             eventbus.$emit('cleanAutocomplete', 'requester')
             eventbus.$emit('cleanAutocomplete', 'responsible')
->>>>>>> c7f9a8b964a2c29a7634347dfa4b017e1d174c04
         },
 
         async checkOrder(order) {

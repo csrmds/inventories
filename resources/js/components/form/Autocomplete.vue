@@ -10,7 +10,7 @@
                 @keydown.up="onArrowUp"
                 @keydown.enter="onEnter"
                 @keydown.esc="cleanResults"
-                @keydown.tab="cleanResults"
+                @keydown.tab="onTab"
                 type="text"
                 class="form-control form-control-sm"
                 autocomplete="off"
@@ -83,18 +83,24 @@ export default {
         },
 
         setItem(param) {
+            console.log('setItem')
+            console.log(param)
             this.word= param[this.column]
+            this.inputValue= this.word[this.column]
             this.itemSelected= param
             this.divList= false
             this.arrowCounter= -1
 
-            //this.$emit('itemSelected', this.itemSelected)
+            //console.log("deveria enviar o evento $emit abaixo..")
+            this.$emit('itemSelected', this.itemSelected)
         },
 
         handleClickOutside(event) {
-            if (!this.$el.contains(event.target)) {
-                this.arrowCounter= -1
+            if (!this.$el.contains(event.target) && this.divList) {
+                let x= { description: this.word }
+                this.setItem(x)
                 this.divList= false
+                this.arrowCounter= -1
             }
         },
 
@@ -114,10 +120,19 @@ export default {
         },
 
         onEnter() {
-            this.word= this.listFiltred[this.arrowCounter][this.column]
+            this.setItem(this.listFiltred[this.arrowCounter])
             this.itemSelected= this.listFiltred[this.arrowCounter]
             this.arrowCounter= -1
             this.divList= false
+        },
+
+        onTab() {
+            if (this.divList) {
+                this.arrowCounter= -1
+                this.divList= false    
+            }
+            // let x= { description: this.word }
+            // this.setItem(x)
         },
 
         cleanResults() {

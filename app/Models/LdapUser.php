@@ -30,19 +30,15 @@ class LdapUser extends Authenticatable implements LdapAuthenticatable
         'user',
     ];
 
-    public function getLdapUser() {
-
-        $ldapUser= AdUser::where('samaccountname', $this->name)->first();
-        if ($ldapUser && $this->guid===$ldapUser->getconvertedguid()) {
-            return $ldapUser;
-        } else {
-            return null;
-        }
-
-    }
-
-    public function getPeople()
+    //verificar se o usuário selecionado no banco tem o mesmo GUID do usuario do AD
+    public function checkGuid(Request $request)
     {
-        
+        $ldapUser= AdUser::where('samaccountname', $this->name)->first();
+        if ($ldapUser && $ldapUser->getconvertedguid()===$this->guid) {
+            return true;
+        } else {
+            return false;
+        }
     }
+
 }

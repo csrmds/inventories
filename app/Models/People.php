@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\LdapUser;
+use App\Models\User;
 
 class People extends Model
 {
@@ -35,8 +36,12 @@ class People extends Model
         "updated_at"
     ];
 
-    public function getUser() {
+    public function getLdapUserLogin() {
         return $this->hasOne(LdapUser::class, "people_id", "id");
     }
-    
+
+    public function getUser() {
+        return $this->hasOne(User::class, "people_id", "id");
+    }
+
 }
